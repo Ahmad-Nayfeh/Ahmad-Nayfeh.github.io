@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ماراثون القراءة · تطبيق أندرويد لمجموعات القراءة</title>
+<meta name="description" content="تطبيق أندرويد مجاني لمجموعات القراءة: كتاب مشترك لكل تحدٍّ، تسجيل يومي للدقائق، نقاط وترتيب وأوسمة وتقارير PDF.">
+<link rel="canonical" href="https://ahmad-nayfeh.github.io/marathon/">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#14213D">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_AR">
+<meta property="og:title" content="ماراثون القراءة">
+<meta property="og:description" content="اقرؤوا معاً، سجّلوا كل يوم، واحتفلوا بكل كتاب يُختم. تطبيق أندرويد مجاني.">
+<meta property="og:url" content="https://ahmad-nayfeh.github.io/marathon/">
+<meta property="og:image" content="https://ahmad-nayfeh.github.io/marathon/img/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  .t-marathon {
+    --bg: #FBF7EF; --ink: #14213D; --muted: #5B6478; --line: #E6DFD0; --card: #FFFDF8;
+    --accent: #B7791F; --accent-soft: #F7E7C4; --on-accent: #14213D; --link: #8A5A12;
+    --btn-bg: linear-gradient(135deg, #F2B84B, #E0A23A); --glow: rgba(183,121,31,.55);
+    --frame: #0B1222; --final-bg: linear-gradient(135deg, #14213D, #233A68); --final-ink: #FBF7EF;
+  }
+  .hero { background: radial-gradient(1200px 600px at 85% -10%, #2A4478 0%, transparent 60%), linear-gradient(180deg, #0B1222, #14213D 55%, #1C2D52); color: #FBF7EF; }
+  .hero .lead { color: #C9D2E3; }
+  .hero .eyebrow { color: #F2B84B; }
+  .hero .dl-meta, .hero .qr p { color: #9AA6BD; }
+  .hero .qr { border-color: rgba(255,255,255,.14); }
+  .hero .btn-ghost { border-color: rgba(255,255,255,.25); }
+  .hero h1 { font-family: "Amiri", serif; font-weight: 700; letter-spacing: 0; }
+  .hero .brand { color: #FBF7EF; }
+  .hero::after { content: ""; position: absolute; inset: auto 0 0 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(242,184,75,.5), transparent); }
+  .quote { font-family: "Amiri", serif; font-size: clamp(1.4rem, 3.6vw, 2rem); line-height: 1.7; text-align: center; max-width: 30em; margin: 0 auto; }
+  .quote small { display: block; font-family: "IBM Plex Sans Arabic", sans-serif; font-size: .95rem; color: var(--muted); margin-top: 10px; }
+  .points { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .points div { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+  .points b { display: block; font-size: 1.5rem; color: var(--accent); }
+  .points span { font-size: .9rem; color: var(--muted); }
+  .badges { display: flex; flex-wrap: wrap; gap: 10px; }
+  .badges span { background: var(--accent-soft); border-radius: 999px; padding: 6px 14px; font-size: .95rem; }
+</style>
+</head>
+<body class="t-marathon">
+<a class="skip" href="#main">تخطَّ إلى المحتوى</a>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="./"><img src="img/icon.svg" alt="" width="36" height="36">ماراثون القراءة</a>
+      <nav aria-label="أقسام الصفحة">
+        <a href="#features">المزايا</a>
+        <a href="#how">كيف يعمل</a>
+        <a href="#install">التثبيت</a>
+        <a href="#faq">أسئلة</a>
+      </nav>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">تطبيق أندرويد مجاني · بالعربية</span>
+        <h1>ماراثون القراءة</h1>
+        <p class="lead">اقرؤوا معاً كتاباً واحداً في كل تحدٍّ، سجّلوا دقائقكم كل يوم، وتابعوا النقاط والترتيب والأوسمة. احتفلوا بكل كتاب يُختم.</p>
+        <div class="cta">
+          <a class="btn" href="reading-marathon-1.0.0.apk" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
+            حمّل التطبيق (APK)
+          </a>
+          <a class="btn btn-ghost" href="#install">طريقة التثبيت</a>
+        </div>
+        <p class="dl-meta">الإصدار 1.0.0 · 4.2 ميغابايت · أندرويد 8 فأحدث</p>
+        <div class="qr">
+          <img src="img/qr.svg" alt="رمز QR لصفحة التطبيق" width="92" height="92">
+          <p>تتصفّح من الحاسوب؟ امسح الرمز بكاميرا هاتفك لتفتح هذه الصفحة وتحمّل التطبيق.</p>
+        </div>
+      </div>
+      <div class="phones" aria-hidden="true">
+        <div class="phone side"><img src="img/leaderboard.webp" alt="" loading="lazy" width="540" height="1170"></div>
+        <div class="phone main"><img src="img/home.webp" alt="" width="540" height="1170"></div>
+        <div class="phone side"><img src="img/card.webp" alt="" loading="lazy" width="540" height="1170"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section">
+    <div class="wrap">
+      <p class="quote">قراءة نصف ساعة كل يوم مع أصدقاء يقرؤون الكتاب نفسه أسهل من قراءة كتاب كامل وحدك.<small>هذه فكرة الماراثون، والتطبيق يرتّبها لكم.</small></p>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="wrap">
+      <span class="eyebrow">المزايا</span>
+      <h2>كل ما تحتاجه مجموعة قراءة، في تطبيق واحد</h2>
+      <p class="lead">بدل نموذج Google وجدول يُحدَّث يدوياً: كل شيء يُحسب تلقائياً ويظهر فوراً.</p>
+      <div class="grid">
+        <div class="card"><div class="ico">📖</div><h3>تحديات بكتاب مشترك</h3><p>لكل تحدٍّ كتاب ومدة ونظام نقاط خاص به. التحدي الحالي يظهر في الرئيسية مع الأيام الباقية.</p></div>
+        <div class="card"><div class="ico">⏱️</div><h3>تسجيل يومي في ثوانٍ</h3><p>دقائق الكتاب المشترك وغيره، والاقتباسات، وإنهاء الكتاب وحضور النقاش، من شاشة واحدة.</p></div>
+        <div class="card"><div class="ico">🏆</div><h3>نقاط وترتيب</h3><p>منصة تتويج وترتيب كامل للتحدي الحالي أو لكل الماراثون، مع لوحة شرف لأبرز القرّاء.</p></div>
+        <div class="card"><div class="ico">🎖️</div><h3>أوسمة وأيام متتالية</h3><p>خمسة أوسمة تُكسب بالقراءة الفعلية، وعدّاد للأيام المتتالية يشجّع على الاستمرار.</p></div>
+        <div class="card"><div class="ico">📊</div><h3>تحليلات واضحة</h3><p>الساعات المتراكمة، ساعات كل قارئ، أيام الأسبوع، وخريطة قراءة لكل يوم.</p></div>
+        <div class="card"><div class="ico">📄</div><h3>تقارير وبيانات</h3><p>تقرير PDF جاهز للمشاركة، تصدير CSV لبرنامج Excel، نسخة احتياطية، واستيراد ردود نموذج Google القديم.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">من الداخل</span>
+      <h2>شاشات التطبيق</h2>
+      <div class="gallery" tabindex="0" aria-label="صور شاشات التطبيق">
+        <figure><img src="img/home.webp" alt="الرئيسية: التحدي الحالي وقراءة اليوم ومن قرأ اليوم" loading="lazy" width="540" height="1170"><figcaption>الرئيسية</figcaption></figure>
+        <figure><img src="img/log.webp" alt="شاشة تسجيل القراءة اليومية" loading="lazy" width="540" height="1170"><figcaption>تسجيل القراءة</figcaption></figure>
+        <figure><img src="img/leaderboard.webp" alt="المتصدرون ومنصة التتويج" loading="lazy" width="540" height="1170"><figcaption>المتصدرون</figcaption></figure>
+        <figure><img src="img/challenge.webp" alt="تفاصيل التحدي وأرقامه" loading="lazy" width="540" height="1170"><figcaption>التحدي بالأرقام</figcaption></figure>
+        <figure><img src="img/card.webp" alt="بطاقة القارئ والأوسمة" loading="lazy" width="540" height="1170"><figcaption>بطاقة القارئ</figcaption></figure>
+        <figure><img src="img/home-dark.webp" alt="الرئيسية في الوضع الداكن" loading="lazy" width="540" height="1170"><figcaption>الوضع الداكن</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">كيف يعمل</span>
+        <h2>ثلاث خطوات</h2>
+        <ol class="steps">
+          <li><b>أنشئ الماراثون وأضف القرّاء</b><span>اسم للمجموعة وأسماء المشاركين. لا حسابات ولا بريد.</span></li>
+          <li><b>أنشئ تحدياً</b><span>اختر الكتاب المشترك وتاريخ البداية والنهاية. نظام النقاط جاهز ويمكن تعديله.</span></li>
+          <li><b>سجّلوا كل يوم</b><span>النقاط والترتيب والأوسمة والأخبار تتحدّث فوراً مع كل تسجيل.</span></li>
+        </ol>
+      </div>
+      <div>
+        <span class="eyebrow">نظام النقاط الافتراضي</span>
+        <h2>كل دقيقة تُحسب</h2>
+        <div class="points">
+          <div><b>1</b><span>نقطة لكل 10 دقائق من الكتاب المشترك</span></div>
+          <div><b>1</b><span>نقطة لكل 5 دقائق من كتب أخرى</span></div>
+          <div><b>3</b><span>لاقتباس من الكتاب المشترك</span></div>
+          <div><b>50</b><span>لإنهاء الكتاب المشترك</span></div>
+          <div><b>25</b><span>لإنهاء كتاب آخر</span></div>
+          <div><b>25</b><span>لحضور جلسة النقاش</span></div>
+        </div>
+        <p class="muted" style="margin-top:14px">المشرف يعدّل القيم لكل تحدٍّ. الأوسمة:</p>
+        <div class="badges"><span>✍️ الفيلسوف</span><span>🏃 العدّاء</span><span>💯 المثابرة</span><span>📚 الملتهم</span><span>🗣️ المحاور</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <span class="eyebrow">طريقة الاستخدام</span>
+      <h2>على هاتف واحد، أو مع المجموعة</h2>
+      <table class="table">
+        <thead><tr><th scope="col">الوضع</th><th scope="col">مناسب لـ</th><th scope="col">الإنترنت</th></tr></thead>
+        <tbody>
+          <tr><td><b>على هذا الجهاز</b></td><td>المشرف يسجّل قراءات المجموعة من هاتفه، والبيانات تبقى عليه.</td><td>لا يحتاج</td></tr>
+          <tr><td><b>مشترك</b></td><td>كل قارئ يسجّل من هاتفه برمز دعوة، والنتائج تظهر للجميع لحظياً. <span class="muted">يُتاح في تحديث قادم.</span></td><td>يحتاج</td></tr>
+          <tr><td><b>تجريبي</b></td><td>جولة في التطبيق ببيانات وهمية قبل أن تبدأ.</td><td>لا يحتاج</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section" id="install">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">التثبيت</span>
+        <h2>ثبّته في دقيقة</h2>
+        <ol class="steps">
+          <li><b>حمّل الملف</b><span>اضغط «حمّل التطبيق» من هاتف أندرويد.</span></li>
+          <li><b>افتحه</b><span>من الإشعارات أو مجلد التنزيلات. إن طُلب «السماح بالتثبيت من هذا المصدر» فاسمح به للمتصفح.</span></li>
+          <li><b>إن ظهر Play Protect</b><span>اختر «تفاصيل إضافية» ثم «التثبيت على أي حال». التطبيق ليس على متجر Play بعد، لذلك يظهر هذا التنبيه.</span></li>
+        </ol>
+      </div>
+      <div class="faq" id="faq">
+        <span class="eyebrow">أسئلة</span>
+        <h2>أسئلة شائعة</h2>
+        <details><summary>هل التطبيق مجاني؟</summary><p>نعم، بلا إعلانات وبلا اشتراكات.</p></details>
+        <details><summary>هل يعمل على الآيفون؟</summary><p>حالياً أندرويد فقط (الإصدار 8 فأحدث).</p></details>
+        <details><summary>أين تُحفظ بياناتنا؟</summary><p>في الوضع المحلي تبقى على هاتفك فقط. صدّر نسخة احتياطية من صفحة الإدارة من حين لآخر لتنقلها إلى هاتف جديد. التفاصيل في <a href="privacy/">سياسة الخصوصية</a>.</p></details>
+        <details><summary>كانت مجموعتنا تستخدم نموذج Google. هل نخسر السجلّ القديم؟</summary><p>لا. من الإدارة ← «استيراد ردود نموذج Google» اختر ملف CSV للردود، فيُضاف القرّاء والأيام والإنجازات تلقائياً.</p></details>
+        <details><summary>كيف أحدّث التطبيق؟</summary><p>حمّل الإصدار الجديد من هذه الصفحة وثبّته فوق القديم. بياناتك تبقى كما هي.</p></details>
+        <details><summary>هل الملف آمن؟</summary><p>الملف موقّع بمفتاح المطوّر نفسه في كل إصدار. للتحقق، بصمة SHA-256 للملف: <code>366d6253bf1aa692d9c0cbbca03010872afcbb80ae2accaea49e7ef15ce937c1</code></p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="final">
+        <h2>ابدأوا التحدي القادم</h2>
+        <p class="lead">جرّب التطبيق ببيانات تجريبية أولاً، ثم أنشئ ماراثون مجموعتك.</p>
+        <a class="btn" href="reading-marathon-1.0.0.apk" download>حمّل ماراثون القراءة</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <span>صنعه <a href="https://ahmadnayfeh.vercel.app">أحمد نايفة</a></span>
+  <span><a href="privacy/">سياسة الخصوصية</a> · <a href="../khatwa/">تطبيق خطوة</a></span>
+</footer>
+</body>
+</html>
