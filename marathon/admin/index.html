@@ -78,6 +78,32 @@
   .loading { display: flex; gap: 10px; align-items: center; justify-content: center; padding: 60px 0; color: var(--muted); }
   .spin { width: 22px; height: 22px; border: 2.5px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: s 1s linear infinite; }
   @keyframes s { to { transform: rotate(360deg); } }
+
+  /* Tabs, forms, dialogs */
+  .tabs { display: flex; gap: 8px; overflow-x: auto; padding: 4px 0 2px; margin: 4px 0 10px; }
+  .tab { background: transparent; border: 1px solid var(--line); color: var(--ink); border-radius: 12px; padding: 8px 14px; font: inherit; font-size: .9rem; cursor: pointer; white-space: nowrap; }
+  .tab[aria-selected="true"] { background: var(--accent); color: var(--on-accent); border-color: var(--accent); font-weight: 600; }
+  .tab .n { display: inline-block; min-width: 20px; padding: 0 6px; margin-inline-start: 6px; border-radius: 99px; background: var(--bad); color: #2a0b0b; font-size: .75rem; }
+  .btn-a { background: var(--accent); color: var(--on-accent); border: 0; border-radius: 12px; padding: 9px 16px; font: inherit; font-weight: 600; cursor: pointer; }
+  .btn-a:disabled { opacity: .5; cursor: default; }
+  .btn-d { background: transparent; color: var(--bad); border: 1px solid rgba(242,184,181,.4); border-radius: 12px; padding: 8px 14px; font: inherit; cursor: pointer; }
+  .row-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+  .field { display: block; margin-top: 12px; }
+  .field span { display: block; color: var(--muted); font-size: .8rem; margin-bottom: 4px; }
+  .field input, .field textarea, .field select, select.mini { width: 100%; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; color: var(--ink); padding: 9px 12px; font: inherit; }
+  select.mini { width: auto; padding: 4px 8px; border-radius: 8px; font-size: .85rem; }
+  .field textarea { min-height: 90px; resize: vertical; }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); }
+  .seg { display: inline-flex; gap: 6px; margin: 4px 0 10px; }
+  .muted { color: var(--muted); }
+  .small { font-size: .82rem; }
+  .toast { position: fixed; bottom: 22px; inset-inline: 0; margin: auto; width: fit-content; max-width: 90vw; background: var(--ink); color: var(--bg);
+    padding: 10px 18px; border-radius: 12px; z-index: 40; font-weight: 500; }
+  .toast.err { background: var(--bad); color: #2a0b0b; }
+  .pick { cursor: pointer; padding: 8px 10px; border-radius: 10px; }
+  .pick:hover { background: var(--accent-soft); }
+  .split2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 760px) { .split2 { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body class="t-marathon">
@@ -92,7 +118,6 @@
     </div>
   </header>
 
-  <!-- Sign-in -->
   <section class="gate" id="gate" hidden>
     <img src="../img/icon.svg" alt="">
     <h1>لوحة إدارة المنصة</h1>
@@ -104,53 +129,27 @@
     <p class="note" id="gate-msg"></p>
   </section>
 
-  <!-- Loading -->
   <div class="loading" id="loading"><span class="spin"></span> جارٍ التحميل…</div>
 
-  <!-- Dashboard -->
   <main id="dash" hidden>
     <h1 class="title">لوحة إدارة المنصة</h1>
     <p class="sub" id="stamp"></p>
-    <div class="kpis" id="kpis"></div>
-
-    <div class="card">
-      <h2><span class="grow">القراءة على المنصة</span><small>دقائق القراءة يومياً · آخر 30 يوماً</small></h2>
-      <svg class="chart" id="chart" viewBox="0 0 600 160" preserveAspectRatio="none" role="img" aria-label="دقائق القراءة يومياً"></svg>
-    </div>
-
-    <div class="tools">
-      <input id="q" type="search" placeholder="ابحث باسم مجموعة أو بريد أو رمز دعوة" autocomplete="off">
-      <button class="chip-btn" id="btn-csv">تصدير CSV</button>
-    </div>
-
-    <div class="card">
-      <h2><span class="grow">المجموعات</span><small id="m-count"></small></h2>
-      <div class="table-wrap"><table>
-        <thead><tr><th>المجموعة</th><th>المالك</th><th>القرّاء</th><th>الكتب</th><th>الساعات</th><th>آخر 7 أيام</th><th>آخر قراءة</th><th>الرمز</th></tr></thead>
-        <tbody id="m-body"></tbody>
-      </table></div>
-    </div>
-
-    <div class="card">
-      <h2><span class="grow">الحسابات</span><small id="u-count"></small></h2>
-      <div class="table-wrap"><table>
-        <thead><tr><th>الحساب</th><th>النوع</th><th>مجموعات</th><th>ساعات القراءة</th><th>أُنشئ</th><th>آخر دخول</th></tr></thead>
-        <tbody id="u-body"></tbody>
-      </table></div>
-      <button class="chip-btn more" id="u-more" hidden>عرض الجميع</button>
-    </div>
-    <p class="note" style="margin:24px 0 48px">البيانات تُقرأ مباشرة من Firestore بصلاحية مدير المنصة. قواعد الأمان تمنع أي حساب آخر من قراءتها.</p>
+    <nav class="tabs" id="tabs" role="tablist"></nav>
+    <div id="view"></div>
+    <p class="note" style="margin:24px 0 48px">البيانات تُقرأ وتُكتب مباشرة في Firestore بصلاحية مدير المنصة. قواعد الأمان تمنع أي حساب آخر من ذلك، وكل تعديل يُسجَّل في «السجل».</p>
   </main>
 </div>
 
 <div class="scrim" id="scrim" hidden></div>
 <aside class="drawer" id="drawer" hidden aria-modal="true" role="dialog"></aside>
+<div class="toast" id="toast" hidden></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut,
   connectAuthEmulator, signInWithCredential } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
-import { getFirestore, collection, collectionGroup, getDocs, connectFirestoreEmulator }
+import { getFirestore, collection, collectionGroup, getDocs, getDoc, doc, setDoc, updateDoc, deleteDoc, addDoc, writeBatch,
+  query, where, orderBy, limit, deleteField, arrayRemove, connectFirestoreEmulator }
   from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const ADMIN = "readingmarathon.admin@gmail.com";
@@ -190,30 +189,70 @@ function rel(s) {
   return fmtDate(s);
 }
 const parentId = (path) => path.split("/")[1] || "";
+const newId = (p) => p + Array.from(crypto.getRandomValues(new Uint8Array(12)), (b) => "abcdefghijkmnopqrstuvwxyz23456789"[b % 33]).join("");
+
+// Same search keys as the app (core/Catalog.kt), so books saved here are found there.
+const normalize = (s) => String(s ?? "").trim().replace(/[ً-ْٰـ]/g, "").replace(/[إأآٱ]/g, "ا")
+  .replace(/ى/g, "ي").replace(/ة/g, "ه").replace(/\s+/g, " ").toLowerCase();
+const words = (t) => normalize(t).split(/[^\p{L}\p{N}]+/u).filter(Boolean);
+const forms = (w) => (w.startsWith("ال") && w.length > 3 ? [w, w.slice(2)] : [w]);
+function bookKeys(title, author, aliases) {
+  const out = new Set();
+  for (const w of [title, author, ...aliases].flatMap(words).flatMap(forms)) for (let n = 2; n <= Math.min(w.length, 12); n++) out.add(w.slice(0, n));
+  return [...out];
+}
+const matches = (q, b) => { const qs = words(q).map((w) => forms(w).at(-1)); const hay = [b.title, b.author, ...(b.aliases || [])].flatMap(words).flatMap(forms);
+  return qs.length > 0 && qs.every((w) => hay.some((h) => h.startsWith(w))); };
+const sameBook = (title, author, list) => list.find((b) => b.status !== "merged" && (normalize(b.title) === normalize(title) || (b.aliases || []).some((a) => normalize(a) === normalize(title)))
+  && (!author || normalize(b.author) === normalize(author)));
 
 let data = null;
+let tab = "overview";
 let showAllUsers = false;
+let suggView = "open";
+let bookFilter = "all";
+
+function toast(text, bad = false) {
+  const t = $("toast");
+  t.textContent = text; t.className = "toast" + (bad ? " err" : ""); t.hidden = false;
+  clearTimeout(toast.h); toast.h = setTimeout(() => (t.hidden = true), 3500);
+}
+function friendly(e) {
+  const c = e?.code || e?.message || "";
+  if (String(c).includes("permission")) return "رفضت قواعد الأمان هذا الإجراء. تأكد من نشر آخر نسخة منها.";
+  return "تعذّر الإكمال: " + c;
+}
+/** Runs a write, logs it, reloads. */
+async function act(label, target, fn, done = "تم.") {
+  try {
+    await fn();
+    await addDoc(collection(db, "adminLog"), { at: Date.now(), action: label, target: String(target ?? "") });
+    toast(done);
+    closeDrawer();
+    await load(true);
+  } catch (e) { console.error(e); toast(friendly(e), true); }
+}
+/** Firestore batches hold at most 500 writes. */
+async function commitAll(ops) {
+  for (let i = 0; i < ops.length; i += 450) {
+    const b = writeBatch(db);
+    for (const op of ops.slice(i, i + 450)) op(b);
+    await b.commit();
+  }
+}
 
 // ---- Auth ----
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account", login_hint: ADMIN });
-
 $("btn-google").onclick = async () => {
   $("btn-google").disabled = true;
   $("gate-msg").textContent = "";
   try {
     await signInWithPopup(auth, provider);
   } catch (e) {
-    if (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment") {
-      await signInWithRedirect(auth, provider);
-      return;
-    }
-    if (e.code !== "auth/popup-closed-by-user" && e.code !== "auth/cancelled-popup-request") {
-      $("gate-msg").innerHTML = `<span class="err">تعذّر الدخول: ${esc(e.code || e.message)}</span>`;
-    }
-  } finally {
-    $("btn-google").disabled = false;
-  }
+    if (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment") { await signInWithRedirect(auth, provider); return; }
+    if (e.code !== "auth/popup-closed-by-user" && e.code !== "auth/cancelled-popup-request") $("gate-msg").innerHTML = `<span class="err">تعذّر الدخول: ${esc(e.code || e.message)}</span>`;
+  } finally { $("btn-google").disabled = false; }
 };
 getRedirectResult(auth).catch((e) => { $("gate-msg").innerHTML = `<span class="err">تعذّر الدخول: ${esc(e.code)}</span>`; });
 $("btn-out").onclick = () => signOut(auth);
@@ -221,10 +260,7 @@ $("btn-refresh").onclick = () => load();
 
 onAuthStateChanged(auth, (user) => {
   show("loading", false);
-  if (!user) {
-    show("gate"); show("dash", false); show("who", false);
-    return;
-  }
+  if (!user) { show("gate"); show("dash", false); show("who", false); return; }
   const email = (user.email || "").toLowerCase();
   $("who-email").textContent = email || "ضيف";
   show("who");
@@ -238,36 +274,29 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // ---- Data ----
-// Schema: users/{uid}(/days/{date}), groups/{gid} with members, challenges, entries, finishes.
-async function load() {
-  show("dash", false); show("loading");
+async function load(quiet = false) {
+  if (!quiet) { show("dash", false); show("loading"); }
   try {
-    const [gs, us, mem, ent, ch, fin, dys] = await Promise.all([
+    const [gs, us, mem, ent, ch, fin, dys, bks, sgs, ann, ban, lg] = await Promise.all([
       getDocs(collection(db, "groups")), getDocs(collection(db, "users")),
       getDocs(collectionGroup(db, "members")), getDocs(collectionGroup(db, "entries")),
       getDocs(collectionGroup(db, "challenges")), getDocs(collectionGroup(db, "finishes")),
-      getDocs(collectionGroup(db, "days")),
+      getDocs(collectionGroup(db, "days")), getDocs(collection(db, "books")), getDocs(collection(db, "suggestions")),
+      getDocs(collection(db, "announcements")), getDocs(collection(db, "banned")),
+      getDocs(query(collection(db, "adminLog"), orderBy("at", "desc"), limit(200))),
     ]);
-    const bucket = (snap) => {
-      const out = {};
-      for (const d of snap.docs) (out[parentId(d.ref.path)] ||= []).push({ id: d.id, ...d.data() });
-      return out;
-    };
+    const bucket = (snap) => { const out = {}; for (const d of snap.docs) (out[parentId(d.ref.path)] ||= []).push({ id: d.id, ref: d.ref, ...d.data() }); return out; };
     const days = bucket(dys);
-    const users = us.docs.map((d) => {
-      const u = { uid: d.id, ...d.data() };
-      u.minutes = (days[d.id] || []).reduce((a, x) => a + (x.minutes || 0), 0);
-      return u;
-    });
+    const banned = new Set(ban.docs.map((d) => d.id));
+    const users = us.docs.map((d) => ({ uid: d.id, ...d.data(), days: days[d.id] || [], minutes: (days[d.id] || []).reduce((a, x) => a + (x.minutes || 0), 0), banned: banned.has(d.id) }));
     const byUid = Object.fromEntries(users.map((u) => [u.uid, u]));
     const members = bucket(mem), entries = bucket(ent), challenges = bucket(ch), finishes = bucket(fin);
     const week = iso(new Date(Date.now() - 6 * 864e5));
     const groups = gs.docs.map((d) => {
-      const g = d.data();
-      const roles = g.roles || {};
-      const es = entries[d.id] || [];
+      const g = d.data(); const roles = g.roles || {}; const es = entries[d.id] || [];
       return {
-        id: d.id, name: g.name || "—", code: g.inviteCode || "", createdAt: g.createdAt || 0, roles, visibility: g.visibility || "private",
+        id: d.id, ...g, name: g.name || "—", code: g.inviteCode || "", createdAt: g.createdAt || 0, roles, visibility: g.visibility || "private",
+        rules: g.rules || { minutesPerPoint: 10, finishBonus: 50 },
         owners: Object.keys(roles).filter((u) => roles[u] === "owner").map((u) => byUid[u]?.email || byUid[u]?.name || "ضيف"),
         members: members[d.id] || [], entries: es, challenges: challenges[d.id] || [], finishes: finishes[d.id] || [],
         minutes: es.reduce((a, e) => a + (e.minutes || 0), 0),
@@ -275,145 +304,446 @@ async function load() {
         last: es.filter((e) => e.minutes > 0).map((e) => e.date).sort().pop() || null,
       };
     }).sort((a, b) => (b.last || "").localeCompare(a.last || "") || b.createdAt - a.createdAt);
-    // Platform totals come from personal logs: every reader counts once, in a group or not.
-    const allDays = dys.docs.map((d) => d.data());
-    data = { groups, users: users.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0)), allDays, finishes: fin.size, week };
+    data = {
+      groups, users: users.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0)), byUid, allDays: dys.docs.map((d) => d.data()),
+      allChallenges: ch.docs.map((d) => ({ id: d.id, ref: d.ref, gid: parentId(d.ref.path), ...d.data() })),
+      finishes: fin.size, week,
+      books: bks.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => normalize(a.title).localeCompare(normalize(b.title), "ar")),
+      suggestions: sgs.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (a.status === "open" ? 0 : 1) - (b.status === "open" ? 0 : 1) || (b.createdAt || 0) - (a.createdAt || 0)),
+      news: ann.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)),
+      log: lg.docs.map((d) => d.data()),
+    };
     render();
     $("stamp").textContent = `آخر تحديث: ${new Date().toLocaleTimeString("ar-SA-u-nu-latn", { hour: "2-digit", minute: "2-digit" })}`;
     show("dash");
   } catch (e) {
+    console.error(e);
     $("stamp").innerHTML = `<span class="err">تعذّرت قراءة البيانات (${esc(e.code || e.message)}). تأكد من نشر قواعد الأمان.</span>`;
     show("dash");
-  } finally {
-    show("loading", false);
-  }
+  } finally { show("loading", false); }
 }
 
+// ---- Rendering ----
+const TABS = [["overview", "نظرة عامة"], ["suggestions", "الاقتراحات"], ["books", "الكتب"], ["groups", "المجموعات"], ["users", "المستخدمون"], ["news", "الإعلانات"], ["log", "السجل"]];
 function render() {
-  const { groups, users, allDays, finishes, week } = data;
+  const open = data.suggestions.filter((s) => s.status === "open").length;
+  $("tabs").innerHTML = TABS.map(([k, l]) => `<button class="tab" role="tab" data-t="${k}" aria-selected="${tab === k}">${l}${k === "suggestions" && open ? `<span class="n">${open}</span>` : ""}</button>`).join("");
+  for (const b of document.querySelectorAll(".tab")) b.onclick = () => { tab = b.dataset.t; render(); };
+  ({ overview, suggestions, books, groups, users, news, log }[tab])();
+}
+
+function bars(vals, color = "#3C4A6B", last = "#F2B84B") {
+  const max = Math.max(1, ...vals); const bw = 600 / vals.length;
+  return vals.map((v, i) => { const h = Math.max(v > 0 ? 3 : 1, (v / max) * 140); const x = (vals.length - 1 - i) * bw;
+    return `<rect x="${x + 3}" y="${155 - h}" width="${bw - 6}" height="${h}" rx="3" fill="${i === vals.length - 1 ? last : color}"><title>${v}</title></rect>`; }).join("");
+}
+
+function overview() {
+  const { groups, users, allDays, finishes, week, books, suggestions: sg } = data;
   const guests = users.filter((u) => u.guest).length;
   const seen7 = users.filter((u) => (u.lastSeen || 0) > Date.now() - 7 * 864e5).length;
   const total = allDays.reduce((a, e) => a + (e.minutes || 0), 0);
   const last7 = allDays.filter((e) => e.date >= week).reduce((a, e) => a + (e.minutes || 0), 0);
-  const active = groups.filter((g) => g.minutes7 > 0).length;
-  const k = [
-    [users.length, `حساب · ${guests} دون Google`], [seen7, "دخلوا هذا الأسبوع"],
-    [groups.length, `مجموعة · ${active} نشطة هذا الأسبوع`], [finishes, "إتمام كتاب"],
-    [hours(total), "ساعة قراءة"], [hours(last7), "ساعة في آخر 7 أيام"],
-  ];
-  $("kpis").innerHTML = k.map(([v, l]) => `<div class="kpi"><b class="mono">${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
-
-  // 30-day chart
   const span = [...Array(30)].map((_, i) => iso(new Date(Date.now() - (29 - i) * 864e5)));
-  const per = Object.fromEntries(span.map((d) => [d, 0]));
-  for (const e of allDays) if (e.date in per) per[e.date] += e.minutes || 0;
-  const vals = span.map((d) => per[d]);
-  const max = Math.max(1, ...vals);
-  const bw = 600 / 30;
-  $("chart").innerHTML = vals.map((v, i) => {
-    const h = Math.max(v > 0 ? 3 : 1, (v / max) * 140);
-    // RTL page: newest day on the left, like the app.
-    const x = (29 - i) * bw;
-    return `<rect x="${x + 3}" y="${155 - h}" width="${bw - 6}" height="${h}" rx="3" fill="${i === 29 ? "#F2B84B" : "#3C4A6B"}"><title>${fmtDate(span[i])}: ${v} دقيقة</title></rect>`;
-  }).join("");
-
-  const q = $("q").value.trim().toLowerCase();
-  const gs = groups.filter((g) => !q || g.name.toLowerCase().includes(q) || g.code.toLowerCase() === q || g.owners.some((o) => o.toLowerCase().includes(q)));
-  $("m-count").textContent = `${gs.length} من ${groups.length}`;
-  $("m-body").innerHTML = gs.length ? gs.map((g) => {
-    const act = g.members.filter((x) => x.active !== false).length;
-    return `<tr class="row" data-id="${esc(g.id)}">
-      <td><b>${esc(g.name)}</b> <span class="pill dim">${g.visibility === "public" ? "عامة" : "خاصة"}</span>${g.minutes7 > 0 ? ' <span class="pill ok">نشطة</span>' : ""}</td>
-      <td class="mono" style="font-size:.8rem">${esc(g.owners.join("، ") || "—")}</td>
-      <td class="num">${act}</td>
-      <td class="num">${g.challenges.length}</td>
-      <td class="num">${hours(g.minutes)}</td>
-      <td class="num">${hours(g.minutes7)}</td>
-      <td>${esc(rel(g.last))}</td>
-      <td class="mono">${esc(g.code)}</td></tr>`;
-  }).join("") : `<tr><td colspan="8" class="empty">${q ? "لا نتائج لهذا البحث." : "لم تُنشأ أي مجموعة بعد."}</td></tr>`;
-  for (const tr of document.querySelectorAll("tr.row")) tr.onclick = () => openDetail(tr.dataset.id);
-
-  const us = users.filter((u) => !q || (u.email || "").toLowerCase().includes(q) || (u.name || "").toLowerCase().includes(q));
-  const shown = showAllUsers || q ? us : us.slice(0, 20);
-  $("u-count").textContent = `${us.length}`;
-  $("u-body").innerHTML = shown.length ? shown.map((u) => `<tr>
-      <td>${u.name ? `<b>${esc(u.name)}</b>` : "دون اسم"}${u.email ? `<div class="mono muted" style="font-size:.8rem">${esc(u.email)}</div>` : ""}</td>
-      <td>${u.guest ? '<span class="pill dim">دون Google</span>' : '<span class="pill">Google</span>'}</td>
-      <td class="num">${(u.groups || []).length}</td>
-      <td class="num">${hours(u.minutes)}</td>
-      <td>${esc(fmtDate(ms2iso(u.createdAt)))}</td>
-      <td>${esc(rel(ms2iso(u.lastSeen)))}</td></tr>`).join("") : `<tr><td colspan="6" class="empty">لا حسابات.</td></tr>`;
-  show("u-more", !showAllUsers && !q && us.length > 20);
+  const mins = span.map((d) => allDays.filter((e) => e.date === d).reduce((a, e) => a + (e.minutes || 0), 0));
+  const readers = span.map((d) => allDays.filter((e) => e.date === d && e.minutes > 0).length);
+  const top = {}; for (const c of data.allChallenges) { const k = c.bookId || normalize(c.title); (top[k] ||= { title: c.title, groups: new Set() }).groups.add(c.gid); }
+  const topList = Object.values(top).sort((a, b) => b.groups.size - a.groups.size).slice(0, 10);
+  const k = [
+    [users.length, `حساب · ${guests} دون Google`], [seen7, "دخلوا هذا الأسبوع"], [groups.length, `مجموعة · ${groups.filter((g) => g.minutes7 > 0).length} نشطة`],
+    [hours(total), "ساعة قراءة"], [hours(last7), "ساعة آخر 7 أيام"], [finishes, "إتمام كتاب"],
+    [books.filter((b) => b.status !== "merged").length, "كتاب في الفهرس"], [books.filter((b) => b.status === "pending").length, "بانتظار المراجعة"],
+    [sg.filter((s) => s.status === "open").length, "اقتراح مفتوح"], [users.filter((u) => u.banned).length, "حساب موقوف"],
+  ];
+  $("view").innerHTML = `
+    <div class="kpis">${k.map(([v, l]) => `<div class="kpi"><b class="mono">${esc(v)}</b><span>${esc(l)}</span></div>`).join("")}</div>
+    <div class="split2">
+      <div class="card"><h2><span class="grow">دقائق القراءة يومياً</span><small>آخر 30 يوماً</small></h2><svg class="chart" viewBox="0 0 600 160" preserveAspectRatio="none">${bars(mins)}</svg></div>
+      <div class="card"><h2><span class="grow">قرّاء نشطون يومياً</span><small>اليوم ${readers.at(-1)}</small></h2><svg class="chart" viewBox="0 0 600 160" preserveAspectRatio="none">${bars(readers, "#2F5D4A", "#6CCB92")}</svg></div>
+    </div>
+    <div class="card"><h2>أكثر الكتب اختياراً</h2><div class="table-wrap"><table><thead><tr><th>الكتاب</th><th>المجموعات</th></tr></thead><tbody>
+      ${topList.map((t) => `<tr><td>«${esc(t.title)}»</td><td class="num">${t.groups.size}</td></tr>`).join("") || '<tr><td colspan="2" class="empty">لا كتب بعد.</td></tr>'}
+    </tbody></table></div></div>`;
 }
 
-$("q").addEventListener("input", () => data && render());
-$("u-more").onclick = () => { showAllUsers = true; render(); };
+const typeName = { new_book: "كتاب جديد", fix: "تصحيح", duplicate: "مكرر" };
+function suggestions() {
+  const list = data.suggestions.filter((s) => (suggView === "open") === (s.status === "open"));
+  $("view").innerHTML = `
+    <div class="seg"><button class="tab" data-v="open" aria-selected="${suggView === "open"}">مفتوحة</button><button class="tab" data-v="closed" aria-selected="${suggView !== "open"}">منتهية</button></div>
+    <div class="card"><div class="table-wrap"><table><thead><tr><th>النوع</th><th>الكتاب</th><th>من</th><th>متى</th><th>الحالة</th></tr></thead><tbody>
+      ${list.map((s) => `<tr class="row" data-id="${esc(s.id)}"><td>${typeName[s.type] || esc(s.type)}</td><td><b>«${esc(s.title)}»</b><div class="muted small">${esc(s.author)}</div>${s.note ? `<div class="small">${esc(s.note)}</div>` : ""}</td>
+        <td>${esc(s.byName || "قارئ")}</td><td>${esc(rel(ms2iso(s.createdAt)))}</td><td>${s.status === "open" ? '<span class="pill">مفتوح</span>' : s.status === "accepted" ? '<span class="pill ok">قُبل</span>' : '<span class="pill dim">رُفض</span>'}</td></tr>`).join("")
+        || `<tr><td colspan="5" class="empty">${suggView === "open" ? "لا اقتراحات مفتوحة." : "لا اقتراحات منتهية."}</td></tr>`}
+    </tbody></table></div></div>`;
+  for (const b of document.querySelectorAll("[data-v]")) b.onclick = () => { suggView = b.dataset.v; render(); };
+  for (const tr of document.querySelectorAll("tr.row")) tr.onclick = () => openSuggestion(tr.dataset.id);
+}
 
-// ---- Detail ----
-function openDetail(id) {
+function books() {
+  const q = ($("bq")?.value ?? "").trim();
+  const live = data.books.filter((b) => b.status !== "merged");
+  const list = live.filter((b) => (bookFilter === "all" || b.status === "pending") && (!q || matches(q, b)));
+  $("view").innerHTML = `
+    <div class="tools" style="margin-top:0">
+      <input id="bq" type="search" placeholder="عنوان أو اسم آخر أو مؤلف" value="${esc(q)}" autocomplete="off">
+      <button class="btn-a" id="b-new">كتاب جديد</button><button class="chip-btn" id="b-import">استيراد قائمة</button>
+    </div>
+    <div class="seg" style="margin-top:10px"><button class="tab" data-f="all" aria-selected="${bookFilter === "all"}">الكل (${live.length})</button>
+      <button class="tab" data-f="pending" aria-selected="${bookFilter !== "all"}">بانتظار المراجعة (${live.filter((b) => b.status === "pending").length})</button></div>
+    <div class="card"><div class="table-wrap"><table><thead><tr><th>العنوان</th><th>المؤلف</th><th>أسماء أخرى</th><th>المجموعات</th><th></th></tr></thead><tbody>
+      ${list.slice(0, 300).map((b) => `<tr class="row" data-id="${esc(b.id)}"><td><b>«${esc(b.title)}»</b></td><td>${esc(b.author)}</td><td class="small muted">${esc((b.aliases || []).join("، "))}</td>
+        <td class="num">${new Set(data.allChallenges.filter((c) => c.bookId === b.id).map((c) => c.gid)).size}</td><td>${b.status === "pending" ? '<span class="pill">بانتظار المراجعة</span>' : ""}</td></tr>`).join("")
+        || `<tr><td colspan="5" class="empty">${live.length ? "لا نتائج." : "الفهرس فارغ. أضف كتباً أو استورد قائمة."}</td></tr>`}
+    </tbody></table></div></div>`;
+  $("bq").oninput = () => { const pos = $("bq").selectionStart; render(); $("bq").focus(); $("bq").setSelectionRange(pos, pos); };
+  for (const b of document.querySelectorAll("[data-f]")) b.onclick = () => { bookFilter = b.dataset.f; render(); };
+  $("b-new").onclick = () => openBook(null);
+  $("b-import").onclick = openImport;
+  for (const tr of document.querySelectorAll("tr.row")) tr.onclick = () => openBook(tr.dataset.id);
+}
+
+function groups() {
+  const q = ($("gq")?.value ?? "").trim().toLowerCase();
+  const gs = data.groups.filter((g) => !q || g.name.toLowerCase().includes(q) || g.code.toLowerCase() === q || g.owners.some((o) => o.toLowerCase().includes(q)));
+  $("view").innerHTML = `
+    <div class="tools" style="margin-top:0"><input id="gq" type="search" placeholder="اسم مجموعة أو بريد مالكها أو رمز دعوة" value="${esc(q)}" autocomplete="off"><button class="chip-btn" id="csv">تصدير CSV</button></div>
+    <div class="card"><h2><span class="grow">المجموعات</span><small>${gs.length} من ${data.groups.length}</small></h2><div class="table-wrap"><table>
+      <thead><tr><th>المجموعة</th><th>المالك</th><th>القرّاء</th><th>الكتب</th><th>الساعات</th><th>آخر 7 أيام</th><th>آخر قراءة</th><th>الرمز</th></tr></thead><tbody>
+      ${gs.map((g) => `<tr class="row" data-id="${esc(g.id)}"><td><b>${esc(g.name)}</b> <span class="pill dim">${g.visibility === "public" ? "عامة" : "خاصة"}</span>${g.minutes7 > 0 ? ' <span class="pill ok">نشطة</span>' : ""}</td>
+        <td class="mono small">${esc(g.owners.join("، ") || "—")}</td><td class="num">${g.members.filter((x) => x.active !== false).length}</td><td class="num">${g.challenges.length}</td>
+        <td class="num">${hours(g.minutes)}</td><td class="num">${hours(g.minutes7)}</td><td>${esc(rel(g.last))}</td><td class="mono">${esc(g.code)}</td></tr>`).join("")
+        || `<tr><td colspan="8" class="empty">${q ? "لا نتائج." : "لم تُنشأ أي مجموعة بعد."}</td></tr>`}
+    </tbody></table></div></div>`;
+  $("gq").oninput = () => { const pos = $("gq").selectionStart; render(); $("gq").focus(); $("gq").setSelectionRange(pos, pos); };
+  $("csv").onclick = exportCsv;
+  for (const tr of document.querySelectorAll("tr.row")) tr.onclick = () => openGroup(tr.dataset.id);
+}
+
+function users() {
+  const q = ($("uq")?.value ?? "").trim().toLowerCase();
+  const us = data.users.filter((u) => !q || (u.email || "").toLowerCase().includes(q) || (u.name || "").toLowerCase().includes(q));
+  const shown = showAllUsers || q ? us : us.slice(0, 30);
+  $("view").innerHTML = `
+    <div class="tools" style="margin-top:0"><input id="uq" type="search" placeholder="اسم أو بريد" value="${esc(q)}" autocomplete="off"></div>
+    <div class="card"><h2><span class="grow">المستخدمون</span><small>${us.length}</small></h2><div class="table-wrap"><table>
+      <thead><tr><th>الحساب</th><th>النوع</th><th>مجموعات</th><th>ساعات</th><th>أُنشئ</th><th>آخر دخول</th></tr></thead><tbody>
+      ${shown.map((u) => `<tr class="row" data-id="${esc(u.uid)}"><td>${u.name ? `<b>${esc(u.name)}</b>` : "دون اسم"}${u.email ? `<div class="mono muted small">${esc(u.email)}</div>` : ""}</td>
+        <td>${u.banned ? '<span class="pill" style="color:var(--bad)">موقوف</span>' : u.guest ? '<span class="pill dim">دون Google</span>' : '<span class="pill">Google</span>'}</td>
+        <td class="num">${(u.groups || []).length}</td><td class="num">${hours(u.minutes)}</td><td>${esc(fmtDate(ms2iso(u.createdAt)))}</td><td>${esc(rel(ms2iso(u.lastSeen)))}</td></tr>`).join("")
+        || '<tr><td colspan="6" class="empty">لا حسابات.</td></tr>'}
+    </tbody></table></div>${!showAllUsers && !q && us.length > 30 ? `<button class="chip-btn more" id="u-more">عرض الجميع (${us.length})</button>` : ""}</div>`;
+  $("uq").oninput = () => { const pos = $("uq").selectionStart; render(); $("uq").focus(); $("uq").setSelectionRange(pos, pos); };
+  if ($("u-more")) $("u-more").onclick = () => { showAllUsers = true; render(); };
+  for (const tr of document.querySelectorAll("tr.row")) tr.onclick = () => openUser(tr.dataset.id);
+}
+
+function news() {
+  $("view").innerHTML = `
+    <button class="btn-a" id="n-new">إعلان جديد</button>
+    <p class="note">يظهر الإعلان المنشور أعلى الرئيسية في التطبيق لكل القرّاء حتى يغلقه كل منهم.</p>
+    <div class="card"><div class="table-wrap"><table><thead><tr><th>الإعلان</th><th>التاريخ</th><th>الحالة</th></tr></thead><tbody>
+      ${data.news.map((a) => `<tr class="row" data-id="${esc(a.id)}"><td><b>${esc(a.title)}</b><div class="small">${esc(a.body)}</div></td><td>${esc(fmtDate(ms2iso(a.createdAt)))}</td>
+        <td>${a.active ? '<span class="pill ok">منشور</span>' : '<span class="pill dim">مخفي</span>'}</td></tr>`).join("") || '<tr><td colspan="3" class="empty">لا إعلانات.</td></tr>'}
+    </tbody></table></div></div>`;
+  $("n-new").onclick = () => openNews(null);
+  for (const tr of document.querySelectorAll("tr.row")) tr.onclick = () => openNews(tr.dataset.id);
+}
+
+function log() {
+  $("view").innerHTML = `<div class="card"><div class="table-wrap"><table><thead><tr><th>العملية</th><th>على</th><th>متى</th></tr></thead><tbody>
+    ${data.log.map((e) => `<tr><td>${esc(e.action)}</td><td class="small">${esc(e.target)}</td><td class="small mono">${esc(new Date(e.at).toLocaleString("en-GB"))}</td></tr>`).join("") || '<tr><td colspan="3" class="empty">لا عمليات بعد.</td></tr>'}
+  </tbody></table></div></div>`;
+}
+
+// ---- Drawer ----
+function openDrawer(html) {
+  $("drawer").innerHTML = `<button class="chip-btn" id="d-close">إغلاق</button>` + html;
+  show("scrim"); show("drawer");
+  $("d-close").onclick = closeDrawer;
+}
+function closeDrawer() { show("scrim", false); show("drawer", false); }
+$("scrim").onclick = closeDrawer;
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDrawer(); });
+const val = (id) => ($(id)?.value ?? "").trim();
+
+// Groups reading a book get its new title and author.
+async function propagate(fromId, to) {
+  const ops = [];
+  for (const c of data.allChallenges.filter((c) => c.bookId === fromId)) ops.push((b) => b.update(c.ref, { bookId: to.id, title: to.title, author: to.author }));
+  for (const g of data.groups.filter((g) => g.current?.bookId === fromId)) ops.push((b) => b.update(doc(db, "groups", g.id), { current: { ...g.current, bookId: to.id, title: to.title, author: to.author } }));
+  await commitAll(ops);
+}
+function bookDoc(b) {
+  return { title: b.title, author: b.author, aliases: b.aliases, keys: bookKeys(b.title, b.author, b.aliases), pages: b.pages ?? null,
+    status: b.status, mergedInto: b.mergedInto ?? null, createdBy: b.createdBy ?? auth.currentUser.uid, createdAt: b.createdAt || Date.now() };
+}
+async function saveBook(id, title, author, aliases, pages, prev) {
+  if (!title || !author) throw { message: "اكتب العنوان والمؤلف." };
+  const b = { ...(prev || {}), id: id || newId("b_"), title, author, pages, status: "verified",
+    aliases: [...new Map(aliases.filter((a) => a && normalize(a) !== normalize(title)).map((a) => [normalize(a), a])).values()] };
+  await setDoc(doc(db, "books", b.id), bookDoc(b));
+  if (id) await propagate(id, b);
+  return b;
+}
+
+function openBook(id) {
+  const b = id ? data.books.find((x) => x.id === id) : null;
+  openDrawer(`
+    <h2 class="dn">${b ? "تعديل الكتاب" : "كتاب جديد"}</h2>
+    ${b?.status === "pending" ? '<p class="muted small">أضافه قارئ ولم يُراجَع بعد. الحفظ يعتمده.</p>' : ""}
+    <label class="field"><span>العنوان الرسمي</span><input id="f-title" value="${esc(b?.title)}"></label>
+    <label class="field"><span>المؤلف</span><input id="f-author" value="${esc(b?.author)}"></label>
+    <label class="field"><span>أسماء أخرى للكتاب (افصل بفاصلة)</span><input id="f-aliases" value="${esc((b?.aliases || []).join("، "))}"></label>
+    <label class="field"><span>عدد الصفحات</span><input id="f-pages" inputmode="numeric" value="${esc(b?.pages ?? "")}"></label>
+    ${b ? `<p class="small muted">تقرؤه ${new Set(data.allChallenges.filter((c) => c.bookId === b.id).map((c) => c.gid)).size} مجموعة. الحفظ يحدّث العنوان والمؤلف فيها كلها.</p>` : ""}
+    <div class="row-actions"><button class="btn-a" id="f-save">${b?.status === "pending" ? "حفظ واعتماد" : "حفظ"}</button>${b ? '<button class="btn-d" id="f-del">حذف من الفهرس</button>' : ""}</div>
+    ${b ? `<div class="card"><h2>دمجه في كتاب آخر</h2><p class="small muted">اختر النسخة التي تبقى: يصبح هذا الكتاب اسماً آخر لها، وتنتقل إليها كل المجموعات.</p>
+      <label class="field"><input id="m-q" placeholder="ابحث في الفهرس"></label><div id="m-res"></div></div>` : ""}`);
+  $("f-save").onclick = () => {
+    const title = val("f-title"), author = val("f-author"), aliases = val("f-aliases").split(/[,،;؛]/).map((s) => s.trim()).filter(Boolean), pages = parseInt(val("f-pages")) || null;
+    if (!b) { const dup = sameBook(title, author, data.books); if (dup && !confirm(`«${dup.title}» لـ ${dup.author} موجود في الفهرس. أضيفه رغم ذلك؟`)) return; }
+    act(b ? "عدّل كتاباً" : "أضاف كتاباً", `«${title}» · ${author}`, () => saveBook(b?.id, title, author, aliases, pages, b), "حُفظ الكتاب.");
+  };
+  if (!b) return;
+  $("f-del").onclick = () => confirm(`حذف «${b.title}» من الفهرس؟ المجموعات التي تقرؤه تحتفظ بعنوانه.`) && act("حذف كتاباً", `«${b.title}»`, () => deleteDoc(doc(db, "books", b.id)), "حُذف الكتاب.");
+  $("m-q").oninput = () => {
+    const q = val("m-q");
+    const res = q.length < 2 ? [] : data.books.filter((x) => x.id !== b.id && x.status !== "merged" && matches(q, x)).slice(0, 8);
+    $("m-res").innerHTML = res.map((x) => `<div class="pick" data-id="${esc(x.id)}">«${esc(x.title)}» · ${esc(x.author)}</div>`).join("");
+    for (const p of document.querySelectorAll("#m-res .pick")) p.onclick = () => {
+      const into = data.books.find((x) => x.id === p.dataset.id);
+      if (confirm(`دمج «${b.title}» في «${into.title}»؟`)) act("دمج كتابين", `«${b.title}» ← «${into.title}»`, () => mergeBooks(b, into), "دُمج الكتابان.");
+    };
+  };
+}
+async function mergeBooks(from, into) {
+  const kept = { ...into, aliases: [...new Map([...(into.aliases || []), from.title, ...(from.aliases || [])].filter((a) => normalize(a) !== normalize(into.title)).map((a) => [normalize(a), a])).values()] };
+  const b = writeBatch(db);
+  b.set(doc(db, "books", into.id), bookDoc(kept));
+  b.set(doc(db, "books", from.id), bookDoc({ ...from, status: "merged", mergedInto: into.id }));
+  await b.commit();
+  await propagate(from.id, kept);
+}
+function openImport() {
+  openDrawer(`<h2 class="dn">استيراد قائمة كتب</h2>
+    <p class="small muted">سطر لكل كتاب: العنوان، المؤلف، أسماء أخرى مفصولة بـ «؛»، عدد الصفحات. يمكنك اللصق من Excel بعد حفظه CSV. الموجود في الفهرس يُتخطّى.</p>
+    <label class="field"><textarea id="imp" placeholder="الأيام,طه حسين&#10;رجال في الشمس,غسان كنفاني,,96" style="min-height:240px"></textarea></label>
+    <p class="small" id="imp-n"></p><div class="row-actions"><button class="btn-a" id="imp-go">استيراد</button></div>`);
+  const parse = () => val("imp").split(/\r?\n/).map((l) => { const c = l.split(/[,\t]/); return { title: (c[0] || "").replace(/^"|"$/g, "").trim(), author: (c[1] || "").replace(/^"|"$/g, "").trim(),
+    aliases: (c[2] || "").split(/[;؛]/).map((s) => s.trim()).filter(Boolean), pages: parseInt(c[3]) || null }; }).filter((x) => x.title && x.author && x.title !== "العنوان" && x.title.toLowerCase() !== "title");
+  $("imp").oninput = () => { $("imp-n").textContent = `${parse().length} كتاباً جاهزاً`; };
+  $("imp-go").onclick = () => {
+    const list = parse(); let added = 0;
+    act("استورد قائمة كتب", `${list.length} سطراً`, async () => {
+      const known = [...data.books]; const ops = [];
+      for (const x of list) {
+        if (sameBook(x.title, x.author, known)) continue;
+        const b = { ...x, id: newId("b_"), status: "verified", createdAt: Date.now() };
+        known.push(b); added++; ops.push((batch) => batch.set(doc(db, "books", b.id), bookDoc(b)));
+      }
+      await commitAll(ops);
+    }, "اكتمل الاستيراد.").then(() => toast(`أُضيف ${added} كتاباً جديداً.`));
+  };
+}
+
+function openSuggestion(id) {
+  const s = data.suggestions.find((x) => x.id === id);
+  const b = data.books.find((x) => x.id === s.bookId);
+  const o = data.books.find((x) => x.id === s.otherBookId);
+  const open = s.status === "open";
+  openDrawer(`
+    <h2 class="dn">${typeName[s.type] || ""}</h2>
+    <p class="muted small">من ${esc(s.byName || "قارئ")} · ${esc(fmtDate(ms2iso(s.createdAt)))}</p>
+    ${s.note ? `<p>«${esc(s.note)}»</p>` : ""}
+    <p>${b ? `في الفهرس الآن: «${esc(b.title)}» · ${esc(b.author)}${b.status === "pending" ? " (بانتظار المراجعة)" : ""}` : '<span class="err">الكتاب لم يعد في الفهرس.</span>'}</p>
+    ${s.type === "duplicate" ? `<p>ويقول إنه مكرر مع: ${o ? `«${esc(o.title)}» · ${esc(o.author)}` : "كتاب غير موجود"}</p><p class="small muted">القبول يدمج الأول في الثاني، وتنتقل كل المجموعات إليه.</p>`
+      : open && b ? `<label class="field"><span>العنوان</span><input id="s-title" value="${esc(s.title || b.title)}"></label><label class="field"><span>المؤلف</span><input id="s-author" value="${esc(s.author || b.author)}"></label>` : ""}
+    ${open ? `<label class="field"><span>رد للقارئ (اختياري)</span><input id="s-reply"></label>
+      <div class="row-actions"><button class="btn-a" id="s-ok" ${(s.type === "duplicate" ? b && o : b) ? "" : "disabled"}>${s.type === "new_book" ? "اعتماد" : s.type === "fix" ? "تطبيق التصحيح" : "دمج"}</button><button class="btn-d" id="s-no">رفض</button></div>`
+      : `<p class="small">${s.status === "accepted" ? "قُبل" : "رُفض"}${s.reply ? ` · الرد: ${esc(s.reply)}` : ""}</p>`}`);
+  if (!open) return;
+  const resolve = (accepted) => ({ status: accepted ? "accepted" : "rejected", reply: val("s-reply"), resolvedAt: Date.now() });
+  $("s-no").onclick = () => act("رفض اقتراحاً", `«${s.title}» من ${s.byName}`, () => updateDoc(doc(db, "suggestions", s.id), resolve(false)), "رُفض الاقتراح.");
+  $("s-ok").onclick = () => act("قبل اقتراحاً", `«${s.title}» من ${s.byName}`, async () => {
+    if (s.type === "duplicate") await mergeBooks(b, o);
+    else if (val("s-title") !== b.title || val("s-author") !== b.author || b.status === "pending") await saveBook(b.id, val("s-title"), val("s-author"), b.aliases || [], b.pages ?? null, b);
+    await updateDoc(doc(db, "suggestions", s.id), resolve(true));
+  }, "حُسم الاقتراح.");
+}
+
+function openGroup(id) {
   const g = data.groups.find((x) => x.id === id);
-  if (!g) return;
-  const byMember = {};
-  for (const e of g.entries) {
-    const s = (byMember[e.memberId] ||= { minutes: 0, days: 0, last: null });
-    s.minutes += e.minutes || 0;
-    if (e.minutes > 0) { s.days++; if (!s.last || e.date > s.last) s.last = e.date; }
-  }
   const roleName = { owner: "المالك", admin: "مشرف", member: "عضو" };
-  const members = [...g.members].sort((a, b) => (byMember[b.id]?.minutes || 0) - (byMember[a.id]?.minutes || 0));
+  const byMember = {};
+  for (const e of g.entries) { const s = (byMember[e.memberId] ||= { minutes: 0, days: 0, last: null }); s.minutes += e.minutes || 0; if (e.minutes > 0) { s.days++; if (!s.last || e.date > s.last) s.last = e.date; } }
+  const members = g.members.filter((m) => m.active !== false).sort((a, b) => (byMember[b.id]?.minutes || 0) - (byMember[a.id]?.minutes || 0));
   const chs = [...g.challenges].sort((a, b) => (b.start || "").localeCompare(a.start || ""));
   const today = iso(new Date());
-  const recent = [...g.entries].filter((e) => e.minutes > 0).sort((a, b) => b.date.localeCompare(a.date) || (b.updatedAt || 0) - (a.updatedAt || 0)).slice(0, 15);
-  const nameOf = Object.fromEntries(g.members.map((x) => [x.id, x.name]));
-  $("drawer").innerHTML = `
-    <button class="chip-btn" id="d-close">إغلاق</button>
+  openDrawer(`
     <h2 class="dn">${esc(g.name)}</h2>
-    <div class="muted" style="font-size:.85rem">${g.visibility === "public" ? "عامة" : "خاصة"} · رمز الدعوة <span class="mono">${esc(g.code)}</span> · أُنشئت ${esc(fmtDate(ms2iso(g.createdAt)))} · ${Object.keys(g.roles).length} حساب</div>
-    <div class="grid2">
-      <div class="kpi"><b class="mono">${g.members.filter((x) => x.active !== false).length}</b><span>قارئ</span></div>
-      <div class="kpi"><b class="mono">${g.challenges.length}</b><span>كتاب</span></div>
-      <div class="kpi"><b class="mono">${hours(g.minutes)}</b><span>ساعة</span></div>
-      <div class="kpi"><b class="mono">${g.entries.filter((e) => e.minutes > 0).length}</b><span>يوم مسجّل</span></div>
+    <p class="muted small">${g.visibility === "public" ? "عامة" : "خاصة"} · رمز الدعوة <span class="mono">${esc(g.code)}</span> · أُنشئت ${esc(fmtDate(ms2iso(g.createdAt)))}</p>
+    <div class="card"><h2>الإعدادات</h2>
+      <label class="field"><span>الاسم</span><input id="g-name" value="${esc(g.name)}"></label>
+      <label class="field"><span>الوصف</span><textarea id="g-about">${esc(g.about || "")}</textarea></label>
+      <label class="field"><span>من يستطيع الانضمام</span><select id="g-vis"><option value="private" ${g.visibility !== "public" ? "selected" : ""}>برمز الدعوة فقط</option><option value="public" ${g.visibility === "public" ? "selected" : ""}>أي قارئ (عامة)</option></select></label>
+      <div class="split2"><label class="field"><span>نقطة لكل كم دقيقة</span><input id="g-mpp" inputmode="numeric" value="${esc(g.rules.minutesPerPoint)}"></label>
+      <label class="field"><span>نقاط إتمام الكتاب</span><input id="g-bonus" inputmode="numeric" value="${esc(g.rules.finishBonus)}"></label></div>
+      <div class="row-actions"><button class="btn-a" id="g-save">حفظ</button><button class="chip-btn" id="g-code">رمز دعوة جديد</button><button class="btn-d" id="g-del">حذف المجموعة</button></div>
     </div>
-    <div class="card"><h2>القرّاء</h2><div class="table-wrap"><table>
-      <thead><tr><th>القارئ</th><th>الساعات</th><th>أيام</th><th>آخر قراءة</th><th></th></tr></thead><tbody>
-      ${members.map((x) => { const s = byMember[x.id] || { minutes: 0, days: 0, last: null }; return `<tr>
-        <td>${esc(x.name)}</td><td class="num">${hours(s.minutes)}</td><td class="num">${s.days}</td><td>${esc(rel(s.last))}</td>
-        <td>${x.active === false ? '<span class="pill dim">غادر</span>' : g.roles[x.id] ? `<span class="pill dim">${roleName[g.roles[x.id]] || ""}</span>` : '<span class="pill dim">دون تطبيق</span>'}</td></tr>`; }).join("") || '<tr><td colspan="5" class="empty">لا قرّاء.</td></tr>'}
+    <div class="card"><h2>الأعضاء (${members.length})</h2><div class="table-wrap"><table>
+      <thead><tr><th>العضو</th><th>الساعات</th><th>أيام</th><th>آخر قراءة</th><th>الدور</th><th></th></tr></thead><tbody>
+      ${members.map((m) => { const s = byMember[m.id] || { minutes: 0, days: 0, last: null }; const r = g.roles[m.id]; return `<tr>
+        <td>${esc(m.name)}${m.linkedUid ? "" : ' <span class="pill dim">دون تطبيق</span>'}</td><td class="num">${hours(s.minutes)}</td><td class="num">${s.days}</td><td>${esc(rel(s.last))}</td>
+        <td>${r ? `<select class="mini" data-role="${esc(m.id)}">${["owner", "admin", "member"].map((x) => `<option value="${x}" ${x === r ? "selected" : ""}>${roleName[x]}</option>`).join("")}</select>` : "—"}</td>
+        <td>${r === "owner" ? "" : `<button class="chip-btn" data-kick="${esc(m.id)}">إخراج</button>`}</td></tr>`; }).join("") || '<tr><td colspan="6" class="empty">لا أعضاء.</td></tr>'}
     </tbody></table></div></div>
-    <div class="card"><h2>الكتب</h2><div class="table-wrap"><table>
-      <thead><tr><th>الكتاب</th><th>الفترة</th><th>الحالة</th><th>أتمّوه</th></tr></thead><tbody>
-      ${chs.map((c) => { const st = today < c.start ? "قادم" : today > c.end ? "منتهٍ" : "جارٍ"; const n = g.finishes.filter((f) => f.challengeId === c.id).length; return `<tr>
-        <td><b>${esc(c.title)}</b>${c.author ? `<div class="muted" style="font-size:.8rem">${esc(c.author)}</div>` : ""}</td>
-        <td>${esc(fmtDate(c.start))} – ${esc(fmtDate(c.end))}</td><td><span class="pill${st === "جارٍ" ? " ok" : " dim"}">${st}</span></td><td class="num">${n}</td></tr>`; }).join("") || '<tr><td colspan="4" class="empty">لا كتب.</td></tr>'}
-    </tbody></table></div></div>
-    <div class="card"><h2>آخر التسجيلات</h2><div class="table-wrap"><table>
-      <thead><tr><th>اليوم</th><th>القارئ</th><th>الدقائق</th></tr></thead><tbody>
-      ${recent.map((e) => `<tr><td>${esc(fmtDate(e.date))}</td><td>${esc(nameOf[e.memberId] || "—")}</td><td class="num">${e.minutes || 0} د</td></tr>`).join("") || '<tr><td colspan="3" class="empty">لا تسجيلات.</td></tr>'}
-    </tbody></table></div></div>`;
-  show("scrim"); show("drawer");
-  $("d-close").onclick = closeDetail;
-  $("d-close").focus();
+    <div class="card"><h2>الكتب</h2><div class="table-wrap"><table><thead><tr><th>الكتاب</th><th>الفترة</th><th>الحالة</th><th>أتمّوه</th><th></th></tr></thead><tbody>
+      ${chs.map((c) => { const st = today < c.start ? "قادم" : today > c.end ? "منتهٍ" : "جارٍ"; return `<tr><td><b>«${esc(c.title)}»</b><div class="muted small">${esc(c.author || "")}</div></td>
+        <td>${esc(fmtDate(c.start))} – ${esc(fmtDate(c.end))}</td><td><span class="pill${st === "جارٍ" ? " ok" : " dim"}">${st}</span></td>
+        <td class="num">${g.finishes.filter((f) => f.challengeId === c.id).length}</td><td><button class="chip-btn" data-delc="${esc(c.id)}">حذف</button></td></tr>`; }).join("") || '<tr><td colspan="5" class="empty">لا كتب.</td></tr>'}
+    </tbody></table></div><p class="small muted">لإضافة كتاب أو تعديل تواريخه افتح المجموعة من التطبيق (لوحة الإدارة ← المجموعات).</p></div>`);
+
+  $("g-save").onclick = () => {
+    const mpp = parseInt(val("g-mpp")), bonus = parseInt(val("g-bonus"));
+    if (!val("g-name") || !(mpp >= 1 && mpp <= 600) || !(bonus >= 0 && bonus <= 10000)) return toast("تحقق من الاسم والقيم: النقطة 1–600 دقيقة، والإتمام 0–10000.", true);
+    act("عدّل مجموعة", g.name, () => updateDoc(doc(db, "groups", g.id), { name: val("g-name"), about: val("g-about"), visibility: $("g-vis").value, rules: { minutesPerPoint: mpp, finishBonus: bonus } }), "حُفظت المجموعة.");
+  };
+  $("g-code").onclick = () => act("جدّد رمز دعوة", g.name, async () => {
+    const code = Array.from(crypto.getRandomValues(new Uint8Array(6)), (b) => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[b % 32]).join("");
+    const b = writeBatch(db);
+    b.set(doc(db, "invites", code), { groupId: g.id, createdBy: auth.currentUser.uid });
+    b.update(doc(db, "groups", g.id), { inviteCode: code });
+    if (g.code) b.delete(doc(db, "invites", g.code));
+    await b.commit();
+  }, "صار للمجموعة رمز جديد.");
+  $("g-del").onclick = () => confirm(`حذف «${g.name}» نهائياً بكل بياناتها؟ لا يمكن التراجع.`) && act("حذف مجموعة", g.name, async () => {
+    const ops = [];
+    for (const sub of ["members", "challenges", "entries", "finishes"]) for (const d of (await getDocs(collection(db, "groups", g.id, sub))).docs) ops.push((b) => b.delete(d.ref));
+    if (g.code) ops.push((b) => b.delete(doc(db, "invites", g.code)));
+    for (const uid of Object.keys(g.roles)) if (data.byUid[uid]) ops.push((b) => b.update(doc(db, "users", uid), { groups: arrayRemove(g.id) }));
+    await commitAll(ops);
+    await deleteDoc(doc(db, "groups", g.id));
+  }, "حُذفت المجموعة.");
+  for (const sel of document.querySelectorAll("[data-role]")) sel.onchange = () => {
+    const uid = sel.dataset.role, role = sel.value;
+    const upd = { [`roles.${uid}`]: role };
+    // One owner only: handing over makes the old owner an admin.
+    if (role === "owner") for (const [k, v] of Object.entries(g.roles)) if (v === "owner" && k !== uid) upd[`roles.${k}`] = "admin";
+    act("غيّر دوراً", `${g.name}: ${g.members.find((m) => m.id === uid)?.name || uid} ← ${roleName[role]}`, () => updateDoc(doc(db, "groups", g.id), upd), "تغيّر الدور.");
+  };
+  for (const btn of document.querySelectorAll("[data-kick]")) btn.onclick = () => {
+    const mid = btn.dataset.kick, m = g.members.find((x) => x.id === mid);
+    if (!confirm(`إخراج ${m?.name} من «${g.name}»؟`)) return;
+    act("أخرج عضواً", `${g.name}: ${m?.name}`, async () => {
+      const b = writeBatch(db);
+      if (g.roles[mid]) b.update(doc(db, "groups", g.id), { [`roles.${mid}`]: deleteField() });
+      b.update(doc(db, "groups", g.id, "members", mid), { active: false });
+      if (data.byUid[mid]) b.update(doc(db, "users", mid), { groups: arrayRemove(g.id) });
+      await b.commit();
+    }, "أُخرج العضو.");
+  };
+  for (const btn of document.querySelectorAll("[data-delc]")) btn.onclick = () => {
+    const c = g.challenges.find((x) => x.id === btn.dataset.delc);
+    if (!confirm(`حذف «${c.title}» من كتب المجموعة؟ يُحذف من أتمّه، وتبقى الدقائق.`)) return;
+    act("حذف كتاباً من مجموعة", `${g.name}: «${c.title}»`, async () => {
+      const b = writeBatch(db);
+      for (const f of g.finishes.filter((f) => f.challengeId === c.id)) b.delete(f.ref);
+      b.delete(c.ref);
+      if (g.current && g.current.title === c.title) b.update(doc(db, "groups", g.id), { current: null });
+      await b.commit();
+    }, "حُذف الكتاب من المجموعة.");
+  };
 }
-function closeDetail() { show("scrim", false); show("drawer", false); }
-$("scrim").onclick = closeDetail;
-document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDetail(); });
+
+function openUser(uid) {
+  const u = data.users.find((x) => x.uid === uid);
+  const read = u.days.filter((d) => d.minutes > 0).sort((a, b) => b.date.localeCompare(a.date));
+  const myGroups = (u.groups || []).map((gid) => data.groups.find((g) => g.id === gid)).filter(Boolean);
+  const owns = myGroups.filter((g) => g.roles[uid] === "owner");
+  openDrawer(`
+    <h2 class="dn">${esc(u.name || "دون اسم")}</h2>
+    <p class="muted small">${esc(u.email || "دون حساب Google")} · أُنشئ ${esc(fmtDate(ms2iso(u.createdAt)))} · آخر دخول ${esc(rel(ms2iso(u.lastSeen)))}</p>
+    ${u.banned ? '<p><span class="pill" style="color:var(--bad)">موقوف</span></p>' : ""}
+    <div class="grid2">
+      <div class="kpi"><b class="mono">${hours(u.minutes)}</b><span>ساعة</span></div>
+      <div class="kpi"><b class="mono">${read.length}</b><span>يوم قراءة</span></div>
+      <div class="kpi"><b class="mono">${myGroups.length}</b><span>مجموعة</span></div>
+      <div class="kpi"><b class="mono">${u.goal ?? 30}</b><span>دقيقة هدفه اليومي</span></div>
+    </div>
+    <p class="small">المجموعات: ${myGroups.map((g) => `${esc(g.name)}${g.roles[uid] ? ` (${{ owner: "المالك", admin: "مشرف", member: "عضو" }[g.roles[uid]]})` : ""}`).join("، ") || "لا شيء"}</p>
+    <div class="card"><h2>تغيير الاسم</h2><label class="field"><input id="u-name" value="${esc(u.name || "")}"></label><div class="row-actions"><button class="btn-a" id="u-save">حفظ الاسم</button></div></div>
+    <div class="row-actions">
+      <button class="${u.banned ? "btn-a" : "btn-d"}" id="u-ban">${u.banned ? "إعادة تفعيل الحساب" : "إيقاف الحساب"}</button>
+      <button class="btn-d" id="u-del">حذف كل بياناته</button>
+    </div>
+    <p class="small muted">الإيقاف يمنعه من قراءة أو كتابة أي شيء حتى تعيد تفعيله. حذف حساب الدخول نفسه من Google يتم من Firebase ← Authentication.</p>
+    <div class="card"><h2>آخر قراءاته</h2><div class="table-wrap"><table><thead><tr><th>اليوم</th><th>الدقائق</th></tr></thead><tbody>
+      ${read.slice(0, 20).map((d) => `<tr><td>${esc(fmtDate(d.date))}</td><td class="num">${d.minutes}</td></tr>`).join("") || '<tr><td colspan="2" class="empty">لا قراءات.</td></tr>'}
+    </tbody></table></div></div>`);
+  $("u-save").onclick = () => {
+    const name = val("u-name");
+    if (!name || name.length > 40) return toast("الاسم بين 1 و40 حرفاً.", true);
+    act("غيّر اسم حساب", `${u.name || uid} ← ${name}`, async () => {
+      const b = writeBatch(db);
+      b.update(doc(db, "users", uid), { name });
+      for (const g of myGroups) b.set(doc(db, "groups", g.id, "members", uid), { name }, { merge: true });
+      await b.commit();
+    }, "حُفظ الاسم.");
+  };
+  $("u-ban").onclick = () => {
+    if (uid === auth.currentUser.uid) return toast("لا يمكنك إيقاف حسابك.", true);
+    if (u.banned) act("أعاد تفعيل حساب", u.name || u.email || uid, () => deleteDoc(doc(db, "banned", uid)), "أُعيد تفعيل الحساب.");
+    else if (confirm(`إيقاف حساب ${u.name || u.email || "هذا القارئ"}؟`)) act("أوقف حساباً", u.name || u.email || uid, () => setDoc(doc(db, "banned", uid), { at: Date.now() }), "أُوقف الحساب.");
+  };
+  $("u-del").onclick = () => {
+    if (uid === auth.currentUser.uid) return toast("لا يمكنك حذف بيانات حسابك من هنا.", true);
+    if (owns.length) return toast(`يملك «${owns[0].name}». انقل ملكيتها أو احذفها أولاً.`, true);
+    if (!confirm("حذف سجلّه وملفه ومكانه في كل المجموعات؟ لا يمكن التراجع.")) return;
+    act("حذف بيانات حساب", u.name || u.email || uid, async () => {
+      const ops = u.days.map((d) => (b) => b.delete(d.ref));
+      for (const g of myGroups) {
+        ops.push((b) => b.update(doc(db, "groups", g.id), { [`roles.${uid}`]: deleteField() }));
+        ops.push((b) => b.delete(doc(db, "groups", g.id, "members", uid)));
+        for (const e of g.entries.filter((e) => e.memberId === uid)) ops.push((b) => b.delete(e.ref));
+        for (const f of g.finishes.filter((f) => f.memberId === uid)) ops.push((b) => b.delete(f.ref));
+      }
+      ops.push((b) => b.delete(doc(db, "users", uid)));
+      await commitAll(ops);
+    }, "حُذفت بياناته.");
+  };
+}
+
+function openNews(id) {
+  const a = id ? data.news.find((x) => x.id === id) : null;
+  openDrawer(`
+    <h2 class="dn">${a ? "تعديل الإعلان" : "إعلان جديد"}</h2>
+    <label class="field"><span>العنوان</span><input id="a-title" maxlength="80" value="${esc(a?.title)}"></label>
+    <label class="field"><span>النص</span><textarea id="a-body" maxlength="400">${esc(a?.body)}</textarea></label>
+    <label class="field"><span>الحالة</span><select id="a-active"><option value="1" ${!a || a.active ? "selected" : ""}>منشور</option><option value="0" ${a && !a.active ? "selected" : ""}>مخفي</option></select></label>
+    <div class="row-actions"><button class="btn-a" id="a-save">حفظ</button>${a ? '<button class="btn-d" id="a-del">حذف</button>' : ""}</div>`);
+  $("a-save").onclick = () => {
+    if (!val("a-title") && !val("a-body")) return toast("اكتب نص الإعلان.", true);
+    const nid = a?.id || newId("a_");
+    act(a ? "عدّل إعلاناً" : "نشر إعلاناً", val("a-title") || val("a-body").slice(0, 40),
+      () => setDoc(doc(db, "announcements", nid), { title: val("a-title"), body: val("a-body"), active: $("a-active").value === "1", createdAt: a?.createdAt || Date.now() }), "حُفظ الإعلان.");
+  };
+  if (a) $("a-del").onclick = () => confirm("حذف الإعلان؟") && act("حذف إعلاناً", a.title, () => deleteDoc(doc(db, "announcements", a.id)), "حُذف الإعلان.");
+}
 
 // ---- CSV ----
-$("btn-csv").onclick = () => {
-  if (!data) return;
+function exportCsv() {
   const cell = (v) => { const s = String(v ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   const rows = [["group", "visibility", "invite_code", "owners", "readers", "books", "hours", "hours_last_7_days", "last_reading", "created"]];
   for (const g of data.groups) rows.push([g.name, g.visibility, g.code, g.owners.join(" / "), g.members.filter((x) => x.active !== false).length, g.challenges.length, hours(g.minutes), hours(g.minutes7), g.last || "", ms2iso(g.createdAt) || ""]);
   rows.push([]);
-  rows.push(["name", "account", "type", "groups", "hours", "created", "last_seen"]);
-  for (const u of data.users) rows.push([u.name || "", u.email || "", u.guest ? "guest" : "google", (u.groups || []).length, hours(u.minutes), ms2iso(u.createdAt) || "", ms2iso(u.lastSeen) || ""]);
+  rows.push(["name", "account", "type", "groups", "hours", "created", "last_seen", "suspended"]);
+  for (const u of data.users) rows.push([u.name || "", u.email || "", u.guest ? "guest" : "google", (u.groups || []).length, hours(u.minutes), ms2iso(u.createdAt) || "", ms2iso(u.lastSeen) || "", u.banned ? "yes" : ""]);
   const blob = new Blob(["﻿" + rows.map((r) => r.map(cell).join(",")).join("\n")], { type: "text/csv;charset=utf-8" });
   const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: `reading-marathon-${iso(new Date())}.csv` });
   a.click();
   URL.revokeObjectURL(a.href);
-};
+}
 </script>
 </body>
 </html>
