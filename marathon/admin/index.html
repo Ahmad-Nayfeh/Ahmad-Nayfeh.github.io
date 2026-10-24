@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>لوحة إدارة ماراثون القراءة</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" href="../img/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0B1222">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+  .t-marathon { --bg: #0B1222; --panel: #111A2E; --panel2: #141E34; --ink: #EEF1F7; --muted: #9AA6BD; --line: rgba(255,255,255,.12);
+    --accent: #F2B84B; --accent-soft: rgba(242,184,75,.14); --on-accent: #14213D; --link: #F2B84B; --ok: #6CCB92; --bad: #F2B8B5;
+    --btn-bg: linear-gradient(135deg, #F2B84B, #E0A23A); --glow: rgba(242,184,75,.45); }
+  body { min-height: 100vh; font-size: 15px; line-height: 1.6;
+    background: radial-gradient(1000px 520px at 50% -12%, #22386A, transparent 65%), var(--bg); }
+  .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; direction: ltr; unicode-bidi: embed; }
+  [hidden] { display: none !important; }
+  .top { padding: 16px 0; border-bottom: 1px solid var(--line); margin-bottom: 24px; }
+  .brand img { width: 32px; height: 32px; }
+  .who { display: flex; align-items: center; gap: 10px; font-size: .9rem; color: var(--muted); }
+  .chip-btn { background: transparent; border: 1px solid var(--line); color: var(--ink); border-radius: 10px; padding: 6px 12px; font: inherit; font-size: .85rem; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+  .chip-btn:hover { border-color: var(--accent); }
+  .chip-btn svg { width: 16px; height: 16px; }
+
+  /* Sign-in */
+  .gate { max-width: 28rem; margin: 9vh auto 0; text-align: center; }
+  .gate img { width: 76px; height: 76px; margin: 0 auto 14px; }
+  .gate h1 { font-family: "Amiri", serif; font-size: 2.2rem; }
+  .gbtn { display: inline-flex; align-items: center; justify-content: center; gap: 12px; width: 100%; min-height: 54px; border-radius: 16px;
+    border: 0; background: #fff; color: #1F1F1F; font: inherit; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 18px; }
+  .gbtn:disabled { opacity: .6; cursor: progress; }
+  .note { font-size: .88rem; color: var(--muted); margin-top: 14px; }
+  .err { color: var(--bad); }
+
+  /* Dashboard */
+  h1.title { font-size: 1.6rem; margin: 0; }
+  .sub { color: var(--muted); font-size: .9rem; margin: 2px 0 18px; }
+  .kpis { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+  @media (max-width: 980px) { .kpis { grid-template-columns: repeat(3, 1fr); } }
+  @media (max-width: 560px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+  .kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px 16px; }
+  .kpi b { display: block; font-size: 1.7rem; line-height: 1.2; }
+  .kpi span { color: var(--muted); font-size: .82rem; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 18px; margin-top: 16px; }
+  .card h2 { font-size: 1.05rem; margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
+  .card h2::before { content: ""; width: 4px; height: 16px; border-radius: 2px; background: var(--accent); }
+  .card h2 .grow { flex: 1; }
+  .card h2 small { color: var(--muted); font-weight: 400; font-size: .82rem; }
+  .chart { width: 100%; height: 160px; }
+  .tools { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  .tools input { flex: 1; min-width: 200px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; color: var(--ink);
+    padding: 10px 14px; font: inherit; }
+  .tools input:focus { outline: none; border-color: var(--accent); }
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th { text-align: start; color: var(--muted); font-weight: 500; font-size: .78rem; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  td { padding: 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  tr.row { cursor: pointer; }
+  tr.row:hover td { background: var(--accent-soft); }
+  td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .pill { display: inline-block; font-size: .72rem; padding: 2px 8px; border-radius: 99px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+  .pill.dim { background: rgba(255,255,255,.07); color: var(--muted); }
+  .pill.ok { background: rgba(108,203,146,.15); color: var(--ok); }
+  .empty { color: var(--muted); padding: 18px 4px; text-align: center; }
+  .more { margin-top: 10px; }
+
+  /* Detail drawer */
+  .scrim { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 20; }
+  .drawer { position: fixed; inset-block: 0; inset-inline-end: 0; width: min(720px, 100%); background: var(--bg); border-inline-start: 1px solid var(--line);
+    z-index: 21; overflow-y: auto; padding: 20px; }
+  .drawer h2.dn { font-family: "Amiri", serif; font-size: 1.9rem; margin: 6px 0 2px; }
+  .grid2 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 14px 0 4px; }
+  @media (max-width: 560px) { .grid2 { grid-template-columns: repeat(2, 1fr); } }
+  .loading { display: flex; gap: 10px; align-items: center; justify-content: center; padding: 60px 0; color: var(--muted); }
+  .spin { width: 22px; height: 22px; border: 2.5px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: s 1s linear infinite; }
+  @keyframes s { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body class="t-marathon">
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="../"><img src="../img/icon.svg" alt=""> ماراثون القراءة · الإدارة</a>
+    <div class="who" id="who" hidden>
+      <span id="who-email" class="mono"></span>
+      <button class="chip-btn" id="btn-refresh" title="تحديث">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg>تحديث</button>
+      <button class="chip-btn" id="btn-out">خروج</button>
+    </div>
+  </header>
+
+  <!-- Sign-in -->
+  <section class="gate" id="gate" hidden>
+    <img src="../img/icon.svg" alt="">
+    <h1>لوحة إدارة المنصة</h1>
+    <p class="muted">لمدير منصة ماراثون القراءة فقط. ادخل بحساب Google المخصص للإدارة.</p>
+    <button class="gbtn" id="btn-google">
+      <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2c-2 1.5-4.5 2.4-7.2 2.4-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>
+      الدخول بحساب Google
+    </button>
+    <p class="note" id="gate-msg"></p>
+  </section>
+
+  <!-- Loading -->
+  <div class="loading" id="loading"><span class="spin"></span> جارٍ التحميل…</div>
+
+  <!-- Dashboard -->
+  <main id="dash" hidden>
+    <h1 class="title">لوحة إدارة المنصة</h1>
+    <p class="sub" id="stamp"></p>
+    <div class="kpis" id="kpis"></div>
+
+    <div class="card">
+      <h2><span class="grow">القراءة على المنصة</span><small>دقائق القراءة يومياً · آخر 30 يوماً</small></h2>
+      <svg class="chart" id="chart" viewBox="0 0 600 160" preserveAspectRatio="none" role="img" aria-label="دقائق القراءة يومياً"></svg>
+    </div>
+
+    <div class="tools">
+      <input id="q" type="search" placeholder="ابحث باسم ماراثون أو بريد أو رمز دعوة" autocomplete="off">
+      <button class="chip-btn" id="btn-csv">تصدير CSV</button>
+    </div>
+
+    <div class="card">
+      <h2><span class="grow">الماراثونات</span><small id="m-count"></small></h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>الماراثون</th><th>المشرف</th><th>القرّاء</th><th>التحديات</th><th>الساعات</th><th>آخر 7 أيام</th><th>آخر قراءة</th><th>الرمز</th></tr></thead>
+        <tbody id="m-body"></tbody>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h2><span class="grow">الحسابات</span><small id="u-count"></small></h2>
+      <div class="table-wrap"><table>
+        <thead><tr><th>الحساب</th><th>النوع</th><th>ماراثونات</th><th>أُنشئ</th><th>آخر دخول</th></tr></thead>
+        <tbody id="u-body"></tbody>
+      </table></div>
+      <button class="chip-btn more" id="u-more" hidden>عرض الجميع</button>
+    </div>
+    <p class="note" style="margin:24px 0 48px">البيانات تُقرأ مباشرة من Firestore بصلاحية مدير المنصة. قواعد الأمان تمنع أي حساب آخر من قراءتها.</p>
+  </main>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" hidden aria-modal="true" role="dialog"></aside>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut,
+  connectAuthEmulator, signInWithCredential } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, collection, collectionGroup, getDocs, connectFirestoreEmulator }
+  from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const ADMIN = "readingmarathon.admin@gmail.com";
+const app = initializeApp({
+  apiKey: "AIzaSyDUyZGapP25-238T8XPYwAIIUK5UkmjsSQ",
+  authDomain: "reading-marathon-38b4f.firebaseapp.com",
+  projectId: "reading-marathon-38b4f",
+  storageBucket: "reading-marathon-38b4f.firebasestorage.app",
+  messagingSenderId: "957581663524",
+  appId: "1:957581663524:web:9a7aa0d42bfaeb9d9667b1",
+});
+const auth = getAuth(app);
+const db = getFirestore(app);
+// Local testing only: on localhost with ?emulator, talk to the Firebase emulators instead of production.
+if (location.hostname === "localhost" && new URLSearchParams(location.search).has("emulator")) {
+  connectAuthEmulator(auth, "http://127.0.0.1:9099", { disableWarnings: true });
+  connectFirestoreEmulator(db, "127.0.0.1", 8085);
+  window.__signInAs = (email, sub) => signInWithCredential(auth,
+    GoogleAuthProvider.credential(JSON.stringify({ sub, email, email_verified: true })));
+}
+const $ = (id) => document.getElementById(id);
+const show = (id, on = true) => { $(id).hidden = !on; };
+
+// Everything users type (names, titles) is untrusted: always escape before it touches HTML.
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const hours = (m) => (Math.round((m / 60) * 10) / 10).toLocaleString("en-US");
+const months = ["يناير","فبراير","مارس","أبريل","مايو","يونيو","يوليو","أغسطس","سبتمبر","أكتوبر","نوفمبر","ديسمبر"];
+const iso = (d) => d.toISOString().slice(0, 10);
+const fmtDate = (s) => { if (!s) return "—"; const [y, m, d] = s.split("-").map(Number); return `${d} ${months[m - 1]} ${y}`; };
+const ms2iso = (ms) => (ms ? iso(new Date(ms)) : null);
+function rel(s) {
+  if (!s) return "—";
+  const days = Math.round((new Date(iso(new Date())) - new Date(s)) / 864e5);
+  if (days <= 0) return "اليوم";
+  if (days === 1) return "أمس";
+  if (days < 30) return `قبل ${days} يوماً`;
+  return fmtDate(s);
+}
+const parentId = (path) => path.split("/")[1] || "";
+
+let data = null;
+let showAllUsers = false;
+
+// ---- Auth ----
+const provider = new GoogleAuthProvider();
+provider.setCustomParameters({ prompt: "select_account", login_hint: ADMIN });
+
+$("btn-google").onclick = async () => {
+  $("btn-google").disabled = true;
+  $("gate-msg").textContent = "";
+  try {
+    await signInWithPopup(auth, provider);
+  } catch (e) {
+    if (e.code === "auth/popup-blocked" || e.code === "auth/operation-not-supported-in-this-environment") {
+      await signInWithRedirect(auth, provider);
+      return;
+    }
+    if (e.code !== "auth/popup-closed-by-user" && e.code !== "auth/cancelled-popup-request") {
+      $("gate-msg").innerHTML = `<span class="err">تعذّر الدخول: ${esc(e.code || e.message)}</span>`;
+    }
+  } finally {
+    $("btn-google").disabled = false;
+  }
+};
+getRedirectResult(auth).catch((e) => { $("gate-msg").innerHTML = `<span class="err">تعذّر الدخول: ${esc(e.code)}</span>`; });
+$("btn-out").onclick = () => signOut(auth);
+$("btn-refresh").onclick = () => load();
+
+onAuthStateChanged(auth, (user) => {
+  show("loading", false);
+  if (!user) {
+    show("gate"); show("dash", false); show("who", false);
+    return;
+  }
+  const email = (user.email || "").toLowerCase();
+  $("who-email").textContent = email || "ضيف";
+  show("who");
+  if (email !== ADMIN || !user.emailVerified) {
+    show("gate"); show("dash", false);
+    $("gate-msg").innerHTML = `<span class="err">الحساب ${esc(email || "الحالي")} ليس حساب مدير المنصة.</span> اخرج وادخل بحساب ${esc(ADMIN)}.`;
+    return;
+  }
+  show("gate", false);
+  load();
+});
+
+// ---- Data ----
+async function load() {
+  show("dash", false); show("loading");
+  try {
+    const [ms, us, mem, ent, ch, ach] = await Promise.all([
+      getDocs(collection(db, "marathons")), getDocs(collection(db, "users")),
+      getDocs(collectionGroup(db, "members")), getDocs(collectionGroup(db, "entries")),
+      getDocs(collectionGroup(db, "challenges")), getDocs(collectionGroup(db, "achievements")),
+    ]);
+    const users = us.docs.map((d) => ({ uid: d.id, ...d.data() }));
+    const byUid = Object.fromEntries(users.map((u) => [u.uid, u]));
+    const group = (snap) => {
+      const out = {};
+      for (const d of snap.docs) (out[parentId(d.ref.path)] ||= []).push({ id: d.id, ...d.data() });
+      return out;
+    };
+    const members = group(mem), entries = group(ent), challenges = group(ch), achievements = group(ach);
+    const week = iso(new Date(Date.now() - 6 * 864e5));
+    const mins = (e) => (e.commonMinutes || 0) + (e.otherMinutes || 0);
+    const marathons = ms.docs.map((d) => {
+      const m = d.data();
+      const roles = m.roles || {};
+      const es = entries[d.id] || [];
+      const reading = es.filter((e) => mins(e) > 0);
+      return {
+        id: d.id, name: m.name || "—", code: m.inviteCode || "", createdAt: m.createdAt || 0, roles,
+        organizers: Object.keys(roles).filter((u) => roles[u] === "organizer").map((u) => byUid[u]?.email || byUid[u]?.name || "ضيف"),
+        members: members[d.id] || [], entries: es, challenges: challenges[d.id] || [], achievements: achievements[d.id] || [],
+        minutes: es.reduce((a, e) => a + mins(e), 0),
+        minutes7: es.filter((e) => e.date >= week).reduce((a, e) => a + mins(e), 0),
+        last: reading.map((e) => e.date).sort().pop() || null,
+      };
+    }).sort((a, b) => (b.last || "").localeCompare(a.last || "") || b.createdAt - a.createdAt);
+    const allEntries = ent.docs.map((d) => d.data());
+    data = { marathons, users: users.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0)), allEntries, ach: ach.docs.map((d) => d.data()), mins, week };
+    render();
+    $("stamp").textContent = `آخر تحديث: ${new Date().toLocaleTimeString("ar-SA-u-nu-latn", { hour: "2-digit", minute: "2-digit" })}`;
+    show("dash");
+  } catch (e) {
+    $("stamp").innerHTML = `<span class="err">تعذّرت قراءة البيانات (${esc(e.code || e.message)}). تأكد من نشر قواعد الأمان.</span>`;
+    show("dash");
+  } finally {
+    show("loading", false);
+  }
+}
+
+function render() {
+  const { marathons, users, allEntries, ach, mins, week } = data;
+  const guests = users.filter((u) => u.guest).length;
+  const totalMembers = marathons.reduce((a, m) => a + m.members.length, 0);
+  const books = ach.filter((a) => a.type === "FINISHED_COMMON_BOOK" || a.type === "FINISHED_OTHER_BOOK").length;
+  const total = allEntries.reduce((a, e) => a + mins(e), 0);
+  const last7 = allEntries.filter((e) => e.date >= week).reduce((a, e) => a + mins(e), 0);
+  const active = marathons.filter((m) => m.minutes7 > 0).length;
+  const k = [
+    [marathons.length, `ماراثون · ${active} نشط هذا الأسبوع`], [users.length, `حساب · ${guests} ضيف`],
+    [totalMembers, "قارئ في كل الماراثونات"], [books, "كتاباً أُنهي"],
+    [hours(total), "ساعة قراءة"], [hours(last7), "ساعة في آخر 7 أيام"],
+  ];
+  $("kpis").innerHTML = k.map(([v, l]) => `<div class="kpi"><b class="mono">${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
+
+  // 30-day chart
+  const days = [...Array(30)].map((_, i) => iso(new Date(Date.now() - (29 - i) * 864e5)));
+  const per = Object.fromEntries(days.map((d) => [d, 0]));
+  for (const e of allEntries) if (e.date in per) per[e.date] += mins(e);
+  const vals = days.map((d) => per[d]);
+  const max = Math.max(1, ...vals);
+  const bw = 600 / 30;
+  $("chart").innerHTML = vals.map((v, i) => {
+    const h = Math.max(v > 0 ? 3 : 1, (v / max) * 140);
+    // RTL page: newest day on the left, like the app.
+    const x = (29 - i) * bw;
+    return `<rect x="${x + 3}" y="${155 - h}" width="${bw - 6}" height="${h}" rx="3" fill="${i === 29 ? "#F2B84B" : "#3C4A6B"}"><title>${fmtDate(days[i])}: ${v} دقيقة</title></rect>`;
+  }).join("");
+
+  const q = $("q").value.trim().toLowerCase();
+  const ms = marathons.filter((m) => !q || m.name.toLowerCase().includes(q) || m.code.toLowerCase() === q || m.organizers.some((o) => o.toLowerCase().includes(q)));
+  $("m-count").textContent = `${ms.length} من ${marathons.length}`;
+  $("m-body").innerHTML = ms.length ? ms.map((m) => {
+    const act = m.members.filter((x) => x.active !== false).length;
+    return `<tr class="row" data-id="${esc(m.id)}">
+      <td><b>${esc(m.name)}</b>${m.minutes7 > 0 ? ' <span class="pill ok">نشط</span>' : ""}</td>
+      <td class="mono" style="font-size:.8rem">${esc(m.organizers.join("، ") || "—")}</td>
+      <td class="num">${act} <span class="muted">/ ${m.members.length}</span></td>
+      <td class="num">${m.challenges.length}</td>
+      <td class="num">${hours(m.minutes)}</td>
+      <td class="num">${hours(m.minutes7)}</td>
+      <td>${esc(rel(m.last))}</td>
+      <td class="mono">${esc(m.code)}</td></tr>`;
+  }).join("") : `<tr><td colspan="8" class="empty">${q ? "لا نتائج لهذا البحث." : "لم يُنشأ أي ماراثون بعد."}</td></tr>`;
+  for (const tr of document.querySelectorAll("tr.row")) tr.onclick = () => openDetail(tr.dataset.id);
+
+  const us = users.filter((u) => !q || (u.email || "").toLowerCase().includes(q) || (u.name || "").toLowerCase().includes(q));
+  const shown = showAllUsers || q ? us : us.slice(0, 20);
+  $("u-count").textContent = `${us.length}`;
+  $("u-body").innerHTML = shown.length ? shown.map((u) => `<tr>
+      <td>${u.email ? `<span class="mono">${esc(u.email)}</span>` : "ضيف"}${u.name ? `<div class="muted" style="font-size:.8rem">${esc(u.name)}</div>` : ""}</td>
+      <td>${u.guest ? '<span class="pill dim">ضيف</span>' : '<span class="pill">Google</span>'}</td>
+      <td class="num">${(u.marathons || []).length}</td>
+      <td>${esc(fmtDate(ms2iso(u.createdAt)))}</td>
+      <td>${esc(rel(ms2iso(u.lastSeen)))}</td></tr>`).join("") : `<tr><td colspan="5" class="empty">لا حسابات.</td></tr>`;
+  show("u-more", !showAllUsers && !q && us.length > 20);
+}
+
+$("q").addEventListener("input", () => data && render());
+$("u-more").onclick = () => { showAllUsers = true; render(); };
+
+// ---- Detail ----
+function openDetail(id) {
+  const m = data.marathons.find((x) => x.id === id);
+  if (!m) return;
+  const mins = data.mins;
+  const byMember = {};
+  for (const e of m.entries) {
+    const s = (byMember[e.memberId] ||= { minutes: 0, days: 0, last: null });
+    s.minutes += mins(e);
+    if (mins(e) > 0) { s.days++; if (!s.last || e.date > s.last) s.last = e.date; }
+  }
+  const finished = new Set(m.achievements.filter((a) => a.type === "FINISHED_COMMON_BOOK").map((a) => a.memberId + "|" + a.challengeId));
+  const members = [...m.members].sort((a, b) => (byMember[b.id]?.minutes || 0) - (byMember[a.id]?.minutes || 0));
+  const chs = [...m.challenges].sort((a, b) => (b.start || "").localeCompare(a.start || ""));
+  const today = iso(new Date());
+  const recent = [...m.entries].filter((e) => mins(e) > 0).sort((a, b) => b.date.localeCompare(a.date) || (b.updatedAt || 0) - (a.updatedAt || 0)).slice(0, 15);
+  const nameOf = Object.fromEntries(m.members.map((x) => [x.id, x.name]));
+  $("drawer").innerHTML = `
+    <button class="chip-btn" id="d-close">إغلاق</button>
+    <h2 class="dn">${esc(m.name)}</h2>
+    <div class="muted" style="font-size:.85rem">رمز الدعوة <span class="mono">${esc(m.code)}</span> · أُنشئ ${esc(fmtDate(ms2iso(m.createdAt)))} · ${Object.keys(m.roles).length} حساب</div>
+    <div class="grid2">
+      <div class="kpi"><b class="mono">${m.members.length}</b><span>قارئ</span></div>
+      <div class="kpi"><b class="mono">${m.challenges.length}</b><span>تحدٍّ</span></div>
+      <div class="kpi"><b class="mono">${hours(m.minutes)}</b><span>ساعة</span></div>
+      <div class="kpi"><b class="mono">${m.entries.filter((e) => mins(e) > 0).length}</b><span>يوم مسجّل</span></div>
+    </div>
+    <div class="card"><h2>القرّاء</h2><div class="table-wrap"><table>
+      <thead><tr><th>القارئ</th><th>الساعات</th><th>أيام</th><th>آخر قراءة</th><th></th></tr></thead><tbody>
+      ${members.map((x) => { const s = byMember[x.id] || { minutes: 0, days: 0, last: null }; return `<tr>
+        <td>${esc(x.name)}</td><td class="num">${hours(s.minutes)}</td><td class="num">${s.days}</td><td>${esc(rel(s.last))}</td>
+        <td>${x.active === false ? '<span class="pill dim">مؤرشف</span>' : ""} ${x.linkedUid ? '<span class="pill dim">مرتبط بحساب</span>' : ""}</td></tr>`; }).join("") || '<tr><td colspan="5" class="empty">لا قرّاء.</td></tr>'}
+    </tbody></table></div></div>
+    <div class="card"><h2>التحديات</h2><div class="table-wrap"><table>
+      <thead><tr><th>الكتاب</th><th>الفترة</th><th>الحالة</th><th>أنهوه</th></tr></thead><tbody>
+      ${chs.map((c) => { const st = today < c.start ? "قادم" : today > c.end ? "منتهٍ" : "جارٍ"; const n = [...finished].filter((k) => k.endsWith("|" + c.id)).length; return `<tr>
+        <td><b>${esc(c.title)}</b>${c.author ? `<div class="muted" style="font-size:.8rem">${esc(c.author)}</div>` : ""}</td>
+        <td>${esc(fmtDate(c.start))} – ${esc(fmtDate(c.end))}</td><td><span class="pill${st === "جارٍ" ? " ok" : " dim"}">${st}</span></td><td class="num">${n}</td></tr>`; }).join("") || '<tr><td colspan="4" class="empty">لا تحديات.</td></tr>'}
+    </tbody></table></div></div>
+    <div class="card"><h2>آخر التسجيلات</h2><div class="table-wrap"><table>
+      <thead><tr><th>اليوم</th><th>القارئ</th><th>المشترك</th><th>أخرى</th></tr></thead><tbody>
+      ${recent.map((e) => `<tr><td>${esc(fmtDate(e.date))}</td><td>${esc(nameOf[e.memberId] || "—")}</td><td class="num">${e.commonMinutes || 0} د</td><td class="num">${e.otherMinutes || 0} د</td></tr>`).join("") || '<tr><td colspan="4" class="empty">لا تسجيلات.</td></tr>'}
+    </tbody></table></div></div>`;
+  show("scrim"); show("drawer");
+  $("d-close").onclick = closeDetail;
+  $("d-close").focus();
+}
+function closeDetail() { show("scrim", false); show("drawer", false); }
+$("scrim").onclick = closeDetail;
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDetail(); });
+
+// ---- CSV ----
+$("btn-csv").onclick = () => {
+  if (!data) return;
+  const cell = (v) => { const s = String(v ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  const rows = [["marathon", "invite_code", "organizers", "readers", "challenges", "hours", "hours_last_7_days", "last_reading", "created"]];
+  for (const m of data.marathons) rows.push([m.name, m.code, m.organizers.join(" / "), m.members.length, m.challenges.length, hours(m.minutes), hours(m.minutes7), m.last || "", ms2iso(m.createdAt) || ""]);
+  rows.push([]);
+  rows.push(["account", "name", "type", "marathons", "created", "last_seen"]);
+  for (const u of data.users) rows.push([u.email || "", u.name || "", u.guest ? "guest" : "google", (u.marathons || []).length, ms2iso(u.createdAt) || "", ms2iso(u.lastSeen) || ""]);
+  const blob = new Blob(["﻿" + rows.map((r) => r.map(cell).join(",")).join("\n")], { type: "text/csv;charset=utf-8" });
+  const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: `reading-marathon-${iso(new Date())}.csv` });
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+</script>
+</body>
+</html>
