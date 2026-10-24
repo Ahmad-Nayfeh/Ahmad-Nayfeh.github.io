@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>شاشة · يوتيوب هادئ لتلفاز البيت</title>
+<meta name="description" content="تطبيق أندرويد مجاني لتلفاز البيت والجوال: بلا إعلانات ولا تسجيل دخول، وملفات للأطفال بقنوات تسمح بها ووقت يومي، والجوال ريموتاً.">
+<link rel="canonical" href="https://ahmad-nayfeh.github.io/shasha/">
+<link rel="icon" href="img/icon.png" type="image/png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#F4F7F9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0B0F14" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_AR">
+<meta property="og:title" content="شاشة · يوتيوب هادئ لتلفاز البيت">
+<meta property="og:description" content="بلا إعلانات، وبحماية كاملة للأطفال. تطبيق أندرويد مجاني للتلفاز والجوال.">
+<meta property="og:url" content="https://ahmad-nayfeh.github.io/shasha/">
+<meta property="og:image" content="https://ahmad-nayfeh.github.io/shasha/img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  /* Shasha's brand (branding/README.md): teal screen, amber dots. Light by default, dark with the system. */
+  .t-shasha {
+    --bg: #F4F7F9; --ink: #0B0F14; --muted: #55606E; --line: #DCE3EA; --card: #FFFFFF;
+    --accent: #138A7E; --accent-soft: #DDF3F0; --on-accent: #04201D; --link: #0F7A70; --amber: #C77A0A;
+    --btn-bg: linear-gradient(135deg, #48DCCD, #2EC4B6 55%, #1FAE9F); --glow: rgba(46,196,182,.55);
+    --frame: #0B0F14; --final-bg: linear-gradient(135deg, #0B0F14, #12313A); --final-ink: #EAF0F6;
+    --hero-bg: radial-gradient(1000px 520px at 88% -12%, rgba(46,196,182,.22), transparent 60%),
+               radial-gradient(700px 420px at -5% 35%, rgba(255,181,71,.14), transparent 60%);
+  }
+  @media (prefers-color-scheme: dark) {
+    .t-shasha {
+      --bg: #0B0F14; --ink: #EAF0F6; --muted: #8A97A8; --line: rgba(234,240,246,.12); --card: #151B24;
+      --accent: #2EC4B6; --accent-soft: rgba(46,196,182,.14); --link: #5FD6CA; --amber: #FFB547;
+      --final-bg: linear-gradient(135deg, #10302F, #1E2632); --final-ink: #EAF0F6;
+      --hero-bg: radial-gradient(1000px 520px at 88% -12%, rgba(46,196,182,.20), transparent 60%),
+                 radial-gradient(700px 420px at -5% 35%, rgba(255,181,71,.10), transparent 60%);
+    }
+  }
+  .hero { background: var(--hero-bg); }
+  .hero h1 { font-weight: 700; letter-spacing: 0; }
+  .hero h1 .dots { color: var(--amber); }
+  .brand img { border-radius: 10px; }
+
+  /* A TV with the phone in front of it */
+  .devices { position: relative; padding: 10px 0 40px; }
+  .tv { background: var(--frame); border-radius: 18px; padding: 10px; box-shadow: 0 40px 80px -36px rgba(0,0,0,.6), inset 0 0 0 1.5px rgba(255,255,255,.08); }
+  .tv img { border-radius: 10px; aspect-ratio: 16 / 9; width: 100%; object-fit: cover; }
+  .tv-stand { width: 34%; height: 10px; margin: 0 auto; border-radius: 0 0 10px 10px; background: var(--frame); opacity: .8; }
+  .devices .phone { position: absolute; inset-inline-end: -6px; bottom: 0; width: clamp(96px, 24%, 150px); border-radius: 22px; padding: 5px; }
+  .devices .phone img { border-radius: 18px; }
+
+  /* Download cards */
+  .downloads { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 18px; }
+  .dl { display: flex; flex-direction: column; gap: 14px; background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 24px; min-width: 0; }
+  .dl-head { display: flex; gap: 14px; align-items: center; }
+  .dl-head .ico { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); flex: none; }
+  .dl-head .ico svg { width: 28px; height: 28px; }
+  .dl h3 { margin: 0; font-size: 1.3rem; }
+  .dl-head p { margin: 0; color: var(--muted); font-size: .95rem; line-height: 1.6; }
+  .dl .btn { width: 100%; min-height: 56px; height: auto; padding: 10px 18px; text-align: center; line-height: 1.4; }
+  .facts { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: .92rem; }
+  .facts dt { color: var(--muted); }
+  .facts dd { margin: 0; min-width: 0; }
+  .sha { display: block; direction: ltr; text-align: left; font-size: .74rem; word-break: break-all; color: var(--muted); line-height: 1.6; }
+  .kit { border-top: 1px dashed var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 10px; }
+  .kit p { margin: 0; font-size: .95rem; color: var(--muted); }
+  .kit .btn { min-height: 48px; font-size: 1rem; }
+
+  /* Screenshots */
+  .gallery.tv-shots { grid-auto-columns: minmax(280px, 420px); }
+  .gallery.tv-shots img { aspect-ratio: 16 / 9; border-radius: 16px; }
+  .gallery.phone-shots { grid-auto-columns: minmax(170px, 200px); }
+  .gallery.phone-shots img { aspect-ratio: 480 / 1041; }
+
+  /* Installation */
+  .tabs-note { font-size: .95rem; color: var(--muted); }
+  .where { display: inline-block; font-size: .78rem; font-weight: 600; border-radius: 999px; padding: 1px 10px; margin-inline-start: 6px; background: var(--accent-soft); color: var(--accent); vertical-align: 2px; }
+  .shot { margin: 14px 0 0; }
+  .shot img { border-radius: 16px; border: 1px solid var(--line); aspect-ratio: 16 / 9; width: 100%; object-fit: cover; }
+  .shot figcaption { font-size: .88rem; color: var(--muted); margin-top: 6px; text-align: center; }
+  .shots2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  @media (max-width: 520px) { .shots2 { grid-template-columns: 1fr; } }
+  .note { border: 1px solid var(--line); border-radius: 16px; padding: 14px 18px; background: var(--accent-soft); font-size: .95rem; margin-top: 14px; }
+  .note b { display: block; margin-bottom: 2px; }
+  .os { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 18px; }
+  .os .card h3 { margin-bottom: .5em; }
+  .os .card ul { margin: 0; padding-inline-start: 1.1em; color: var(--muted); font-size: .95rem; }
+  .os .card li { margin-bottom: .35em; }
+  .ok { color: var(--accent); }
+  .no { color: #C2410C; }
+  @media (prefers-color-scheme: dark) { .no { color: #FF8A65; } }
+
+  /* Guide */
+  .guides { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+  .guide { display: flex; gap: 16px; align-items: center; padding: 20px; border-radius: 22px; border: 1px solid var(--line); background: var(--card); color: inherit; text-decoration: none; transition: border-color .15s, transform .15s; }
+  .guide:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .guide .ico { width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); flex: none; }
+  .guide .ico svg { width: 26px; height: 26px; }
+  .guide b { display: block; font-size: 1.1rem; color: var(--ink); }
+  .guide span { color: var(--muted); font-size: .92rem; }
+  .final .btn { margin-top: 6px; }
+  .foot code { font-size: .8rem; }
+</style>
+</head>
+<body class="t-shasha">
+<a class="skip" href="#main">تخطَّ إلى المحتوى</a>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="./"><img src="img/icon.png" alt="" width="36" height="36">شاشة</a>
+      <nav aria-label="أقسام الصفحة">
+        <a href="#download">التنزيل</a>
+        <a href="#install">التثبيت</a>
+        <a href="#screens">الشاشات</a>
+        <a href="#guide">الدليل</a>
+        <a href="#faq">أسئلة</a>
+      </nav>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">تطبيق أندرويد مجاني · للتلفاز والجوال · عربي وإنجليزي</span>
+        <h1>شاشة</h1>
+        <p class="lead">يوتيوب هادئ لتلفاز البيت: بلا إعلانات ولا تسجيل دخول، وبحماية كاملة للأطفال. لكل طفل ملف لا يرى فيه إلا القنوات التي تسمح بها، بوقت يومي ومواعيد محددة. ويُدار كله بالريموت أو من جوالك.</p>
+        <div class="cta">
+          <a class="btn" href="#download">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
+            نزّل «شاشة»
+          </a>
+          <a class="btn btn-ghost" href="#install">طريقة التثبيت</a>
+        </div>
+        <p class="dl-meta">الإصدار <!--@tv-version-->1.8.0<!--/@tv-version--> · للتلفاز: أندرويد 7.1 فأحدث و<bdi>Fire TV</bdi> · للجوال: أندرويد 8 فأحدث</p>
+      </div>
+      <div class="devices" aria-hidden="true">
+        <div class="tv"><img src="img/tv-home.webp" alt="" width="960" height="540"></div>
+        <div class="tv-stand"></div>
+        <div class="phone"><img src="img/phone-home.webp" alt="" width="480" height="1041"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section" id="features">
+    <div class="wrap">
+      <span class="eyebrow">المزايا</span>
+      <h2>ما تختاره أنت فقط، على شاشة البيت</h2>
+      <p class="lead">كل شيء محفوظ على التلفاز نفسه: لا حسابات ولا تتبّع.</p>
+      <div class="grid">
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="12" rx="3"/><path d="M8 21h8M10.5 8.8v4.4l3.6-2.2z"/></svg></div><h3>بلا إعلانات، والاقتراحات بيدك</h3><p>الرئيسية فيها أحدث فيديوهات قنواتك. والمقترحة والقصيرة تظهر أو تختفي بقرارك، لكل ملف.</p></div>
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M17 11.5l1.6 1.6 3-3.2"/></svg></div><h3>ملفات للأطفال</h3><p>يرى الطفل القنوات التي تسمح بها فقط، وفلتر مدمج يحجب البحث والنتائج غير اللائقة.</p></div>
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5M9 2h6"/></svg></div><h3>وقت محدد</h3><p>دقائق يومية وساعات مشاهدة لكل طفل، وتنبيه قبل انتهاء الوقت.</p></div>
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div><h3>الوضع الجاد</h3><p>الفيديو الذي يبدأ يُشاهَد حتى نهايته، للأطفال وللكبار، ورمز للوالدين لكل تغيير.</p></div>
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2.5"/><path d="M11 18h2"/></svg></div><h3>الجوال ريموتاً، وتطبيقاً</h3><p>أرسل الروابط وافتح الوقت من الجوال، وما يُرسل ينتظر «قبول / رفض» على الشاشة. أو شاهد على الجوال نفسه، مع التنزيل والتشغيل في الخلفية.</p></div>
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></div><h3>البحث بالصوت، وتخطّي الإعلانات المقروءة</h3><p>من ميكروفون الريموت بالعربية أو الإنجليزية. والمقاطع الدعائية داخل الفيديو تُتخطّى وحدها ببيانات <bdi>SponsorBlock</bdi>.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="download">
+    <div class="wrap">
+      <span class="eyebrow">التنزيل</span>
+      <h2>نزّل «شاشة»</h2>
+      <p class="lead">مجاني. بعد التثبيت يتحدّث كل تطبيق بضغطة واحدة من داخله: «الإعدادات ← فحص التحديثات»، وتبقى بياناتك كما هي.</p>
+      <div class="downloads">
+        <article class="dl" aria-labelledby="dl-tv">
+          <div class="dl-head">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4" width="19" height="13" rx="2.5"/><path d="M8 21h8"/></svg></div>
+            <div><h3 id="dl-tv">تطبيق التلفاز</h3><p><bdi>Google TV</bdi> و<bdi>Android TV</bdi> (أندرويد 7.1 فأحدث) و<bdi>Amazon Fire TV</bdi> (<bdi>Fire OS 6</bdi> فأحدث).</p></div>
+          </div>
+          <dl class="facts">
+            <dt>الإصدار</dt><dd><!--@tv-version-->1.8.0<!--/@tv-version--> (رقم البناء <!--@tv-code-->1098<!--/@tv-code-->)</dd>
+            <dt>الحجم</dt><dd><!--@tv-size-->31.8<!--/@tv-size--> ميغابايت</dd>
+            <dt>SHA-256</dt><dd><code class="sha"><!--@tv-sha-->477cc6ed7ed785c2fd141cb6db4e099f6b8bc4da163de64a1f0f5b88876aa495<!--/@tv-sha--></code></dd>
+          </dl>
+          <a class="btn" href="shasha-tv.apk?v=1098" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
+            نزّل تطبيق التلفاز (<bdi>APK</bdi>)
+          </a>
+          <div class="kit">
+            <p><b>أول تثبيت على التلفاز؟</b> التلفاز لا يفتح الملف وحده: نزّل حقيبة التثبيت على حاسوبك، ففيها المثبّت لويندوز وماك ولينكس، وتطبيق التلفاز، وتطبيق الجوال، والدليل.</p>
+            <dl class="facts">
+              <dt>الحجم</dt><dd><!--@kit-size-->55.6<!--/@kit-size--> ميغابايت</dd>
+              <dt>SHA-256</dt><dd><code class="sha"><!--@kit-sha-->78b30805fa2e26c1af6f5ae011dcfca710e014a65e299c16a5613d9ebad76c59<!--/@kit-sha--></code></dd>
+            </dl>
+            <a class="btn btn-ghost" href="shasha-setup.zip?v=1098" download>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M12 10v6m0 0l-2.5-2.5M12 16l2.5-2.5"/></svg>
+              حقيبة التثبيت (<bdi>ZIP</bdi>)
+            </a>
+          </div>
+        </article>
+
+        <article class="dl" aria-labelledby="dl-phone">
+          <div class="dl-head">
+            <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6.5" y="2" width="11" height="20" rx="2.5"/><path d="M11 18h2"/></svg></div>
+            <div><h3 id="dl-phone">تطبيق الجوال</h3><p>أندرويد 8 فأحدث. يعمل وحده بلا تلفاز: بحث، ومشغّل كامل، وتنزيل الفيديو أو الصوت.</p></div>
+          </div>
+          <dl class="facts">
+            <dt>الإصدار</dt><dd><!--@mobile-version-->1.8.0<!--/@mobile-version--> (رقم البناء <!--@mobile-code-->1098<!--/@mobile-code-->)</dd>
+            <dt>الحجم</dt><dd><!--@mobile-size-->4.2<!--/@mobile-size--> ميغابايت</dd>
+            <dt>SHA-256</dt><dd><code class="sha"><!--@mobile-sha-->8e097a0ba6127a73f7e87eb0b9155f852da952880dd7b2e6a60b85cd31349e5d<!--/@mobile-sha--></code></dd>
+          </dl>
+          <a class="btn" href="shasha-mobile.apk?v=1098" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
+            نزّل تطبيق الجوال (<bdi>APK</bdi>)
+          </a>
+          <p class="dl-meta" style="margin:0">افتح هذه الصفحة على جوالك واضغط الزر، ثم اتبع <a href="#install-phone">ثلاث خطوات</a>. تطبيق الجوال للمشاهدة على الجوال؛ أما التحكم في التلفاز فصفحة تفتحها من رمز <bdi>QR</bdi> في إعدادات «شاشة» على التلفاز.</p>
+        </article>
+      </div>
+      <p class="dl-meta">آخر نشر: <span dir="ltr"><!--@published-->2026-10-24<!--/@published--></span>. كل الملفات موقّعة بمفتاح الإصدارات نفسه، فتُثبَّت فوق النسخة السابقة وتبقى البيانات.</p>
+    </div>
+  </section>
+
+  <section class="section" id="install">
+    <div class="wrap">
+      <span class="eyebrow">التثبيت</span>
+      <h2>التثبيت خطوة بخطوة</h2>
+      <p class="lead">مرة واحدة فقط. بعدها يتحدّث التطبيق من داخله.</p>
+      <div class="split">
+        <div id="install-phone">
+          <h3>على الجوال <span class="where">3 خطوات</span></h3>
+          <ol class="steps">
+            <li><b>نزّل الملف</b><span>من زر «نزّل تطبيق الجوال» في هذه الصفحة، على جوالك نفسه. (وهو أيضاً في «مجلد <bdi>Phone</bdi>» داخل حقيبة التثبيت.)</span></li>
+            <li><b>افتحه</b><span>من الإشعار أو تطبيق الملفات أو المتصفح. سيقول أندرويد إن التثبيت من هذا المصدر غير مسموح: اضغط «الإعدادات» وفعّل السماح من هذا المصدر (<bdi>Install unknown apps</bdi>) للتطبيق الذي فتحت منه الملف. مرة واحدة فقط.</span></li>
+            <li><b>ثبّته</b><span>ارجع واضغط «تثبيت»، ثم «فتح». يعمل على أندرويد 8 أو أحدث.</span></li>
+          </ol>
+          <p class="note"><b>للتحديث لاحقاً</b>الإعدادات ← فحص التحديثات ← نزّل وثبّت. قد يطلب النظام تأكيدك، ومرة واحدة يطلب السماح بالتثبيت.</p>
+        </div>
+        <div id="install-tv">
+          <h3>على التلفاز <span class="where">نحو ربع ساعة</span></h3>
+          <p class="tabs-note">تحتاج التلفاز والريموت، وحاسوباً (ويندوز أو ماك أو لينكس)، والاثنان على شبكة البيت نفسها.</p>
+          <ol class="steps">
+            <li><b>نزّل حقيبة التثبيت <span class="where">الحاسوب</span></b><span>من زر «حقيبة التثبيت» أعلاه، ثم فك الضغط. ويندوز: الزر الأيمن ← <bdi>Extract All</bdi>. ماك: انقر مرتين. لا تنقل أي ملف من المجلد.</span></li>
+            <li><b>فعّل خيارات المطوّر <span class="where">التلفاز</span></b><span><bdi>Settings</bdi> ← <bdi>System</bdi> ← <bdi>About</bdi>، واضغط <bdi>OK</bdi> سبع مرات على <bdi>Android TV OS build</bdi> حتى تظهر <bdi>You are now a developer!</bdi></span></li>
+            <li><b>فعّل تصحيح الأخطاء <span class="where">التلفاز</span></b><span><bdi>Settings</bdi> ← <bdi>System</bdi> ← <bdi>Developer options</bdi> ← فعّل <bdi>USB debugging</bdi>، و<bdi>Network debugging</bdi> إن وجدته.</span></li>
+            <li><b>اعرف عنوان التلفاز <span class="where">التلفاز</span></b><span><bdi>Settings</bdi> ← <bdi>Network &amp; Internet</bdi> ← اسم شبكتك ← <bdi>IP address</bdi> (وبالسلك: <bdi>Ethernet</bdi>). أربعة أرقام بينها نقاط، مثل 192.168.1.50.</span></li>
+            <li><b>شغّل المثبّت <span class="where">الحاسوب</span></b><span>ويندوز: انقر مرتين على «<bdi>Windows</bdi> - ثبّت شاشة» (إن ظهر التحذير الأزرق: <bdi>More info</bdi> ← <bdi>Run anyway</bdi>). ماك: انقر مرتين على «<bdi>Mac</bdi> - ثبّت شاشة» (إن رفضه: <bdi>System Settings</bdi> ← <bdi>Privacy &amp; Security</bdi> ← <bdi>Open Anyway</bdi>). لينكس: <code>bash install-linux.sh</code>. ثم اكتب عنوان التلفاز.</span></li>
+            <li><b>اسمح للحاسوب <span class="where">التلفاز</span></b><span>تظهر <bdi>Allow USB debugging</bdi>?: ضع علامة على <bdi>Always allow from this computer</bdi> ثم <bdi>OK</bdi>، خلال 60 ثانية.</span></li>
+            <li><b>انتظر، المثبّت يكمل وحده <span class="where">الحاسوب</span></b><span>يكتب اسم التلفاز وطرازه، ويثبّت «شاشة» ويمنحه صلاحياته، ويسألك هل تطفئ يوتيوب الرسمي (<bdi>y</bdi> أو <bdi>n</bdi>)، ثم يكتب «تمّ!».</span></li>
+            <li><b>أول تشغيل <span class="where">التلفاز</span></b><span>«شاشة» يطلب رمز الوالدين، ثم ملفك، ثم ملف طفلك.</span></li>
+            <li><b>اربط جوالك (اختياري) <span class="where">الجوال</span></b><span>في «شاشة»: الإعدادات ← الخادم المحلي ← رمز الاقتران <bdi>QR</bdi>، وامسحه بكاميرا الجوال.</span></li>
+          </ol>
+          <div class="shots2">
+            <figure class="shot"><img src="img/install-tv-build-7-presses.webp" alt="الخطوة 2: اضغط OK سبع مرات على Android TV OS build" loading="lazy" width="1200" height="675"><figcaption>الخطوة 2 على التلفاز</figcaption></figure>
+            <figure class="shot"><img src="img/install-tv-allow-debugging.webp" alt="الخطوة 6: نافذة Allow USB debugging على التلفاز" loading="lazy" width="1200" height="675"><figcaption>الخطوة 6 على التلفاز</figcaption></figure>
+            <figure class="shot"><img src="img/install-pc-run-script.webp" alt="الخطوة 5: تشغيل المثبّت على الحاسوب وكتابة عنوان التلفاز" loading="lazy" width="1200" height="675"><figcaption>الخطوة 5 على الحاسوب</figcaption></figure>
+            <figure class="shot"><img src="img/install-pc-success.webp" alt="الخطوة 7: المثبّت يكتب تمّ" loading="lazy" width="1200" height="675"><figcaption>الخطوة 7: «تمّ!»</figcaption></figure>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="margin-top:44px">أي تلفاز يناسب «شاشة»؟</h3>
+      <div class="os">
+        <div class="card">
+          <h3 class="ok">يعمل</h3>
+          <ul>
+            <li><bdi>Google TV</bdi> و<bdi>Android TV</bdi> بنظام أندرويد 7.1 أو أحدث، من أي ماركة: <bdi>Sony</bdi> و<bdi>TCL</bdi> و<bdi>Hisense</bdi> و<bdi>Philips</bdi> و<bdi>Xiaomi</bdi>، و<bdi>Nvidia Shield</bdi> و<bdi>Chromecast with Google TV</bdi> و<bdi>Google TV Streamer</bdi>، وأجهزة العرض مثل <bdi>XGIMI</bdi> و<bdi>Nebula</bdi>.</li>
+            <li><bdi>Amazon Fire TV</bdi> بنظام <bdi>Fire OS 6</bdi> أو أحدث: <bdi>Fire TV Stick</bdi> و<bdi>Fire TV Cube</bdi> وتلفازات <bdi>Fire TV</bdi>.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="no">لا يعمل</h3>
+          <ul>
+            <li><bdi>Samsung (Tizen)</bdi> و<bdi>LG (webOS)</bdi>، و<bdi>Roku</bdi> و<bdi>Apple TV</bdi>.</li>
+            <li><bdi>Fire TV</bdi> بنظام <bdi>Vega OS</bdi> (أجهزة 2025 و2026 مثل <bdi>Fire TV Stick 4K Select</bdi>)، والقديمة بنظام <bdi>Fire OS 5</bdi>.</li>
+            <li>تلفازات بنظام خاص غير أندرويد: <bdi>Hisense (VIDAA)</bdi> و<bdi>Philips (Titan OS)</bdi> و<bdi>Panasonic</bdi>.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>تلفازك ليس منها؟</h3>
+          <ul>
+            <li>يكفي جهاز صغير يوصل بمنفذ <bdi>HDMI</bdi>: <bdi>Google TV Streamer</bdi> أو <bdi>Chromecast with Google TV</bdi> أو <bdi>Xiaomi TV Stick</bdi> أو <bdi>Fire TV Stick 4K</bdi> أو <bdi>Fire TV Cube</bdi>.</li>
+            <li>ابحث عن <bdi>Fire OS</bdi> على الصندوق: بعض أجهزة 2025 و2026 بنظام <bdi>Vega OS</bdi> ولا تعمل.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="note"><b>Fire TV</b>خيارات المطوّر: <bdi>Settings</bdi> ← <bdi>My Fire TV</bdi> ← <bdi>Developer options</bdi> (إن لم تجدها: <bdi>About</bdi>، واضغط <bdi>OK</bdi> سبع مرات على اسم الجهاز). فعّل <bdi>ADB debugging</bdi>، والعنوان في <bdi>About</bdi> ← <bdi>Network</bdi>. وفي <bdi>Fire OS 6</bdi> يفعّل المثبّت وحده <bdi>Apps from Unknown Sources</bdi> لتعمل التحديثات بضغطة واحدة. وتجد «شاشة» لاحقاً في <bdi>Your Apps</bdi> ← <bdi>See all</bdi>.</p>
+      <p class="note"><b><bdi>Android TV</bdi> الأقدم، و<bdi>Philips</bdi>، و<bdi>Nvidia Shield</bdi></b>خيارات المطوّر من <bdi>Settings</bdi> ← <bdi>Device Preferences</bdi> ← <bdi>About</bdi> (في <bdi>Philips</bdi>: <bdi>All settings</bdi> ← <bdi>Android settings</bdi> ← <bdi>Device Preferences</bdi> ← <bdi>About</bdi>)، وفي <bdi>Nvidia Shield</bdi> فعّل <bdi>Network debugging</bdi> أيضاً. وفي بعض موديلات <bdi>Google TV</bdi> الأحدث <bdi>Wireless debugging</bdi> فقط: إن رفض التلفاز الاتصال عرض المثبّت الاقتران برمز من 6 أرقام. التفاصيل في الدليل.</p>
+    </div>
+  </section>
+
+  <section class="section" id="screens">
+    <div class="wrap">
+      <span class="eyebrow">من الداخل</span>
+      <h2>شاشات التطبيق</h2>
+      <div class="gallery tv-shots" tabindex="0" aria-label="صور شاشات تطبيق التلفاز">
+        <figure><img src="img/tv-home.webp" alt="الرئيسية: أحدث فيديوهات قنواتك" loading="lazy" width="960" height="540"><figcaption>الرئيسية</figcaption></figure>
+        <figure><img src="img/tv-profile-picker.webp" alt="من يشاهد الآن؟ اختيار الملف" loading="lazy" width="960" height="540"><figcaption>من يشاهد الآن؟</figcaption></figure>
+        <figure><img src="img/tv-kids-allowed-channels.webp" alt="القنوات المسموحة لملف الطفل" loading="lazy" width="960" height="540"><figcaption>قنوات الطفل المسموحة</figcaption></figure>
+        <figure><img src="img/tv-search-results.webp" alt="نتائج البحث" loading="lazy" width="960" height="540"><figcaption>البحث</figcaption></figure>
+        <figure><img src="img/tv-player-osd.webp" alt="المشغّل" loading="lazy" width="960" height="540"><figcaption>المشغّل</figcaption></figure>
+        <figure><img src="img/tv-cast-request-overlay.webp" alt="طلب تشغيل من الجوال ينتظر القبول" loading="lazy" width="960" height="540"><figcaption>طلب من الجوال: قبول أو رفض</figcaption></figure>
+        <figure><img src="img/tv-time-up.webp" alt="انتهى وقت المشاهدة" loading="lazy" width="960" height="540"><figcaption>انتهى الوقت</figcaption></figure>
+        <figure><img src="img/tv-behavior-serious.webp" alt="إعدادات الوضع الجاد" loading="lazy" width="960" height="540"><figcaption>الوضع الجاد</figcaption></figure>
+      </div>
+      <h3 style="margin-top:28px">تطبيق الجوال</h3>
+      <div class="gallery phone-shots" tabindex="0" aria-label="صور شاشات تطبيق الجوال">
+        <figure><img src="img/phone-home.webp" alt="الرئيسية في تطبيق الجوال" loading="lazy" width="480" height="1041"><figcaption>الرئيسية</figcaption></figure>
+        <figure><img src="img/phone-player.webp" alt="المشغّل في تطبيق الجوال" loading="lazy" width="480" height="1041"><figcaption>المشغّل</figcaption></figure>
+        <figure><img src="img/phone-downloads.webp" alt="التنزيلات في تطبيق الجوال" loading="lazy" width="480" height="1041"><figcaption>التنزيلات</figcaption></figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="guide">
+    <div class="wrap">
+      <span class="eyebrow">الدليل</span>
+      <h2>دليل شاشة</h2>
+      <p class="lead">بالصور: الشاشات المدعومة، والتثبيت، والاستخدام، والوالدين، وتطبيق الجوال، والتحديث، وحل المشاكل. والدليل وفيديو الشرح موجودان أيضاً داخل التطبيق: «الإعدادات ← الدليل والفيديو».</p>
+      <div class="guides">
+        <a class="guide" href="guide-ar.pdf">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg></span>
+          <span><b>دليل شاشة (عربي)</b><span><bdi>PDF</bdi> · 3.1 ميغابايت</span></span>
+        </a>
+        <a class="guide" href="guide-en.pdf" hreflang="en">
+          <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></svg></span>
+          <span><b lang="en" dir="ltr">Shasha Guide (English)</b><span><bdi>PDF</bdi> · 3.0 ميغابايت</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="faq">
+    <div class="wrap faq">
+      <span class="eyebrow">أسئلة</span>
+      <h2>أسئلة شائعة</h2>
+      <details><summary>هل التطبيق مجاني؟</summary><p>نعم، بلا إعلانات وبلا اشتراكات وبلا تسجيل دخول.</p></details>
+      <details><summary>تلفازي سامسونج أو إل جي</summary><p>نظامهما ليس أندرويد. لا تحتاج أن تغيّر التلفاز: وصّل به جهازاً صغيراً بنظام <bdi>Google TV</bdi> أو <bdi>Fire OS</bdi> في منفذ <bdi>HDMI</bdi>، واختر منفذه بزر <bdi>Source</bdi>، وثبّت «شاشة» عليه كأنه التلفاز.</p></details>
+      <details><summary>كيف أحدّث؟</summary><p>من داخل التطبيق: «الإعدادات ← فحص التحديثات». ضغطة واحدة تنزّل أحدث إصدار وتثبّته، ويُغلق التطبيق لحظة ثم يُفتح من جديد. أو شغّل مثبّت الحاسوب من جديد بالملف الأحدث. بياناتك تبقى كما هي.</p></details>
+      <details><summary>أين تُحفظ بياناتنا؟</summary><p>كل شيء على التلفاز نفسه: الملفات والقنوات المسموحة والسجل والإعدادات. لا حسابات ولا تتبّع.</p></details>
+      <details><summary>هل أستطيع إزالته؟</summary><p>نعم: على التلفاز <bdi>Settings</bdi> ← <bdi>Apps</bdi> ← شاشة ← <bdi>Uninstall</bdi> (يمسح بياناته كلها). ولمن يعرف سطر الأوامر، المثبّت يقبل <code>--undo</code>: يعيد يوتيوب الرسمي ويسحب صلاحيات «شاشة» ويبقيه مثبّتاً.</p></details>
+      <details><summary>كيف أتأكد أن الملف سليم؟</summary><p>قارن بصمة <bdi>SHA-256</bdi> للملف الذي نزّلته بالبصمة المكتوبة تحت زرّه. ويندوز (<bdi>PowerShell</bdi>): <code>Get-FileHash shasha-tv.apk</code>. ماك ولينكس: <code>shasum -a 256 shasha-tv.apk</code>.</p></details>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="final">
+        <h2>شاشة هادئة لبيتك</h2>
+        <p class="lead">ثبّته مرة واحدة، واختر قنوات أطفالك، واترك الباقي له.</p>
+        <a class="btn" href="#download">نزّل «شاشة»</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <span>صنعه <a href="https://ahmadnayfeh.vercel.app">أحمد نايفة</a> · تخطّي المقاطع الدعائية ببيانات <a href="https://sponsor.ajay.app/" lang="en">SponsorBlock</a></span>
+  <span><a href="../khatwa/">خطوة</a> · <a href="../marathon/">ماراثون القراءة</a> · <a href="latest.json"><code>latest.json</code></a></span>
+</footer>
+</body>
+</html>
