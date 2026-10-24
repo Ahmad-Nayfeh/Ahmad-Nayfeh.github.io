@@ -149,7 +149,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/fireba
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut,
   connectAuthEmulator, signInWithCredential } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
 import { getFirestore, collection, collectionGroup, getDocs, getDoc, doc, setDoc, updateDoc, deleteDoc, addDoc, writeBatch,
-  query, where, orderBy, limit, deleteField, arrayRemove, connectFirestoreEmulator }
+  query, where, orderBy, limit, deleteField, arrayRemove, connectFirestoreEmulator, getCountFromServer }
   from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
 
 const ADMIN = "readingmarathon.admin@gmail.com";
@@ -241,6 +241,36 @@ async function commitAll(ops) {
   }
 }
 
+/** Books from Firestore matching a query (one key on the server, the rest checked here), kept in the cache. */
+async function findBooks(q, max = 60) {
+  const key = words(q).flatMap(forms).sort((a, b) => b.length - a.length)[0]?.slice(0, 12);
+  if (!key || key.length < 2) return [];
+  const snap = await getDocs(query(collection(db, "books"), where("keys", "array-contains", key), limit(max)));
+  const got = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  for (const b of got) { const i = data.books.findIndex((x) => x.id === b.id); if (i >= 0) data.books[i] = b; else data.books.push(b); }
+  return got.filter((b) => b.status !== "merged" && matches(q, b));
+}
+
+/** The starting catalog (the same list the app ships) is copied into Firestore once; the app does the same. */
+let seeding = false;
+async function seedCatalog() {
+  if (seeding) return; seeding = true;
+  try {
+    const marker = doc(db, "adminLog", "seed-catalog-1");
+    if ((await getDoc(marker)).exists()) return;
+    const list = await (await fetch("catalog.json")).json();
+    const have = new Set((await getDocs(collection(db, "books"))).docs.map((d) => d.id));
+    const now = Date.now(), ops = [];
+    for (const [id, title, author, aliases] of list) if (!have.has(id)) ops.push((b) => b.set(doc(db, "books", id), bookDoc({ id, title, author, aliases, pages: null, status: "verified", mergedInto: null, createdAt: now })));
+    toast(`يُنسخ فهرس الكتب الأولي (${ops.length} كتاباً)...`);
+    await commitAll(ops);
+    await setDoc(marker, { at: now, action: "أضاف فهرس الكتب الأولي", target: `${ops.length} كتاباً` });
+    data.bookCount = (data.bookCount || 0) + ops.length;
+    toast(`أُضيف ${ops.length} كتاباً إلى الفهرس.`);
+    if (tab === "books" || tab === "overview") render();
+  } catch (e) { console.error(e); seeding = false; }
+}
+
 // ---- Auth ----
 const provider = new GoogleAuthProvider();
 provider.setCustomParameters({ prompt: "select_account", login_hint: ADMIN });
@@ -281,7 +311,7 @@ async function load(quiet = false) {
       getDocs(collection(db, "groups")), getDocs(collection(db, "users")),
       getDocs(collectionGroup(db, "members")), getDocs(collectionGroup(db, "entries")),
       getDocs(collectionGroup(db, "challenges")), getDocs(collectionGroup(db, "finishes")),
-      getDocs(collectionGroup(db, "days")), getDocs(collection(db, "books")), getDocs(collection(db, "suggestions")),
+      getDocs(collectionGroup(db, "days")), getDocs(query(collection(db, "books"), where("status", "==", "pending"))), getDocs(collection(db, "suggestions")),
       getDocs(collection(db, "announcements")), getDocs(collection(db, "banned")),
       getDocs(query(collection(db, "adminLog"), orderBy("at", "desc"), limit(200))),
       getDocs(collectionGroup(db, "reads")), getDocs(collectionGroup(db, "shelf")),
@@ -309,11 +339,17 @@ async function load(quiet = false) {
       groups, users: users.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0)), byUid, allDays: dys.docs.map((d) => d.data()),
       allChallenges: ch.docs.map((d) => ({ id: d.id, ref: d.ref, gid: parentId(d.ref.path), ...d.data() })),
       finishes: fin.size, week,
-      books: bks.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => normalize(a.title).localeCompare(normalize(b.title), "ar")),
+      // The catalog is thousands of books: only pending ones and the ones in use are loaded; the rest by search.
+      books: bks.docs.map((d) => ({ id: d.id, ...d.data() })),
+      bookCount: (await getCountFromServer(collection(db, "books"))).data().count - (await getCountFromServer(query(collection(db, "books"), where("status", "==", "merged")))).data().count,
       suggestions: sgs.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (a.status === "open" ? 0 : 1) - (b.status === "open" ? 0 : 1) || (b.createdAt || 0) - (a.createdAt || 0)),
       news: ann.docs.map((d) => ({ id: d.id, ...d.data() })).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)),
       log: lg.docs.map((d) => d.data()),
     };
+    const wanted = new Set([...data.suggestions.flatMap((x) => [x.bookId, x.otherBookId]), ...data.allChallenges.map((c) => c.bookId)].filter(Boolean));
+    for (const b of data.books) wanted.delete(b.id);
+    for (const snap of await Promise.all([...wanted].map((id) => getDoc(doc(db, "books", id))))) if (snap.exists()) data.books.push({ id: snap.id, ...snap.data() });
+    seedCatalog();
     render();
     $("stamp").textContent = `آخر تحديث: ${new Date().toLocaleTimeString("ar-SA-u-nu-latn", { hour: "2-digit", minute: "2-digit" })}`;
     show("dash");
@@ -341,7 +377,6 @@ function bars(vals, color = "#3C4A6B", last = "#F2B84B") {
 
 function overview() {
   const { groups, users, allDays, finishes, week, books, suggestions: sg } = data;
-  const guests = users.filter((u) => u.guest).length;
   const seen7 = users.filter((u) => (u.lastSeen || 0) > Date.now() - 7 * 864e5).length;
   const total = allDays.reduce((a, e) => a + (e.minutes || 0), 0);
   const last7 = allDays.filter((e) => e.date >= week).reduce((a, e) => a + (e.minutes || 0), 0);
@@ -351,9 +386,9 @@ function overview() {
   const top = {}; for (const c of data.allChallenges) { const k = c.bookId || normalize(c.title); (top[k] ||= { title: c.title, groups: new Set() }).groups.add(c.gid); }
   const topList = Object.values(top).sort((a, b) => b.groups.size - a.groups.size).slice(0, 10);
   const k = [
-    [users.length, `حساب · ${guests} دون Google`], [seen7, "دخلوا هذا الأسبوع"], [groups.length, `مجموعة · ${groups.filter((g) => g.minutes7 > 0).length} نشطة`],
+    [users.length, "حساب"], [seen7, "دخلوا هذا الأسبوع"], [groups.length, `مجموعة · ${groups.filter((g) => g.minutes7 > 0).length} نشطة`],
     [hours(total), "ساعة قراءة"], [hours(last7), "ساعة آخر 7 أيام"], [finishes, "إتمام كتاب"],
-    [books.filter((b) => b.status !== "merged").length, "كتاب في الفهرس"], [books.filter((b) => b.status === "pending").length, "بانتظار المراجعة"],
+    [data.bookCount ?? "—", "كتاب في الفهرس"], [books.filter((b) => b.status === "pending").length, "بانتظار المراجعة"],
     [sg.filter((s) => s.status === "open").length, "اقتراح مفتوح"], [users.filter((u) => u.banned).length, "حساب موقوف"],
   ];
   $("view").innerHTML = `
@@ -381,23 +416,33 @@ function suggestions() {
   for (const tr of document.querySelectorAll("tr.row")) tr.onclick = () => openSuggestion(tr.dataset.id);
 }
 
+let bookResults = null;
 function books() {
   const q = ($("bq")?.value ?? "").trim();
   const live = data.books.filter((b) => b.status !== "merged");
-  const list = live.filter((b) => (bookFilter === "all" || b.status === "pending") && (!q || matches(q, b)));
+  const pending = live.filter((b) => b.status === "pending");
+  const list = bookFilter === "all" ? (q ? (bookResults || []) : []) : pending.filter((b) => !q || matches(q, b));
   $("view").innerHTML = `
     <div class="tools" style="margin-top:0">
       <input id="bq" type="search" placeholder="عنوان أو اسم آخر أو مؤلف" value="${esc(q)}" autocomplete="off">
       <button class="btn-a" id="b-new">كتاب جديد</button><button class="chip-btn" id="b-import">استيراد قائمة</button>
     </div>
-    <div class="seg" style="margin-top:10px"><button class="tab" data-f="all" aria-selected="${bookFilter === "all"}">الكل (${live.length})</button>
-      <button class="tab" data-f="pending" aria-selected="${bookFilter !== "all"}">بانتظار المراجعة (${live.filter((b) => b.status === "pending").length})</button></div>
+    <div class="seg" style="margin-top:10px"><button class="tab" data-f="all" aria-selected="${bookFilter === "all"}">الكل (${data.bookCount ?? "—"})</button>
+      <button class="tab" data-f="pending" aria-selected="${bookFilter !== "all"}">بانتظار المراجعة (${pending.length})</button></div>
     <div class="card"><div class="table-wrap"><table><thead><tr><th>العنوان</th><th>المؤلف</th><th>أسماء أخرى</th><th>المجموعات</th><th></th></tr></thead><tbody>
       ${list.slice(0, 300).map((b) => `<tr class="row" data-id="${esc(b.id)}"><td><b>«${esc(b.title)}»</b></td><td>${esc(b.author)}</td><td class="small muted">${esc((b.aliases || []).join("، "))}</td>
         <td class="num">${new Set(data.allChallenges.filter((c) => c.bookId === b.id).map((c) => c.gid)).size}</td><td>${b.status === "pending" ? '<span class="pill">بانتظار المراجعة</span>' : ""}</td></tr>`).join("")
-        || `<tr><td colspan="5" class="empty">${live.length ? "لا نتائج." : "الفهرس فارغ. أضف كتباً أو استورد قائمة."}</td></tr>`}
+        || `<tr><td colspan="5" class="empty">${bookFilter === "all" && !q ? "اكتب عنواناً أو مؤلفاً للبحث في الفهرس." : "لا نتائج."}</td></tr>`}
     </tbody></table></div></div>`;
-  $("bq").oninput = () => { const pos = $("bq").selectionStart; render(); $("bq").focus(); $("bq").setSelectionRange(pos, pos); };
+  $("bq").oninput = () => {
+    clearTimeout(books.h);
+    books.h = setTimeout(async () => {
+      const qq = $("bq").value.trim();
+      bookResults = bookFilter === "all" && qq ? await findBooks(qq).catch(() => []) : null;
+      if ($("bq").value.trim() !== qq) return;
+      const pos = $("bq").selectionStart; render(); $("bq").focus(); $("bq").setSelectionRange(pos, pos);
+    }, 300);
+  };
   for (const b of document.querySelectorAll("[data-f]")) b.onclick = () => { bookFilter = b.dataset.f; render(); };
   $("b-new").onclick = () => openBook(null);
   $("b-import").onclick = openImport;
@@ -430,7 +475,7 @@ function users() {
     <div class="card"><h2><span class="grow">المستخدمون</span><small>${us.length}</small></h2><div class="table-wrap"><table>
       <thead><tr><th>الحساب</th><th>النوع</th><th>مجموعات</th><th>ساعات</th><th>أُنشئ</th><th>آخر دخول</th></tr></thead><tbody>
       ${shown.map((u) => `<tr class="row" data-id="${esc(u.uid)}"><td>${u.name ? `<b>${esc(u.name)}</b>` : "دون اسم"}${u.email ? `<div class="mono muted small">${esc(u.email)}</div>` : ""}</td>
-        <td>${u.banned ? '<span class="pill" style="color:var(--bad)">موقوف</span>' : u.guest ? '<span class="pill dim">دون Google</span>' : '<span class="pill">Google</span>'}</td>
+        <td>${u.banned ? '<span class="pill" style="color:var(--bad)">موقوف</span>' : u.guest ? '<span class="pill dim">ضيف قديم</span>' : '<span class="pill">Google</span>'}</td>
         <td class="num">${(u.groups || []).length}</td><td class="num">${hours(u.minutes)}</td><td>${esc(fmtDate(ms2iso(u.createdAt)))}</td><td>${esc(rel(ms2iso(u.lastSeen)))}</td></tr>`).join("")
         || '<tr><td colspan="6" class="empty">لا حسابات.</td></tr>'}
     </tbody></table></div>${!showAllUsers && !q && us.length > 30 ? `<button class="chip-btn more" id="u-more">عرض الجميع (${us.length})</button>` : ""}</div>`;
@@ -501,16 +546,18 @@ function openBook(id) {
     <div class="row-actions"><button class="btn-a" id="f-save">${b?.status === "pending" ? "حفظ واعتماد" : "حفظ"}</button>${b ? '<button class="btn-d" id="f-del">حذف من الفهرس</button>' : ""}</div>
     ${b ? `<div class="card"><h2>دمجه في كتاب آخر</h2><p class="small muted">اختر النسخة التي تبقى: يصبح هذا الكتاب اسماً آخر لها، وتنتقل إليها كل المجموعات.</p>
       <label class="field"><input id="m-q" placeholder="ابحث في الفهرس"></label><div id="m-res"></div></div>` : ""}`);
-  $("f-save").onclick = () => {
+  $("f-save").onclick = async () => {
     const title = val("f-title"), author = val("f-author"), aliases = val("f-aliases").split(/[,،;؛]/).map((s) => s.trim()).filter(Boolean), pages = parseInt(val("f-pages")) || null;
+    if (!b && title) await findBooks(title).catch(() => []);
     if (!b) { const dup = sameBook(title, author, data.books); if (dup && !confirm(`«${dup.title}» لـ ${dup.author} موجود في الفهرس. أضيفه رغم ذلك؟`)) return; }
-    act(b ? "عدّل كتاباً" : "أضاف كتاباً", `«${title}» · ${author}`, () => saveBook(b?.id, title, author, aliases, pages, b), "حُفظ الكتاب.");
+    return act(b ? "عدّل كتاباً" : "أضاف كتاباً", `«${title}» · ${author}`, () => saveBook(b?.id, title, author, aliases, pages, b), "حُفظ الكتاب.");
   };
   if (!b) return;
   $("f-del").onclick = () => confirm(`حذف «${b.title}» من الفهرس؟ المجموعات التي تقرؤه تحتفظ بعنوانه.`) && act("حذف كتاباً", `«${b.title}»`, () => deleteDoc(doc(db, "books", b.id)), "حُذف الكتاب.");
-  $("m-q").oninput = () => {
+  $("m-q").oninput = async () => {
     const q = val("m-q");
-    const res = q.length < 2 ? [] : data.books.filter((x) => x.id !== b.id && x.status !== "merged" && matches(q, x)).slice(0, 8);
+    const res = q.length < 2 ? [] : (await findBooks(q).catch(() => [])).filter((x) => x.id !== b.id).slice(0, 8);
+    if (val("m-q") !== q) return;
     $("m-res").innerHTML = res.map((x) => `<div class="pick" data-id="${esc(x.id)}">«${esc(x.title)}» · ${esc(x.author)}</div>`).join("");
     for (const p of document.querySelectorAll("#m-res .pick")) p.onclick = () => {
       const into = data.books.find((x) => x.id === p.dataset.id);
@@ -540,6 +587,7 @@ function openImport() {
       const known = [...data.books]; const ops = [];
       for (const x of list) {
         if (sameBook(x.title, x.author, known)) continue;
+        if (sameBook(x.title, x.author, await findBooks(x.title, 30))) continue;
         const b = { ...x, id: newId("b_"), status: "verified", createdAt: Date.now() };
         known.push(b); added++; ops.push((batch) => batch.set(doc(db, "books", b.id), bookDoc(b)));
       }
@@ -596,7 +644,7 @@ function openGroup(id) {
     <div class="card"><h2>الأعضاء (${members.length})</h2><div class="table-wrap"><table>
       <thead><tr><th>العضو</th><th>الساعات</th><th>منها في الكتاب</th><th>أيام</th><th>آخر قراءة</th><th>الدور</th><th></th></tr></thead><tbody>
       ${members.map((m) => { const s = byMember[m.id] || { minutes: 0, shared: 0, days: 0, last: null }; const r = g.roles[m.id]; return `<tr>
-        <td>${esc(m.name)}${m.linkedUid ? "" : ' <span class="pill dim">دون تطبيق</span>'}</td><td class="num">${hours(s.minutes)}</td><td class="num">${hours(s.shared)}</td><td class="num">${s.days}</td><td>${esc(rel(s.last))}</td>
+        <td>${esc(m.name)}</td><td class="num">${hours(s.minutes)}</td><td class="num">${hours(s.shared)}</td><td class="num">${s.days}</td><td>${esc(rel(s.last))}</td>
         <td>${r ? `<select class="mini" data-role="${esc(m.id)}">${["owner", "admin", "member"].map((x) => `<option value="${x}" ${x === r ? "selected" : ""}>${roleName[x]}</option>`).join("")}</select>` : "—"}</td>
         <td>${r === "owner" ? "" : `<button class="chip-btn" data-kick="${esc(m.id)}">إخراج</button>`}</td></tr>`; }).join("") || '<tr><td colspan="7" class="empty">لا أعضاء.</td></tr>'}
     </tbody></table></div></div>
