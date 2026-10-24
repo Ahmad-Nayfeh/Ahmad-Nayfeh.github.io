@@ -66,7 +66,6 @@
   .facts { margin: 0; display: grid; grid-template-columns: auto 1fr; gap: 4px 14px; font-size: .92rem; }
   .facts dt { color: var(--muted); }
   .facts dd { margin: 0; min-width: 0; }
-  .sha { display: block; direction: ltr; text-align: left; font-size: .74rem; word-break: break-all; color: var(--muted); line-height: 1.6; }
   .kit { border-top: 1px dashed var(--line); padding-top: 14px; display: flex; flex-direction: column; gap: 10px; }
   .kit p { margin: 0; font-size: .95rem; color: var(--muted); }
   .kit .btn { min-height: 48px; font-size: 1rem; }
@@ -174,9 +173,8 @@
             <div><h3 id="dl-tv">تطبيق التلفاز</h3><p><bdi>Google TV</bdi> و<bdi>Android TV</bdi> (أندرويد 7.1 فأحدث) و<bdi>Amazon Fire TV</bdi> (<bdi>Fire OS 6</bdi> فأحدث).</p></div>
           </div>
           <dl class="facts">
-            <dt>الإصدار</dt><dd><!--@tv-version-->1.8.0<!--/@tv-version--> (رقم البناء <!--@tv-code-->1098<!--/@tv-code-->)</dd>
+            <dt>الإصدار</dt><dd><!--@tv-version-->1.8.0<!--/@tv-version--></dd>
             <dt>الحجم</dt><dd><!--@tv-size-->31.8<!--/@tv-size--> ميغابايت</dd>
-            <dt>SHA-256</dt><dd><code class="sha"><!--@tv-sha-->477cc6ed7ed785c2fd141cb6db4e099f6b8bc4da163de64a1f0f5b88876aa495<!--/@tv-sha--></code></dd>
           </dl>
           <a class="btn" href="shasha-tv.apk?v=1098" download>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
@@ -186,7 +184,6 @@
             <p><b>أول تثبيت على التلفاز؟</b> التلفاز لا يفتح الملف وحده: نزّل حقيبة التثبيت على حاسوبك، ففيها المثبّت لويندوز وماك ولينكس، وتطبيق التلفاز، وتطبيق الجوال، والدليل.</p>
             <dl class="facts">
               <dt>الحجم</dt><dd><!--@kit-size-->55.6<!--/@kit-size--> ميغابايت</dd>
-              <dt>SHA-256</dt><dd><code class="sha"><!--@kit-sha-->78b30805fa2e26c1af6f5ae011dcfca710e014a65e299c16a5613d9ebad76c59<!--/@kit-sha--></code></dd>
             </dl>
             <a class="btn btn-ghost" href="shasha-setup.zip?v=1098" download>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7a2 2 0 0 1 2-2h4l2 2h6a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/><path d="M12 10v6m0 0l-2.5-2.5M12 16l2.5-2.5"/></svg>
@@ -201,9 +198,8 @@
             <div><h3 id="dl-phone">تطبيق الجوال</h3><p>أندرويد 8 فأحدث. يعمل وحده بلا تلفاز: بحث، ومشغّل كامل، وتنزيل الفيديو أو الصوت.</p></div>
           </div>
           <dl class="facts">
-            <dt>الإصدار</dt><dd><!--@mobile-version-->1.8.0<!--/@mobile-version--> (رقم البناء <!--@mobile-code-->1098<!--/@mobile-code-->)</dd>
+            <dt>الإصدار</dt><dd><!--@mobile-version-->1.8.0<!--/@mobile-version--></dd>
             <dt>الحجم</dt><dd><!--@mobile-size-->4.2<!--/@mobile-size--> ميغابايت</dd>
-            <dt>SHA-256</dt><dd><code class="sha"><!--@mobile-sha-->8e097a0ba6127a73f7e87eb0b9155f852da952880dd7b2e6a60b85cd31349e5d<!--/@mobile-sha--></code></dd>
           </dl>
           <a class="btn" href="shasha-mobile.apk?v=1098" download>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
@@ -212,7 +208,7 @@
           <p class="dl-meta" style="margin:0">افتح هذه الصفحة على جوالك واضغط الزر، ثم اتبع <a href="#install-phone">ثلاث خطوات</a>. تطبيق الجوال للمشاهدة على الجوال؛ أما التحكم في التلفاز فصفحة تفتحها من رمز <bdi>QR</bdi> في إعدادات «شاشة» على التلفاز.</p>
         </article>
       </div>
-      <p class="dl-meta">آخر نشر: <span dir="ltr"><!--@published-->2026-10-24<!--/@published--></span>. كل الملفات موقّعة بمفتاح الإصدارات نفسه، فتُثبَّت فوق النسخة السابقة وتبقى البيانات.</p>
+      <p class="dl-meta">آخر نشر: <span dir="ltr"><!--@published-->2026-10-24<!--/@published--></span>. كل نسخة جديدة تُثبَّت فوق السابقة، وتبقى بياناتك وإعداداتك كما هي.</p>
     </div>
   </section>
 
@@ -226,21 +222,21 @@
           <h3>على الجوال <span class="where">3 خطوات</span></h3>
           <ol class="steps">
             <li><b>نزّل الملف</b><span>من زر «نزّل تطبيق الجوال» في هذه الصفحة، على جوالك نفسه. (وهو أيضاً في «مجلد <bdi>Phone</bdi>» داخل حقيبة التثبيت.)</span></li>
-            <li><b>افتحه</b><span>من الإشعار أو تطبيق الملفات أو المتصفح. سيقول أندرويد إن التثبيت من هذا المصدر غير مسموح: اضغط «الإعدادات» وفعّل السماح من هذا المصدر (<bdi>Install unknown apps</bdi>) للتطبيق الذي فتحت منه الملف. مرة واحدة فقط.</span></li>
+            <li><b>افتحه</b><span>من الإشعار أو تطبيق الملفات أو المتصفح. سيطلب أندرويد إذنك أول مرة: اضغط «الإعدادات» وفعّل السماح (<bdi>Install unknown apps</bdi>)، ثم ارجع. هذا طبيعي مع أي تطبيق من خارج المتجر، ومرة واحدة فقط.</span></li>
             <li><b>ثبّته</b><span>ارجع واضغط «تثبيت»، ثم «فتح». يعمل على أندرويد 8 أو أحدث.</span></li>
           </ol>
-          <p class="note"><b>للتحديث لاحقاً</b>الإعدادات ← فحص التحديثات ← نزّل وثبّت. قد يطلب النظام تأكيدك، ومرة واحدة يطلب السماح بالتثبيت.</p>
+          <p class="note"><b>للتحديث لاحقاً</b>الإعدادات ← فحص التحديثات ← نزّل وثبّت. قد يطلب النظام تأكيدك بضغطة.</p>
         </div>
         <div id="install-tv">
           <h3>على التلفاز <span class="where">نحو ربع ساعة</span></h3>
           <p class="tabs-note">تحتاج التلفاز والريموت، وحاسوباً (ويندوز أو ماك أو لينكس)، والاثنان على شبكة البيت نفسها.</p>
           <ol class="steps">
-            <li><b>نزّل حقيبة التثبيت <span class="where">الحاسوب</span></b><span>من زر «حقيبة التثبيت» أعلاه، ثم فك الضغط. ويندوز: الزر الأيمن ← <bdi>Extract All</bdi>. ماك: انقر مرتين. لا تنقل أي ملف من المجلد.</span></li>
+            <li><b>نزّل حقيبة التثبيت <span class="where">الحاسوب</span></b><span>من زر «حقيبة التثبيت» أعلاه، ثم فك الضغط. ويندوز: الزر الأيمن ← <bdi>Extract All</bdi>. ماك: انقر مرتين. واترك الملفات معاً في المجلد.</span></li>
             <li><b>فعّل خيارات المطوّر <span class="where">التلفاز</span></b><span><bdi>Settings</bdi> ← <bdi>System</bdi> ← <bdi>About</bdi>، واضغط <bdi>OK</bdi> سبع مرات على <bdi>Android TV OS build</bdi> حتى تظهر <bdi>You are now a developer!</bdi></span></li>
-            <li><b>فعّل تصحيح الأخطاء <span class="where">التلفاز</span></b><span><bdi>Settings</bdi> ← <bdi>System</bdi> ← <bdi>Developer options</bdi> ← فعّل <bdi>USB debugging</bdi>، و<bdi>Network debugging</bdi> إن وجدته.</span></li>
+            <li><b>اسمح بالتثبيت من الحاسوب <span class="where">التلفاز</span></b><span><bdi>Settings</bdi> ← <bdi>System</bdi> ← <bdi>Developer options</bdi> ← فعّل <bdi>USB debugging</bdi>، و<bdi>Network debugging</bdi> إن وجدته.</span></li>
             <li><b>اعرف عنوان التلفاز <span class="where">التلفاز</span></b><span><bdi>Settings</bdi> ← <bdi>Network &amp; Internet</bdi> ← اسم شبكتك ← <bdi>IP address</bdi> (وبالسلك: <bdi>Ethernet</bdi>). أربعة أرقام بينها نقاط، مثل 192.168.1.50.</span></li>
-            <li><b>شغّل المثبّت <span class="where">الحاسوب</span></b><span>ويندوز: انقر مرتين على «<bdi>Windows</bdi> - ثبّت شاشة» (إن ظهر التحذير الأزرق: <bdi>More info</bdi> ← <bdi>Run anyway</bdi>). ماك: انقر مرتين على «<bdi>Mac</bdi> - ثبّت شاشة» (إن رفضه: <bdi>System Settings</bdi> ← <bdi>Privacy &amp; Security</bdi> ← <bdi>Open Anyway</bdi>). لينكس: <code>bash install-linux.sh</code>. ثم اكتب عنوان التلفاز.</span></li>
-            <li><b>اسمح للحاسوب <span class="where">التلفاز</span></b><span>تظهر <bdi>Allow USB debugging</bdi>?: ضع علامة على <bdi>Always allow from this computer</bdi> ثم <bdi>OK</bdi>، خلال 60 ثانية.</span></li>
+            <li><b>شغّل المثبّت <span class="where">الحاسوب</span></b><span>ويندوز: انقر مرتين على «<bdi>Windows</bdi> - ثبّت شاشة» (إن ظهرت نافذة زرقاء فهذا طبيعي: <bdi>More info</bdi> ← <bdi>Run anyway</bdi>). ماك: انقر مرتين على «<bdi>Mac</bdi> - ثبّت شاشة» (إن لم يفتح: <bdi>System Settings</bdi> ← <bdi>Privacy &amp; Security</bdi> ← <bdi>Open Anyway</bdi>). لينكس: شغّل <bdi>install-linux.sh</bdi>. ثم اكتب عنوان التلفاز.</span></li>
+            <li><b>اسمح للحاسوب <span class="where">التلفاز</span></b><span>تظهر <bdi>Allow USB debugging</bdi>?: ضع علامة على <bdi>Always allow from this computer</bdi> ثم <bdi>OK</bdi>.</span></li>
             <li><b>انتظر، المثبّت يكمل وحده <span class="where">الحاسوب</span></b><span>يكتب اسم التلفاز وطرازه، ويثبّت «شاشة» ويمنحه صلاحياته، ويسألك هل تطفئ يوتيوب الرسمي (<bdi>y</bdi> أو <bdi>n</bdi>)، ثم يكتب «تمّ!».</span></li>
             <li><b>أول تشغيل <span class="where">التلفاز</span></b><span>«شاشة» يطلب رمز الوالدين، ثم ملفك، ثم ملف طفلك.</span></li>
             <li><b>اربط جوالك (اختياري) <span class="where">الجوال</span></b><span>في «شاشة»: الإعدادات ← الخادم المحلي ← رمز الاقتران <bdi>QR</bdi>، وامسحه بكاميرا الجوال.</span></li>
@@ -280,7 +276,7 @@
         </div>
       </div>
       <p class="note"><b>Fire TV</b>خيارات المطوّر: <bdi>Settings</bdi> ← <bdi>My Fire TV</bdi> ← <bdi>Developer options</bdi> (إن لم تجدها: <bdi>About</bdi>، واضغط <bdi>OK</bdi> سبع مرات على اسم الجهاز). فعّل <bdi>ADB debugging</bdi>، والعنوان في <bdi>About</bdi> ← <bdi>Network</bdi>. وفي <bdi>Fire OS 6</bdi> يفعّل المثبّت وحده <bdi>Apps from Unknown Sources</bdi> لتعمل التحديثات بضغطة واحدة. وتجد «شاشة» لاحقاً في <bdi>Your Apps</bdi> ← <bdi>See all</bdi>.</p>
-      <p class="note"><b><bdi>Android TV</bdi> الأقدم، و<bdi>Philips</bdi>، و<bdi>Nvidia Shield</bdi></b>خيارات المطوّر من <bdi>Settings</bdi> ← <bdi>Device Preferences</bdi> ← <bdi>About</bdi> (في <bdi>Philips</bdi>: <bdi>All settings</bdi> ← <bdi>Android settings</bdi> ← <bdi>Device Preferences</bdi> ← <bdi>About</bdi>)، وفي <bdi>Nvidia Shield</bdi> فعّل <bdi>Network debugging</bdi> أيضاً. وفي بعض موديلات <bdi>Google TV</bdi> الأحدث <bdi>Wireless debugging</bdi> فقط: إن رفض التلفاز الاتصال عرض المثبّت الاقتران برمز من 6 أرقام. التفاصيل في الدليل.</p>
+      <p class="note"><b><bdi>Android TV</bdi> الأقدم، و<bdi>Philips</bdi>، و<bdi>Nvidia Shield</bdi></b>خيارات المطوّر من <bdi>Settings</bdi> ← <bdi>Device Preferences</bdi> ← <bdi>About</bdi> (في <bdi>Philips</bdi>: <bdi>All settings</bdi> ← <bdi>Android settings</bdi> ← <bdi>Device Preferences</bdi> ← <bdi>About</bdi>)، وفي <bdi>Nvidia Shield</bdi> فعّل <bdi>Network debugging</bdi> أيضاً. وفي بعض موديلات <bdi>Google TV</bdi> الأحدث <bdi>Wireless debugging</bdi> فقط: وفيها يطلب المثبّت رمزاً من 6 أرقام يظهر على التلفاز. التفاصيل في الدليل.</p>
     </div>
   </section>
 
@@ -333,8 +329,7 @@
       <details><summary>تلفازي سامسونج أو إل جي</summary><p>نظامهما ليس أندرويد. لا تحتاج أن تغيّر التلفاز: وصّل به جهازاً صغيراً بنظام <bdi>Google TV</bdi> أو <bdi>Fire OS</bdi> في منفذ <bdi>HDMI</bdi>، واختر منفذه بزر <bdi>Source</bdi>، وثبّت «شاشة» عليه كأنه التلفاز.</p></details>
       <details><summary>كيف أحدّث؟</summary><p>من داخل التطبيق: «الإعدادات ← فحص التحديثات». ضغطة واحدة تنزّل أحدث إصدار وتثبّته، ويُغلق التطبيق لحظة ثم يُفتح من جديد. أو شغّل مثبّت الحاسوب من جديد بالملف الأحدث. بياناتك تبقى كما هي.</p></details>
       <details><summary>أين تُحفظ بياناتنا؟</summary><p>كل شيء على التلفاز نفسه: الملفات والقنوات المسموحة والسجل والإعدادات. لا حسابات ولا تتبّع.</p></details>
-      <details><summary>هل أستطيع إزالته؟</summary><p>نعم: على التلفاز <bdi>Settings</bdi> ← <bdi>Apps</bdi> ← شاشة ← <bdi>Uninstall</bdi> (يمسح بياناته كلها). ولمن يعرف سطر الأوامر، المثبّت يقبل <code>--undo</code>: يعيد يوتيوب الرسمي ويسحب صلاحيات «شاشة» ويبقيه مثبّتاً.</p></details>
-      <details><summary>كيف أتأكد أن الملف سليم؟</summary><p>قارن بصمة <bdi>SHA-256</bdi> للملف الذي نزّلته بالبصمة المكتوبة تحت زرّه. ويندوز (<bdi>PowerShell</bdi>): <code>Get-FileHash shasha-tv.apk</code>. ماك ولينكس: <code>shasum -a 256 shasha-tv.apk</code>.</p></details>
+      <details><summary>هل أستطيع إزالته؟</summary><p>نعم: على التلفاز <bdi>Settings</bdi> ← <bdi>Apps</bdi> ← شاشة ← <bdi>Uninstall</bdi> (يمسح بياناته كلها).</p></details>
     </div>
   </section>
 
@@ -351,7 +346,7 @@
 
 <footer class="wrap foot">
   <span>صنعه <a href="https://ahmadnayfeh.vercel.app">أحمد نايفة</a> · تخطّي المقاطع الدعائية ببيانات <a href="https://sponsor.ajay.app/" lang="en">SponsorBlock</a></span>
-  <span><a href="../khatwa/">خطوة</a> · <a href="../marathon/">ماراثون القراءة</a> · <a href="latest.json"><code>latest.json</code></a></span>
+  <span><a href="../khatwa/">خطوة</a> · <a href="../marathon/">ماراثون القراءة</a></span>
 </footer>
 </body>
 </html>
