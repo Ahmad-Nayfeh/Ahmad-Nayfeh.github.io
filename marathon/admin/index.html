@@ -119,14 +119,14 @@
     </div>
 
     <div class="tools">
-      <input id="q" type="search" placeholder="ابحث باسم ماراثون أو بريد أو رمز دعوة" autocomplete="off">
+      <input id="q" type="search" placeholder="ابحث باسم مجموعة أو بريد أو رمز دعوة" autocomplete="off">
       <button class="chip-btn" id="btn-csv">تصدير CSV</button>
     </div>
 
     <div class="card">
-      <h2><span class="grow">الماراثونات</span><small id="m-count"></small></h2>
+      <h2><span class="grow">المجموعات</span><small id="m-count"></small></h2>
       <div class="table-wrap"><table>
-        <thead><tr><th>الماراثون</th><th>المشرف</th><th>القرّاء</th><th>التحديات</th><th>الساعات</th><th>آخر 7 أيام</th><th>آخر قراءة</th><th>الرمز</th></tr></thead>
+        <thead><tr><th>المجموعة</th><th>المالك</th><th>القرّاء</th><th>الكتب</th><th>الساعات</th><th>آخر 7 أيام</th><th>آخر قراءة</th><th>الرمز</th></tr></thead>
         <tbody id="m-body"></tbody>
       </table></div>
     </div>
@@ -134,7 +134,7 @@
     <div class="card">
       <h2><span class="grow">الحسابات</span><small id="u-count"></small></h2>
       <div class="table-wrap"><table>
-        <thead><tr><th>الحساب</th><th>النوع</th><th>ماراثونات</th><th>أُنشئ</th><th>آخر دخول</th></tr></thead>
+        <thead><tr><th>الحساب</th><th>النوع</th><th>مجموعات</th><th>ساعات القراءة</th><th>أُنشئ</th><th>آخر دخول</th></tr></thead>
         <tbody id="u-body"></tbody>
       </table></div>
       <button class="chip-btn more" id="u-more" hidden>عرض الجميع</button>
@@ -238,40 +238,46 @@ onAuthStateChanged(auth, (user) => {
 });
 
 // ---- Data ----
+// Schema: users/{uid}(/days/{date}), groups/{gid} with members, challenges, entries, finishes.
 async function load() {
   show("dash", false); show("loading");
   try {
-    const [ms, us, mem, ent, ch, ach] = await Promise.all([
-      getDocs(collection(db, "marathons")), getDocs(collection(db, "users")),
+    const [gs, us, mem, ent, ch, fin, dys] = await Promise.all([
+      getDocs(collection(db, "groups")), getDocs(collection(db, "users")),
       getDocs(collectionGroup(db, "members")), getDocs(collectionGroup(db, "entries")),
-      getDocs(collectionGroup(db, "challenges")), getDocs(collectionGroup(db, "achievements")),
+      getDocs(collectionGroup(db, "challenges")), getDocs(collectionGroup(db, "finishes")),
+      getDocs(collectionGroup(db, "days")),
     ]);
-    const users = us.docs.map((d) => ({ uid: d.id, ...d.data() }));
-    const byUid = Object.fromEntries(users.map((u) => [u.uid, u]));
-    const group = (snap) => {
+    const bucket = (snap) => {
       const out = {};
       for (const d of snap.docs) (out[parentId(d.ref.path)] ||= []).push({ id: d.id, ...d.data() });
       return out;
     };
-    const members = group(mem), entries = group(ent), challenges = group(ch), achievements = group(ach);
+    const days = bucket(dys);
+    const users = us.docs.map((d) => {
+      const u = { uid: d.id, ...d.data() };
+      u.minutes = (days[d.id] || []).reduce((a, x) => a + (x.minutes || 0), 0);
+      return u;
+    });
+    const byUid = Object.fromEntries(users.map((u) => [u.uid, u]));
+    const members = bucket(mem), entries = bucket(ent), challenges = bucket(ch), finishes = bucket(fin);
     const week = iso(new Date(Date.now() - 6 * 864e5));
-    const mins = (e) => (e.commonMinutes || 0) + (e.otherMinutes || 0);
-    const marathons = ms.docs.map((d) => {
-      const m = d.data();
-      const roles = m.roles || {};
+    const groups = gs.docs.map((d) => {
+      const g = d.data();
+      const roles = g.roles || {};
       const es = entries[d.id] || [];
-      const reading = es.filter((e) => mins(e) > 0);
       return {
-        id: d.id, name: m.name || "—", code: m.inviteCode || "", createdAt: m.createdAt || 0, roles,
-        organizers: Object.keys(roles).filter((u) => roles[u] === "organizer").map((u) => byUid[u]?.email || byUid[u]?.name || "ضيف"),
-        members: members[d.id] || [], entries: es, challenges: challenges[d.id] || [], achievements: achievements[d.id] || [],
-        minutes: es.reduce((a, e) => a + mins(e), 0),
-        minutes7: es.filter((e) => e.date >= week).reduce((a, e) => a + mins(e), 0),
-        last: reading.map((e) => e.date).sort().pop() || null,
+        id: d.id, name: g.name || "—", code: g.inviteCode || "", createdAt: g.createdAt || 0, roles, visibility: g.visibility || "private",
+        owners: Object.keys(roles).filter((u) => roles[u] === "owner").map((u) => byUid[u]?.email || byUid[u]?.name || "ضيف"),
+        members: members[d.id] || [], entries: es, challenges: challenges[d.id] || [], finishes: finishes[d.id] || [],
+        minutes: es.reduce((a, e) => a + (e.minutes || 0), 0),
+        minutes7: es.filter((e) => e.date >= week).reduce((a, e) => a + (e.minutes || 0), 0),
+        last: es.filter((e) => e.minutes > 0).map((e) => e.date).sort().pop() || null,
       };
     }).sort((a, b) => (b.last || "").localeCompare(a.last || "") || b.createdAt - a.createdAt);
-    const allEntries = ent.docs.map((d) => d.data());
-    data = { marathons, users: users.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0)), allEntries, ach: ach.docs.map((d) => d.data()), mins, week };
+    // Platform totals come from personal logs: every reader counts once, in a group or not.
+    const allDays = dys.docs.map((d) => d.data());
+    data = { groups, users: users.sort((a, b) => (b.lastSeen || 0) - (a.lastSeen || 0)), allDays, finishes: fin.size, week };
     render();
     $("stamp").textContent = `آخر تحديث: ${new Date().toLocaleTimeString("ar-SA-u-nu-latn", { hour: "2-digit", minute: "2-digit" })}`;
     show("dash");
@@ -284,60 +290,60 @@ async function load() {
 }
 
 function render() {
-  const { marathons, users, allEntries, ach, mins, week } = data;
+  const { groups, users, allDays, finishes, week } = data;
   const guests = users.filter((u) => u.guest).length;
-  const totalMembers = marathons.reduce((a, m) => a + m.members.length, 0);
-  const books = ach.filter((a) => a.type === "FINISHED_COMMON_BOOK" || a.type === "FINISHED_OTHER_BOOK").length;
-  const total = allEntries.reduce((a, e) => a + mins(e), 0);
-  const last7 = allEntries.filter((e) => e.date >= week).reduce((a, e) => a + mins(e), 0);
-  const active = marathons.filter((m) => m.minutes7 > 0).length;
+  const seen7 = users.filter((u) => (u.lastSeen || 0) > Date.now() - 7 * 864e5).length;
+  const total = allDays.reduce((a, e) => a + (e.minutes || 0), 0);
+  const last7 = allDays.filter((e) => e.date >= week).reduce((a, e) => a + (e.minutes || 0), 0);
+  const active = groups.filter((g) => g.minutes7 > 0).length;
   const k = [
-    [marathons.length, `ماراثون · ${active} نشط هذا الأسبوع`], [users.length, `حساب · ${guests} ضيف`],
-    [totalMembers, "قارئ في كل الماراثونات"], [books, "كتاباً أُنهي"],
+    [users.length, `حساب · ${guests} دون Google`], [seen7, "دخلوا هذا الأسبوع"],
+    [groups.length, `مجموعة · ${active} نشطة هذا الأسبوع`], [finishes, "إتمام كتاب"],
     [hours(total), "ساعة قراءة"], [hours(last7), "ساعة في آخر 7 أيام"],
   ];
   $("kpis").innerHTML = k.map(([v, l]) => `<div class="kpi"><b class="mono">${esc(v)}</b><span>${esc(l)}</span></div>`).join("");
 
   // 30-day chart
-  const days = [...Array(30)].map((_, i) => iso(new Date(Date.now() - (29 - i) * 864e5)));
-  const per = Object.fromEntries(days.map((d) => [d, 0]));
-  for (const e of allEntries) if (e.date in per) per[e.date] += mins(e);
-  const vals = days.map((d) => per[d]);
+  const span = [...Array(30)].map((_, i) => iso(new Date(Date.now() - (29 - i) * 864e5)));
+  const per = Object.fromEntries(span.map((d) => [d, 0]));
+  for (const e of allDays) if (e.date in per) per[e.date] += e.minutes || 0;
+  const vals = span.map((d) => per[d]);
   const max = Math.max(1, ...vals);
   const bw = 600 / 30;
   $("chart").innerHTML = vals.map((v, i) => {
     const h = Math.max(v > 0 ? 3 : 1, (v / max) * 140);
     // RTL page: newest day on the left, like the app.
     const x = (29 - i) * bw;
-    return `<rect x="${x + 3}" y="${155 - h}" width="${bw - 6}" height="${h}" rx="3" fill="${i === 29 ? "#F2B84B" : "#3C4A6B"}"><title>${fmtDate(days[i])}: ${v} دقيقة</title></rect>`;
+    return `<rect x="${x + 3}" y="${155 - h}" width="${bw - 6}" height="${h}" rx="3" fill="${i === 29 ? "#F2B84B" : "#3C4A6B"}"><title>${fmtDate(span[i])}: ${v} دقيقة</title></rect>`;
   }).join("");
 
   const q = $("q").value.trim().toLowerCase();
-  const ms = marathons.filter((m) => !q || m.name.toLowerCase().includes(q) || m.code.toLowerCase() === q || m.organizers.some((o) => o.toLowerCase().includes(q)));
-  $("m-count").textContent = `${ms.length} من ${marathons.length}`;
-  $("m-body").innerHTML = ms.length ? ms.map((m) => {
-    const act = m.members.filter((x) => x.active !== false).length;
-    return `<tr class="row" data-id="${esc(m.id)}">
-      <td><b>${esc(m.name)}</b>${m.minutes7 > 0 ? ' <span class="pill ok">نشط</span>' : ""}</td>
-      <td class="mono" style="font-size:.8rem">${esc(m.organizers.join("، ") || "—")}</td>
-      <td class="num">${act} <span class="muted">/ ${m.members.length}</span></td>
-      <td class="num">${m.challenges.length}</td>
-      <td class="num">${hours(m.minutes)}</td>
-      <td class="num">${hours(m.minutes7)}</td>
-      <td>${esc(rel(m.last))}</td>
-      <td class="mono">${esc(m.code)}</td></tr>`;
-  }).join("") : `<tr><td colspan="8" class="empty">${q ? "لا نتائج لهذا البحث." : "لم يُنشأ أي ماراثون بعد."}</td></tr>`;
+  const gs = groups.filter((g) => !q || g.name.toLowerCase().includes(q) || g.code.toLowerCase() === q || g.owners.some((o) => o.toLowerCase().includes(q)));
+  $("m-count").textContent = `${gs.length} من ${groups.length}`;
+  $("m-body").innerHTML = gs.length ? gs.map((g) => {
+    const act = g.members.filter((x) => x.active !== false).length;
+    return `<tr class="row" data-id="${esc(g.id)}">
+      <td><b>${esc(g.name)}</b> <span class="pill dim">${g.visibility === "public" ? "عامة" : "خاصة"}</span>${g.minutes7 > 0 ? ' <span class="pill ok">نشطة</span>' : ""}</td>
+      <td class="mono" style="font-size:.8rem">${esc(g.owners.join("، ") || "—")}</td>
+      <td class="num">${act}</td>
+      <td class="num">${g.challenges.length}</td>
+      <td class="num">${hours(g.minutes)}</td>
+      <td class="num">${hours(g.minutes7)}</td>
+      <td>${esc(rel(g.last))}</td>
+      <td class="mono">${esc(g.code)}</td></tr>`;
+  }).join("") : `<tr><td colspan="8" class="empty">${q ? "لا نتائج لهذا البحث." : "لم تُنشأ أي مجموعة بعد."}</td></tr>`;
   for (const tr of document.querySelectorAll("tr.row")) tr.onclick = () => openDetail(tr.dataset.id);
 
   const us = users.filter((u) => !q || (u.email || "").toLowerCase().includes(q) || (u.name || "").toLowerCase().includes(q));
   const shown = showAllUsers || q ? us : us.slice(0, 20);
   $("u-count").textContent = `${us.length}`;
   $("u-body").innerHTML = shown.length ? shown.map((u) => `<tr>
-      <td>${u.email ? `<span class="mono">${esc(u.email)}</span>` : "ضيف"}${u.name ? `<div class="muted" style="font-size:.8rem">${esc(u.name)}</div>` : ""}</td>
-      <td>${u.guest ? '<span class="pill dim">ضيف</span>' : '<span class="pill">Google</span>'}</td>
-      <td class="num">${(u.marathons || []).length}</td>
+      <td>${u.name ? `<b>${esc(u.name)}</b>` : "دون اسم"}${u.email ? `<div class="mono muted" style="font-size:.8rem">${esc(u.email)}</div>` : ""}</td>
+      <td>${u.guest ? '<span class="pill dim">دون Google</span>' : '<span class="pill">Google</span>'}</td>
+      <td class="num">${(u.groups || []).length}</td>
+      <td class="num">${hours(u.minutes)}</td>
       <td>${esc(fmtDate(ms2iso(u.createdAt)))}</td>
-      <td>${esc(rel(ms2iso(u.lastSeen)))}</td></tr>`).join("") : `<tr><td colspan="5" class="empty">لا حسابات.</td></tr>`;
+      <td>${esc(rel(ms2iso(u.lastSeen)))}</td></tr>`).join("") : `<tr><td colspan="6" class="empty">لا حسابات.</td></tr>`;
   show("u-more", !showAllUsers && !q && us.length > 20);
 }
 
@@ -346,46 +352,45 @@ $("u-more").onclick = () => { showAllUsers = true; render(); };
 
 // ---- Detail ----
 function openDetail(id) {
-  const m = data.marathons.find((x) => x.id === id);
-  if (!m) return;
-  const mins = data.mins;
+  const g = data.groups.find((x) => x.id === id);
+  if (!g) return;
   const byMember = {};
-  for (const e of m.entries) {
+  for (const e of g.entries) {
     const s = (byMember[e.memberId] ||= { minutes: 0, days: 0, last: null });
-    s.minutes += mins(e);
-    if (mins(e) > 0) { s.days++; if (!s.last || e.date > s.last) s.last = e.date; }
+    s.minutes += e.minutes || 0;
+    if (e.minutes > 0) { s.days++; if (!s.last || e.date > s.last) s.last = e.date; }
   }
-  const finished = new Set(m.achievements.filter((a) => a.type === "FINISHED_COMMON_BOOK").map((a) => a.memberId + "|" + a.challengeId));
-  const members = [...m.members].sort((a, b) => (byMember[b.id]?.minutes || 0) - (byMember[a.id]?.minutes || 0));
-  const chs = [...m.challenges].sort((a, b) => (b.start || "").localeCompare(a.start || ""));
+  const roleName = { owner: "المالك", admin: "مشرف", member: "عضو" };
+  const members = [...g.members].sort((a, b) => (byMember[b.id]?.minutes || 0) - (byMember[a.id]?.minutes || 0));
+  const chs = [...g.challenges].sort((a, b) => (b.start || "").localeCompare(a.start || ""));
   const today = iso(new Date());
-  const recent = [...m.entries].filter((e) => mins(e) > 0).sort((a, b) => b.date.localeCompare(a.date) || (b.updatedAt || 0) - (a.updatedAt || 0)).slice(0, 15);
-  const nameOf = Object.fromEntries(m.members.map((x) => [x.id, x.name]));
+  const recent = [...g.entries].filter((e) => e.minutes > 0).sort((a, b) => b.date.localeCompare(a.date) || (b.updatedAt || 0) - (a.updatedAt || 0)).slice(0, 15);
+  const nameOf = Object.fromEntries(g.members.map((x) => [x.id, x.name]));
   $("drawer").innerHTML = `
     <button class="chip-btn" id="d-close">إغلاق</button>
-    <h2 class="dn">${esc(m.name)}</h2>
-    <div class="muted" style="font-size:.85rem">رمز الدعوة <span class="mono">${esc(m.code)}</span> · أُنشئ ${esc(fmtDate(ms2iso(m.createdAt)))} · ${Object.keys(m.roles).length} حساب</div>
+    <h2 class="dn">${esc(g.name)}</h2>
+    <div class="muted" style="font-size:.85rem">${g.visibility === "public" ? "عامة" : "خاصة"} · رمز الدعوة <span class="mono">${esc(g.code)}</span> · أُنشئت ${esc(fmtDate(ms2iso(g.createdAt)))} · ${Object.keys(g.roles).length} حساب</div>
     <div class="grid2">
-      <div class="kpi"><b class="mono">${m.members.length}</b><span>قارئ</span></div>
-      <div class="kpi"><b class="mono">${m.challenges.length}</b><span>تحدٍّ</span></div>
-      <div class="kpi"><b class="mono">${hours(m.minutes)}</b><span>ساعة</span></div>
-      <div class="kpi"><b class="mono">${m.entries.filter((e) => mins(e) > 0).length}</b><span>يوم مسجّل</span></div>
+      <div class="kpi"><b class="mono">${g.members.filter((x) => x.active !== false).length}</b><span>قارئ</span></div>
+      <div class="kpi"><b class="mono">${g.challenges.length}</b><span>كتاب</span></div>
+      <div class="kpi"><b class="mono">${hours(g.minutes)}</b><span>ساعة</span></div>
+      <div class="kpi"><b class="mono">${g.entries.filter((e) => e.minutes > 0).length}</b><span>يوم مسجّل</span></div>
     </div>
     <div class="card"><h2>القرّاء</h2><div class="table-wrap"><table>
       <thead><tr><th>القارئ</th><th>الساعات</th><th>أيام</th><th>آخر قراءة</th><th></th></tr></thead><tbody>
       ${members.map((x) => { const s = byMember[x.id] || { minutes: 0, days: 0, last: null }; return `<tr>
         <td>${esc(x.name)}</td><td class="num">${hours(s.minutes)}</td><td class="num">${s.days}</td><td>${esc(rel(s.last))}</td>
-        <td>${x.active === false ? '<span class="pill dim">مؤرشف</span>' : ""} ${x.linkedUid ? '<span class="pill dim">مرتبط بحساب</span>' : ""}</td></tr>`; }).join("") || '<tr><td colspan="5" class="empty">لا قرّاء.</td></tr>'}
+        <td>${x.active === false ? '<span class="pill dim">غادر</span>' : g.roles[x.id] ? `<span class="pill dim">${roleName[g.roles[x.id]] || ""}</span>` : '<span class="pill dim">دون تطبيق</span>'}</td></tr>`; }).join("") || '<tr><td colspan="5" class="empty">لا قرّاء.</td></tr>'}
     </tbody></table></div></div>
-    <div class="card"><h2>التحديات</h2><div class="table-wrap"><table>
-      <thead><tr><th>الكتاب</th><th>الفترة</th><th>الحالة</th><th>أنهوه</th></tr></thead><tbody>
-      ${chs.map((c) => { const st = today < c.start ? "قادم" : today > c.end ? "منتهٍ" : "جارٍ"; const n = [...finished].filter((k) => k.endsWith("|" + c.id)).length; return `<tr>
+    <div class="card"><h2>الكتب</h2><div class="table-wrap"><table>
+      <thead><tr><th>الكتاب</th><th>الفترة</th><th>الحالة</th><th>أتمّوه</th></tr></thead><tbody>
+      ${chs.map((c) => { const st = today < c.start ? "قادم" : today > c.end ? "منتهٍ" : "جارٍ"; const n = g.finishes.filter((f) => f.challengeId === c.id).length; return `<tr>
         <td><b>${esc(c.title)}</b>${c.author ? `<div class="muted" style="font-size:.8rem">${esc(c.author)}</div>` : ""}</td>
-        <td>${esc(fmtDate(c.start))} – ${esc(fmtDate(c.end))}</td><td><span class="pill${st === "جارٍ" ? " ok" : " dim"}">${st}</span></td><td class="num">${n}</td></tr>`; }).join("") || '<tr><td colspan="4" class="empty">لا تحديات.</td></tr>'}
+        <td>${esc(fmtDate(c.start))} – ${esc(fmtDate(c.end))}</td><td><span class="pill${st === "جارٍ" ? " ok" : " dim"}">${st}</span></td><td class="num">${n}</td></tr>`; }).join("") || '<tr><td colspan="4" class="empty">لا كتب.</td></tr>'}
     </tbody></table></div></div>
     <div class="card"><h2>آخر التسجيلات</h2><div class="table-wrap"><table>
-      <thead><tr><th>اليوم</th><th>القارئ</th><th>المشترك</th><th>أخرى</th></tr></thead><tbody>
-      ${recent.map((e) => `<tr><td>${esc(fmtDate(e.date))}</td><td>${esc(nameOf[e.memberId] || "—")}</td><td class="num">${e.commonMinutes || 0} د</td><td class="num">${e.otherMinutes || 0} د</td></tr>`).join("") || '<tr><td colspan="4" class="empty">لا تسجيلات.</td></tr>'}
+      <thead><tr><th>اليوم</th><th>القارئ</th><th>الدقائق</th></tr></thead><tbody>
+      ${recent.map((e) => `<tr><td>${esc(fmtDate(e.date))}</td><td>${esc(nameOf[e.memberId] || "—")}</td><td class="num">${e.minutes || 0} د</td></tr>`).join("") || '<tr><td colspan="3" class="empty">لا تسجيلات.</td></tr>'}
     </tbody></table></div></div>`;
   show("scrim"); show("drawer");
   $("d-close").onclick = closeDetail;
@@ -399,11 +404,11 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDetai
 $("btn-csv").onclick = () => {
   if (!data) return;
   const cell = (v) => { const s = String(v ?? ""); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
-  const rows = [["marathon", "invite_code", "organizers", "readers", "challenges", "hours", "hours_last_7_days", "last_reading", "created"]];
-  for (const m of data.marathons) rows.push([m.name, m.code, m.organizers.join(" / "), m.members.length, m.challenges.length, hours(m.minutes), hours(m.minutes7), m.last || "", ms2iso(m.createdAt) || ""]);
+  const rows = [["group", "visibility", "invite_code", "owners", "readers", "books", "hours", "hours_last_7_days", "last_reading", "created"]];
+  for (const g of data.groups) rows.push([g.name, g.visibility, g.code, g.owners.join(" / "), g.members.filter((x) => x.active !== false).length, g.challenges.length, hours(g.minutes), hours(g.minutes7), g.last || "", ms2iso(g.createdAt) || ""]);
   rows.push([]);
-  rows.push(["account", "name", "type", "marathons", "created", "last_seen"]);
-  for (const u of data.users) rows.push([u.email || "", u.name || "", u.guest ? "guest" : "google", (u.marathons || []).length, ms2iso(u.createdAt) || "", ms2iso(u.lastSeen) || ""]);
+  rows.push(["name", "account", "type", "groups", "hours", "created", "last_seen"]);
+  for (const u of data.users) rows.push([u.name || "", u.email || "", u.guest ? "guest" : "google", (u.groups || []).length, hours(u.minutes), ms2iso(u.createdAt) || "", ms2iso(u.lastSeen) || ""]);
   const blob = new Blob(["﻿" + rows.map((r) => r.map(cell).join(",")).join("\n")], { type: "text/csv;charset=utf-8" });
   const a = Object.assign(document.createElement("a"), { href: URL.createObjectURL(blob), download: `reading-marathon-${iso(new Date())}.csv` });
   a.click();

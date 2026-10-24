@@ -34,8 +34,8 @@
 <body class="t-marathon">
 <main class="wrap box">
   <img class="logo" src="../img/icon.svg" alt="">
-  <h1>دُعيت إلى ماراثون قراءة</h1>
-  <p class="muted">انضم إلى مجموعتك في تطبيق ماراثون القراءة: كتاب مشترك، تسجيل يومي، نقاط وأوسمة.</p>
+  <h1>دُعيت إلى مجموعة قراءة</h1>
+  <p class="muted">انضم إلى المجموعة في تطبيق ماراثون القراءة: كتاب مشترك، وتسجيل بلمسة، وترتيب.</p>
 
   <div id="with-code" hidden>
     <p class="muted" style="margin:24px 0 0">رمز الدعوة</p>
@@ -45,13 +45,13 @@
 
   <div class="stack">
     <a class="btn" id="open" href="#" hidden>افتح في التطبيق</a>
-    <a class="btn" id="dl" href="../reading-marathon-1.0.0.apk" download>حمّل التطبيق (APK)</a>
+    <a class="btn" id="dl" href="../reading-marathon-2.0.0.apk" download>حمّل التطبيق (APK)</a>
   </div>
 
   <ol class="steps">
     <li><b>ثبّت التطبيق</b><span>من الزر أعلاه، واسمح بالتثبيت من هذا المصدر إن طُلب.</span></li>
-    <li><b>اختر «ماراثون مشترك» ثم «انضم برمز دعوة»</b><span>أو اضغط رابط الدعوة مرة أخرى بعد التثبيت فيُملأ الرمز تلقائياً.</span></li>
-    <li><b>اختر اسمك</b><span>من قائمة القرّاء، أو أضف نفسك.</span></li>
+    <li><b>ادخل واختر اسمك</b><span>بحساب Google أو دون حساب.</span></li>
+    <li><b>اضغط رابط الدعوة مرة أخرى</b><span>فيفتح التطبيق على المجموعة مباشرة. أو من «المجموعات ← انضم برمز» أدخل الرمز.</span></li>
   </ol>
   <p class="muted" style="margin-top:28px"><a href="../">تعرّف على التطبيق</a></p>
 </main>
@@ -65,7 +65,7 @@
     document.getElementById('copy').addEventListener('click', function (e) {
       var b = e.currentTarget;
       (navigator.clipboard ? navigator.clipboard.writeText(code) : Promise.reject()).then(
-        function () { b.textContent = 'نُسخ ✓'; },
+        function () { b.textContent = 'نُسخ'; },
         function () { b.textContent = 'انسخه يدوياً: ' + code; });
     });
     // On Android, an intent link opens the app when it is installed, else falls back to this page's download.
