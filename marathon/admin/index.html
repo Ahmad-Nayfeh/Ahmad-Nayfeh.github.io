@@ -277,18 +277,19 @@ onAuthStateChanged(auth, (user) => {
 async function load(quiet = false) {
   if (!quiet) { show("dash", false); show("loading"); }
   try {
-    const [gs, us, mem, ent, ch, fin, dys, bks, sgs, ann, ban, lg] = await Promise.all([
+    const [gs, us, mem, ent, ch, fin, dys, bks, sgs, ann, ban, lg, rds, shf] = await Promise.all([
       getDocs(collection(db, "groups")), getDocs(collection(db, "users")),
       getDocs(collectionGroup(db, "members")), getDocs(collectionGroup(db, "entries")),
       getDocs(collectionGroup(db, "challenges")), getDocs(collectionGroup(db, "finishes")),
       getDocs(collectionGroup(db, "days")), getDocs(collection(db, "books")), getDocs(collection(db, "suggestions")),
       getDocs(collection(db, "announcements")), getDocs(collection(db, "banned")),
       getDocs(query(collection(db, "adminLog"), orderBy("at", "desc"), limit(200))),
+      getDocs(collectionGroup(db, "reads")), getDocs(collectionGroup(db, "shelf")),
     ]);
     const bucket = (snap) => { const out = {}; for (const d of snap.docs) (out[parentId(d.ref.path)] ||= []).push({ id: d.id, ref: d.ref, ...d.data() }); return out; };
-    const days = bucket(dys);
+    const days = bucket(dys), reads = bucket(rds), shelves = bucket(shf);
     const banned = new Set(ban.docs.map((d) => d.id));
-    const users = us.docs.map((d) => ({ uid: d.id, ...d.data(), days: days[d.id] || [], minutes: (days[d.id] || []).reduce((a, x) => a + (x.minutes || 0), 0), banned: banned.has(d.id) }));
+    const users = us.docs.map((d) => ({ uid: d.id, ...d.data(), days: days[d.id] || [], reads: reads[d.id] || [], shelf: shelves[d.id] || [], minutes: (days[d.id] || []).reduce((a, x) => a + (x.minutes || 0), 0), banned: banned.has(d.id) }));
     const byUid = Object.fromEntries(users.map((u) => [u.uid, u]));
     const members = bucket(mem), entries = bucket(ent), challenges = bucket(ch), finishes = bucket(fin);
     const week = iso(new Date(Date.now() - 6 * 864e5));
@@ -296,7 +297,7 @@ async function load(quiet = false) {
       const g = d.data(); const roles = g.roles || {}; const es = entries[d.id] || [];
       return {
         id: d.id, ...g, name: g.name || "—", code: g.inviteCode || "", createdAt: g.createdAt || 0, roles, visibility: g.visibility || "private",
-        rules: g.rules || { minutesPerPoint: 10, finishBonus: 50 },
+        rules: { minutesPerPoint: 10, finishBonus: 50, countAll: true, ...(g.rules || {}) },
         owners: Object.keys(roles).filter((u) => roles[u] === "owner").map((u) => byUid[u]?.email || byUid[u]?.name || "ضيف"),
         members: members[d.id] || [], entries: es, challenges: challenges[d.id] || [], finishes: finishes[d.id] || [],
         minutes: es.reduce((a, e) => a + (e.minutes || 0), 0),
@@ -576,7 +577,7 @@ function openGroup(id) {
   const g = data.groups.find((x) => x.id === id);
   const roleName = { owner: "المالك", admin: "مشرف", member: "عضو" };
   const byMember = {};
-  for (const e of g.entries) { const s = (byMember[e.memberId] ||= { minutes: 0, days: 0, last: null }); s.minutes += e.minutes || 0; if (e.minutes > 0) { s.days++; if (!s.last || e.date > s.last) s.last = e.date; } }
+  for (const e of g.entries) { const s = (byMember[e.memberId] ||= { minutes: 0, shared: 0, days: 0, last: null }); s.minutes += e.minutes || 0; s.shared += e.sharedMinutes || 0; if (e.minutes > 0) { s.days++; if (!s.last || e.date > s.last) s.last = e.date; } }
   const members = g.members.filter((m) => m.active !== false).sort((a, b) => (byMember[b.id]?.minutes || 0) - (byMember[a.id]?.minutes || 0));
   const chs = [...g.challenges].sort((a, b) => (b.start || "").localeCompare(a.start || ""));
   const today = iso(new Date());
@@ -589,14 +590,15 @@ function openGroup(id) {
       <label class="field"><span>من يستطيع الانضمام</span><select id="g-vis"><option value="private" ${g.visibility !== "public" ? "selected" : ""}>برمز الدعوة فقط</option><option value="public" ${g.visibility === "public" ? "selected" : ""}>أي قارئ (عامة)</option></select></label>
       <div class="split2"><label class="field"><span>نقطة لكل كم دقيقة</span><input id="g-mpp" inputmode="numeric" value="${esc(g.rules.minutesPerPoint)}"></label>
       <label class="field"><span>نقاط إتمام الكتاب</span><input id="g-bonus" inputmode="numeric" value="${esc(g.rules.finishBonus)}"></label></div>
+      <label class="field"><span>ما الذي يُحسب في الترتيب</span><select id="g-all"><option value="1" ${g.rules.countAll !== false ? "selected" : ""}>كل قراءة الأعضاء</option><option value="0" ${g.rules.countAll === false ? "selected" : ""}>الكتاب المشترك فقط</option></select></label>
       <div class="row-actions"><button class="btn-a" id="g-save">حفظ</button><button class="chip-btn" id="g-code">رمز دعوة جديد</button><button class="btn-d" id="g-del">حذف المجموعة</button></div>
     </div>
     <div class="card"><h2>الأعضاء (${members.length})</h2><div class="table-wrap"><table>
-      <thead><tr><th>العضو</th><th>الساعات</th><th>أيام</th><th>آخر قراءة</th><th>الدور</th><th></th></tr></thead><tbody>
-      ${members.map((m) => { const s = byMember[m.id] || { minutes: 0, days: 0, last: null }; const r = g.roles[m.id]; return `<tr>
-        <td>${esc(m.name)}${m.linkedUid ? "" : ' <span class="pill dim">دون تطبيق</span>'}</td><td class="num">${hours(s.minutes)}</td><td class="num">${s.days}</td><td>${esc(rel(s.last))}</td>
+      <thead><tr><th>العضو</th><th>الساعات</th><th>منها في الكتاب</th><th>أيام</th><th>آخر قراءة</th><th>الدور</th><th></th></tr></thead><tbody>
+      ${members.map((m) => { const s = byMember[m.id] || { minutes: 0, shared: 0, days: 0, last: null }; const r = g.roles[m.id]; return `<tr>
+        <td>${esc(m.name)}${m.linkedUid ? "" : ' <span class="pill dim">دون تطبيق</span>'}</td><td class="num">${hours(s.minutes)}</td><td class="num">${hours(s.shared)}</td><td class="num">${s.days}</td><td>${esc(rel(s.last))}</td>
         <td>${r ? `<select class="mini" data-role="${esc(m.id)}">${["owner", "admin", "member"].map((x) => `<option value="${x}" ${x === r ? "selected" : ""}>${roleName[x]}</option>`).join("")}</select>` : "—"}</td>
-        <td>${r === "owner" ? "" : `<button class="chip-btn" data-kick="${esc(m.id)}">إخراج</button>`}</td></tr>`; }).join("") || '<tr><td colspan="6" class="empty">لا أعضاء.</td></tr>'}
+        <td>${r === "owner" ? "" : `<button class="chip-btn" data-kick="${esc(m.id)}">إخراج</button>`}</td></tr>`; }).join("") || '<tr><td colspan="7" class="empty">لا أعضاء.</td></tr>'}
     </tbody></table></div></div>
     <div class="card"><h2>الكتب</h2><div class="table-wrap"><table><thead><tr><th>الكتاب</th><th>الفترة</th><th>الحالة</th><th>أتمّوه</th><th></th></tr></thead><tbody>
       ${chs.map((c) => { const st = today < c.start ? "قادم" : today > c.end ? "منتهٍ" : "جارٍ"; return `<tr><td><b>«${esc(c.title)}»</b><div class="muted small">${esc(c.author || "")}</div></td>
@@ -607,7 +609,7 @@ function openGroup(id) {
   $("g-save").onclick = () => {
     const mpp = parseInt(val("g-mpp")), bonus = parseInt(val("g-bonus"));
     if (!val("g-name") || !(mpp >= 1 && mpp <= 600) || !(bonus >= 0 && bonus <= 10000)) return toast("تحقق من الاسم والقيم: النقطة 1–600 دقيقة، والإتمام 0–10000.", true);
-    act("عدّل مجموعة", g.name, () => updateDoc(doc(db, "groups", g.id), { name: val("g-name"), about: val("g-about"), visibility: $("g-vis").value, rules: { minutesPerPoint: mpp, finishBonus: bonus } }), "حُفظت المجموعة.");
+    act("عدّل مجموعة", g.name, () => updateDoc(doc(db, "groups", g.id), { name: val("g-name"), about: val("g-about"), visibility: $("g-vis").value, rules: { minutesPerPoint: mpp, finishBonus: bonus, countAll: $("g-all").value === "1" } }), "حُفظت المجموعة.");
   };
   $("g-code").onclick = () => act("جدّد رمز دعوة", g.name, async () => {
     const code = Array.from(crypto.getRandomValues(new Uint8Array(6)), (b) => "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"[b % 32]).join("");
@@ -678,6 +680,9 @@ function openUser(uid) {
       <button class="btn-d" id="u-del">حذف كل بياناته</button>
     </div>
     <p class="small muted">الإيقاف يمنعه من قراءة أو كتابة أي شيء حتى تعيد تفعيله. حذف حساب الدخول نفسه من Google يتم من Firebase ← Authentication.</p>
+    <div class="card"><h2>رفّه (${u.shelf.length})</h2><div class="table-wrap"><table><thead><tr><th>الكتاب</th><th>الحالة</th><th>الساعات</th></tr></thead><tbody>
+      ${u.shelf.slice().sort((a, b) => (b.minutes || 0) - (a.minutes || 0)).map((s) => `<tr><td><b>«${esc(s.title || "")}»</b><div class="muted small">${esc(s.author || "")}</div></td><td>${{ reading: "يقرؤه", finished: "أتمّه", want: "لاحقاً" }[s.status] || "—"}</td><td class="num">${hours(s.minutes || 0)}</td></tr>`).join("") || '<tr><td colspan="3" class="empty">رفّه فارغ.</td></tr>'}
+    </tbody></table></div></div>
     <div class="card"><h2>آخر قراءاته</h2><div class="table-wrap"><table><thead><tr><th>اليوم</th><th>الدقائق</th></tr></thead><tbody>
       ${read.slice(0, 20).map((d) => `<tr><td>${esc(fmtDate(d.date))}</td><td class="num">${d.minutes}</td></tr>`).join("") || '<tr><td colspan="2" class="empty">لا قراءات.</td></tr>'}
     </tbody></table></div></div>`);
@@ -701,7 +706,7 @@ function openUser(uid) {
     if (owns.length) return toast(`يملك «${owns[0].name}». انقل ملكيتها أو احذفها أولاً.`, true);
     if (!confirm("حذف سجلّه وملفه ومكانه في كل المجموعات؟ لا يمكن التراجع.")) return;
     act("حذف بيانات حساب", u.name || u.email || uid, async () => {
-      const ops = u.days.map((d) => (b) => b.delete(d.ref));
+      const ops = [...u.days, ...u.reads, ...u.shelf].map((d) => (b) => b.delete(d.ref));
       for (const g of myGroups) {
         ops.push((b) => b.update(doc(db, "groups", g.id), { [`roles.${uid}`]: deleteField() }));
         ops.push((b) => b.delete(doc(db, "groups", g.id, "members", uid)));
