@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reel · مشغّل فيديو وموسيقى بلا إعلانات</title>
+<meta name="description" content="مشغّل فيديو وموسيقى مجاني لأندرويد: بلا إعلانات، يشغّل صوت AC3 وDTS، يتذكّر أين توقفت، وإيماءات سهلة.">
+<link rel="canonical" href="https://ahmad-nayfeh.github.io/reel/">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0E0F13">
+<meta property="og:title" content="Reel · مشغّل فيديو وموسيقى بلا إعلانات">
+<meta property="og:description" content="بلا إعلانات، يشغّل صوت AC3 وDTS، ويتذكّر أين توقفت.">
+<meta property="og:url" content="https://ahmad-nayfeh.github.io/reel/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+<style>
+  .t-reel {
+    --bg: #0E0F13; --ink: #ECEEF3; --muted: #8A90A0; --line: rgba(236,238,243,.12); --card: rgba(255,255,255,.035);
+    --accent: #FF8A5C; --accent-soft: rgba(255,138,92,.12); --on-accent: #1B0D07; --link: #FF8A5C;
+    --btn-bg: linear-gradient(135deg, #FF8A5C, #FF5C8A); --glow: rgba(255,138,92,.5);
+    --frame: #05060A; --final-bg: linear-gradient(135deg, #1D1410, #241020); --final-ink: #ECEEF3;
+  }
+  body { background: radial-gradient(800px 480px at 90% -10%, rgba(255,138,92,.16), transparent 60%), #0E0F13; color: var(--ink); }
+  .r-hero { padding: 40px 0 24px; }
+  .r-brand { display: flex; align-items: center; gap: 12px; font-weight: 700; font-size: 1.2rem; }
+  .r-hero h1 { font-size: clamp(2rem, 6vw, 3.2rem); line-height: 1.2; margin: 28px 0 12px; }
+  .r-hero h1 b { color: var(--accent); }
+  .r-hero p { color: var(--muted); font-size: 1.1rem; max-width: 40em; }
+  .r-dl { display: inline-block; margin-top: 22px; padding: 14px 26px; border-radius: 14px; background: var(--btn-bg); color: var(--on-accent); font-weight: 700; text-decoration: none; }
+  .r-meta { color: var(--muted); font-size: .9rem; margin-top: 10px; }
+  .r-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin: 26px 0; }
+  .r-card { border: 1px solid var(--line); background: var(--card); border-radius: 16px; padding: 18px; }
+  .r-card h3 { margin: 0 0 6px; font-size: 1.05rem; }
+  .r-card p { margin: 0; color: var(--muted); font-size: .95rem; }
+  .r-sec h2 { font-size: 1.4rem; margin: 34px 0 6px; }
+  table.r-tab { width: 100%; border-collapse: collapse; font-size: .95rem; }
+  .r-tab th, .r-tab td { border-bottom: 1px solid var(--line); padding: 10px 8px; text-align: start; vertical-align: top; }
+  .r-tab th { color: var(--muted); font-weight: 500; }
+  .r-steps li { margin: 6px 0; color: var(--ink); }
+  .r-note { border: 1px solid var(--line); border-radius: 14px; padding: 12px 16px; background: var(--accent-soft); font-size: .95rem; }
+  .r-wrap { max-width: 980px; margin: 0 auto; padding: 0 16px 48px; }
+  .r-tabwrap { overflow-x: auto; }
+</style>
+</head>
+<body class="t-reel">
+<main class="r-wrap">
+  <header class="r-hero">
+    <a class="r-brand" href="../" style="color:inherit;text-decoration:none"><img src="img/icon.svg" alt="" width="40" height="40">Reel</a>
+    <h1>مشغّل فيديو وموسيقى <b>بلا إعلانات</b>.<br>يشغّل كل شيء، ويتذكّر أين توقفت.</h1>
+    <p>بديل خفيف لـ MX Player: لا إعلانات، لا تتبّع، لا حسابات. يشغّل الأفلام التي تظهر بلا صوت في المشغّلات الأخرى (AC3 وE-AC3 وDTS) دون أي حزمة إضافية.</p>
+    <a class="r-dl" href="reel-1.0.0.apk" download>حمّل Reel ‏1.0.0 (APK)</a>
+    <div class="r-meta">‏6 ميغابايت · أندرويد 8 فما فوق · مجاني تمامًا</div>
+  </header>
+
+  <section class="r-grid" aria-label="المزايا">
+    <div class="r-card"><h3>🔊 صوت لكل الأفلام</h3><p>محلّلات FFmpeg مدمجة لصوت Dolby وDTS، تعمل تلقائيًا عندما لا يدعمها جوالك.</p></div>
+    <div class="r-card"><h3>⏯ تابع من حيث توقفت</h3><p>يحفظ موضعك في كل فيديو، ورفّ «تابع المشاهدة» في أعلى المكتبة.</p></div>
+    <div class="r-card"><h3>👆 إيماءات بسيطة</h3><p>اسحب يسارًا للسطوع ويمينًا للصوت (حتى 200%)، وأفقيًا للتقديم. انقر مرتين للقفز 10 ثوانٍ، وقرّب بإصبعين للتكبير.</p></div>
+    <div class="r-card"><h3>🔒 قفل الشاشة وصورة داخل صورة</h3><p>اقفل اللمس أثناء المشاهدة، أو صغّر الفيديو فوق التطبيقات الأخرى.</p></div>
+    <div class="r-card"><h3>💬 ترجمة وصوتيات</h3><p>اختر مسار الصوت والترجمة، أو حمّل ملف ‎.srt أو ‎.ass، وغيّر سرعة التشغيل.</p></div>
+    <div class="r-card"><h3>🎵 موسيقى في الخلفية</h3><p>تستمر مع إطفاء الشاشة، بأزرار في الإشعار والسماعة، مع خلط وتكرار ومؤقت نوم.</p></div>
+  </section>
+
+  <section class="r-sec">
+    <h2>لماذا Reel؟</h2>
+    <p style="color:var(--muted)">جمعنا أكثر ما يشتكي منه مستخدمو مشغّلات الفيديو الشائعة، وبنينا الحل لكل شكوى:</p>
+    <div class="r-tabwrap"><table class="r-tab">
+      <tr><th>الشكوى</th><th>أين تظهر</th><th>ماذا يفعل Reel</th></tr>
+      <tr><td>إعلانات مزعجة (لافتات، شاشة كاملة، أيقونات عائمة)</td><td>MX Player المجاني، KMPlayer، XPlayer</td><td>صفر إعلانات وصفر أدوات تتبّع</td></tr>
+      <tr><td>«صيغة الصوت EAC3/DTS غير مدعومة» والفيديو بلا صوت</td><td>MX Player بعد إزالة محلّلات Dolby/DTS</td><td>المحلّلات مدمجة، بلا حزم إضافية</td></tr>
+      <tr><td>واجهة مزدحمة أو معقّدة</td><td>VLC، mpv</td><td>تبويبان فقط: الفيديو والموسيقى، وبحث واحد</td></tr>
+      <tr><td>ضياع موضع المشاهدة</td><td>مشغّلات كثيرة</td><td>استئناف تلقائي لكل فيديو</td></tr>
+      <tr><td>الموسيقى تتوقف عند إطفاء الشاشة</td><td>المشغّلات المخصّصة للفيديو</td><td>خدمة موسيقى حقيقية في الخلفية</td></tr>
+    </table></div>
+  </section>
+
+  <section class="r-sec" id="install">
+    <h2>التثبيت</h2>
+    <ol class="r-steps">
+      <li>اضغط زر التحميل أعلاه من جوالك.</li>
+      <li>افتح الملف، وإذا طلب أندرويد ذلك فاسمح بـ«التثبيت من هذا المصدر».</li>
+      <li>افتح Reel واسمح له بالوصول إلى الفيديو والموسيقى.</li>
+    </ol>
+    <p class="r-note">قد يعرض Google Play Protect تحذيرًا لأن التطبيق غير منشور في المتجر. التطبيق لا يحتوي إعلانات ولا يرسل أي بيانات، ويُستخدم إذن الإنترنت فقط عندما تشغّل رابطًا من الإنترنت بنفسك.</p>
+  </section>
+</main>
+</body>
+</html>
