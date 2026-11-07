@@ -1,24 +1,24 @@
 {
   "tv": {
-    "versionCode": 1120,
-    "versionName": "1.10.0",
-    "url": "https://ahmad-nayfeh.github.io/shasha/shasha-tv.apk?v=1120",
-    "sha256": "887a039cc59e87729cec09f54f7f3e11b71cb46aacdc58c9dc3e4d93db05c86e",
+    "versionCode": 1122,
+    "versionName": "1.10.1",
+    "url": "https://ahmad-nayfeh.github.io/shasha/shasha-tv.apk?v=1122",
+    "sha256": "1363f06d638b379553f984be1a58769586eb81605f5e6fb90a3b22ea2a869c0c",
     "size": 33340144,
-    "notes": "شاشة 1.10.0"
+    "notes": "شاشة 1.10.1"
   },
   "mobile": {
-    "versionCode": 1120,
-    "versionName": "1.10.0",
-    "url": "https://ahmad-nayfeh.github.io/shasha/shasha-mobile.apk?v=1120",
-    "sha256": "17796b2a3122c4ee9be9da25d19482bbe62966a0df818eb4f5f8d81ab13f00e0",
-    "size": 4032238,
-    "notes": "شاشة 1.10.0"
+    "versionCode": 1122,
+    "versionName": "1.10.1",
+    "url": "https://ahmad-nayfeh.github.io/shasha/shasha-mobile.apk?v=1122",
+    "sha256": "0d83b2a836fc812a441081425070327450acf59eff43391cd40c58d6b450a596",
+    "size": 4032234,
+    "notes": "شاشة 1.10.1"
   },
   "kit": {
-    "url": "https://ahmad-nayfeh.github.io/shasha/shasha-setup.zip?v=1120",
-    "sha256": "7c62853a6c4e1e0b5ae13e88cb637b81d567f0df835f863db74de52f54261a73",
-    "size": 57930056
+    "url": "https://ahmad-nayfeh.github.io/shasha/shasha-setup.zip?v=1122",
+    "sha256": "49e568c6c3b8d10cd9fa41ab7e24c7c56b6ecd97d27a171a3f37e0b55e227ec2",
+    "size": 57929732
   },
-  "published": "2026-11-06"
+  "published": "2026-11-07"
 }
