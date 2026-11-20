@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>أحمد نايفة · تطبيقات وألعاب مجانية</title>
-<meta name="description" content="أعمال مجانية بالعربية من أحمد نايفة: تطبيقات أندرويد وتطبيقات تعمل في المتصفح — Reel، خطوة، شاشة، ماراثون القراءة، مناظرة، مناوبة الشبكة.">
+<meta name="description" content="أعمال مجانية بالعربية من أحمد نايفة: تطبيقات أندرويد وتطبيقات تعمل في المتصفح — Reel، خطوة، شاشة، ماراثون القراءة، مناظرة، مناوبة الشبكة، Voxa.">
 <link rel="canonical" href="https://ahmad-nayfeh.github.io/">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
@@ -157,7 +157,7 @@
       <ul class="chips">
         <li data-en="<b>Free</b> to download and use"><b>مجانية</b> للتحميل والاستخدام</li>
         <li data-en="<b>Arabic</b> first"><b>عربية</b> أولًا</li>
-        <li data-en="<b>6</b> projects: <b>4</b> Android · <b>2</b> in the browser"><b>6</b> أعمال: <b>4</b> أندرويد · <b>2</b> في المتصفح</li>
+        <li data-en="<b>7</b> projects: <b>4</b> Android · <b>3</b> in the browser"><b>7</b> أعمال: <b>4</b> أندرويد · <b>3</b> في المتصفح</li>
       </ul>
       <div class="cta">
         <a class="btn" href="#work" data-en="Browse the work">تصفّح الأعمال</a>
@@ -230,6 +230,15 @@
           <span class="more" data-en="Play now →">العب الآن ←</span>
         </div></div>
       </a>
+      <a class="app" href="voxa/about/" data-group="browser" data-name-ar="Voxa" data-name-en="Voxa">
+        <div class="thumb shot"><img src="assets/img/voxa-shot.webp" alt="" width="1200" height="750" loading="lazy"></div>
+        <div class="meta"><img src="voxa/icon.svg" alt="" width="56" height="56"><div>
+          <span class="kind" data-en="Web app · Android">تطبيق ويب · أندرويد</span>
+          <h3>Voxa<span class="ar-only">Arabic page</span></h3>
+          <p data-en="Turns voice notes, meetings, lectures and YouTube videos into text that shows who said what, with summary, translation and export.">يحوّل الملاحظات الصوتية والاجتماعات والمحاضرات ومقاطع يوتيوب إلى نص يبيّن من قال ماذا، مع تلخيص وترجمة وتصدير.</p>
+          <span class="more" data-en="Video, details and the app →">الفيديو والتفاصيل والتطبيق ←</span>
+        </div></div>
+      </a>
     </div>
   </section>
 
@@ -256,6 +265,7 @@
       <a href="marathon/" data-en="Reading Marathon" data-name-ar="ماراثون القراءة" data-name-en="Reading Marathon">ماراثون القراءة</a>
       <a href="munazara/" data-en="Munazara" data-name-ar="مناظرة" data-name-en="Munazara">مناظرة</a>
       <a href="grid-shift/" data-en="Grid Shift" data-name-ar="مناوبة الشبكة" data-name-en="Grid Shift">مناوبة الشبكة</a>
+      <a href="voxa/about/" data-name-ar="Voxa" data-name-en="Voxa">Voxa</a>
     </nav>
   </div>
 </footer>
@@ -266,7 +276,7 @@
   var descEl = document.querySelector('meta[name=description]');
   var meta = {
     ar: { title: document.title, desc: descEl.content },
-    en: { title: 'Ahmad Nayfeh · Free apps and games', desc: 'Free work by Ahmad Nayfeh, Arabic first: Android apps and browser apps — Grid Shift, Khatwa, Munazara, Reading Marathon, Reel, Shasha.' }
+    en: { title: 'Ahmad Nayfeh · Free apps and games', desc: 'Free work by Ahmad Nayfeh, Arabic first: Android apps and browser apps — Grid Shift, Khatwa, Munazara, Reading Marathon, Reel, Shasha, Voxa.' }
   };
   var nodes = [].slice.call(document.querySelectorAll('[data-en]'));
   nodes.forEach(function (n) { n.setAttribute('data-ar', n.innerHTML); });

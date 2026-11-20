@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Voxa · حوّل الصوت إلى نص</title>
+<meta name="description" content="Voxa تطبيق مجاني للمتصفح وأندرويد يحوّل الملاحظات الصوتية والاجتماعات والمحاضرات ومقاطع يوتيوب إلى نص بأسماء المتحدثين، مع تلخيص وترجمة وتصدير.">
+<link rel="canonical" href="https://ahmad-nayfeh.github.io/voxa/about/">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#14123A">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_AR">
+<meta property="og:title" content="Voxa · حوّل الصوت إلى نص">
+<meta property="og:description" content="تفريغ صوتي بأسماء المتحدثين، تلخيص، ترجمة وتصدير. مجاني، للمتصفح وأندرويد.">
+<meta property="og:url" content="https://ahmad-nayfeh.github.io/voxa/about/">
+<meta property="og:image" content="https://ahmad-nayfeh.github.io/voxa/about/poster.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="../../assets/fonts.css">
+<link rel="stylesheet" href="../../assets/site.css">
+<style>
+  .t-voxa {
+    --bg: #100F2E; --ink: #ECECF8; --muted: #A3A3C2; --line: rgba(165,180,252,.18); --card: rgba(255,255,255,.04);
+    --accent: #A5B4FC; --accent-soft: rgba(165,180,252,.13); --on-accent: #14123A; --link: #A5B4FC;
+    --btn-bg: linear-gradient(135deg, #A5B4FC, #818CF8 55%, #C084FC); --glow: rgba(129,140,248,.6);
+    --frame: #05051A; --final-bg: linear-gradient(135deg, #1E1B4B, #4C1D95); --final-ink: #ECECF8;
+  }
+  body { background:
+      radial-gradient(900px 520px at 90% -8%, rgba(124,58,237,.30), transparent 60%),
+      radial-gradient(700px 480px at 0% 30%, rgba(37,99,235,.16), transparent 60%),
+      #100F2E; }
+  .grad { background: linear-gradient(135deg, #A5B4FC, #F0ABFC); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero h1 { font-weight: 700; letter-spacing: -.01em; }
+  .film { border-radius: 22px; overflow: hidden; border: 1px solid var(--line); background: #000; box-shadow: 0 40px 90px -40px rgba(129,140,248,.6); }
+  .film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; }
+  .note { border: 1px solid var(--line); border-radius: 16px; padding: 14px 18px; background: var(--accent-soft); font-size: .95rem; }
+  .card { backdrop-filter: blur(4px); }
+</style>
+</head>
+<body class="t-voxa">
+<a class="skip" href="#main">تخطَّ إلى المحتوى</a>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="./"><img src="../icon.svg" alt="" width="36" height="36">Voxa</a>
+      <nav aria-label="أقسام الصفحة">
+        <a href="#video">الفيديو</a>
+        <a href="#features">المزايا</a>
+        <a href="#start">البدء</a>
+        <a href="#faq">أسئلة</a>
+      </nav>
+    </div>
+    <div class="hero-grid">
+      <div>
+        <span class="eyebrow">تطبيق مجاني للمتصفح وأندرويد · عربي وإنجليزي</span>
+        <h1>حوّل الصوت <span class="grad">إلى نص</span></h1>
+        <p class="lead">ملاحظات واتساب الصوتية، الاجتماعات، المحاضرات ومقاطع يوتيوب تصير نصاً منظّماً يبيّن من قال ماذا، مع تلخيص وترجمة وتصدير.</p>
+        <div class="cta">
+          <a class="btn" href="../">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            افتح التطبيق في المتصفح
+          </a>
+          <a class="btn btn-ghost" href="../voxa.apk" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0l-5-5m5 5l5-5M4 19h16"/></svg>
+            حمّل تطبيق أندرويد (APK)
+          </a>
+        </div>
+        <p class="dl-meta">أندرويد 7 فأحدث · نحو 15 ميغابايت · يحتاج مفتاح Gemini مجانياً من Google</p>
+      </div>
+      <div class="phones" aria-hidden="true">
+        <div class="phone side"><img src="img/summary.webp" alt="" loading="lazy" width="540" height="1108"></div>
+        <div class="phone main"><img src="img/transcript.webp" alt="" width="540" height="1108"></div>
+        <div class="phone side"><img src="img/ask.webp" alt="" loading="lazy" width="540" height="1108"></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="section" id="video">
+    <div class="wrap">
+      <span class="eyebrow">فيديو تعريفي</span>
+      <h2>Voxa في دقيقتين</h2>
+      <div class="film">
+        <video controls preload="metadata" playsinline poster="poster.jpg">
+          <source src="voxa-intro.mp4" type="video/mp4">
+          <track kind="captions" srclang="ar" label="العربية" src="voxa-intro.ar.vtt">
+          متصفحك لا يشغّل الفيديو. <a href="voxa-intro.mp4">نزّله من هنا</a>.
+        </video>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="features">
+    <div class="wrap">
+      <span class="eyebrow">المزايا</span>
+      <h2>من التسجيل إلى نص تستفيد منه</h2>
+      <p class="lead">كل شيء يعمل داخل المتصفح أو التطبيق، ومكتبتك محفوظة على جهازك حتى بلا حساب.</p>
+      <div class="grid">
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12M7 8l5-5 5 5M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/></svg></div><h3>أي صوت أو فيديو</h3><p class="muted">ملف بأي صيغة شائعة، عدة ملفات معاً، تسجيل بالميكروفون، رابط يوتيوب، أو مشاركة مباشرة من واتساب على أندرويد.</p></div>
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M16 4a4 4 0 0 1 0 8M22 21a7 7 0 0 0-4-6.3"/></svg></div><h3>من قال ماذا</h3><p class="muted">يميّز المتحدثين، وتسمّي كل متحدث مرة واحدة فيُطبَّق الاسم على النص كله.</p></div>
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>توقيت ينقلك إلى الصوت</h3><p class="muted">اضغط على توقيت أي سطر ليبدأ الصوت منه، وعدّل النص بنقرة، وابحث داخله وفي مكتبتك كلها.</p></div>
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9zM19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/></svg></div><h3>تلخيص وترجمة وأسئلة</h3><p class="muted">ملخص بأهم النقاط والمهام، ترجمة سطراً بسطر، واسأل التسجيل أي سؤال فتأتيك الإجابة من محتواه.</p></div>
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h6"/></svg></div><h3>تصدير</h3><p class="muted">Word و PDF و TXT، وملفات ترجمة الفيديو SRT و VTT، مع التوقيت وأسماء المتحدثين أو بدونهما.</p></div>
+        <div class="card"><div class="ico"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></div><h3>أدوات أخرى</h3><p class="muted">استخراج النص من الصور وملفات PDF، تحويل النص إلى كلام، ومحوّل للصوت والفيديو يعمل على جهازك.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="start">
+    <div class="wrap split">
+      <div>
+        <span class="eyebrow">البدء</span>
+        <h2>ثلاث خطوات</h2>
+        <ol class="steps">
+          <li><b>افتح Voxa</b><span>في المتصفح مباشرة، أو حمّل ملف APK وافتحه على أندرويد. إن طُلب «السماح بالتثبيت من هذا المصدر» فاسمح به.</span></li>
+          <li><b>أضف مفتاح Gemini المجاني</b><span>أنشئه من <a href="https://aistudio.google.com/apikey">aistudio.google.com/apikey</a> بحساب Google، بلا بطاقة، ثم الصقه في «الإعدادات» واضغط «حفظ واختبار».</span></li>
+          <li><b>ارفع أول تسجيل</b><span>من «تفريغ صوتي» اختر ملفاً أو سجّل، وأبقِ التطبيق مفتوحاً حتى يكتمل. على أندرويد: من واتساب اضغط مطولاً على الملاحظة الصوتية ← مشاركة ← Voxa.</span></li>
+        </ol>
+      </div>
+      <div class="faq" id="faq">
+        <span class="eyebrow">أسئلة</span>
+        <h2>أسئلة شائعة</h2>
+        <details><summary>هل هو مجاني؟</summary><p>نعم. التطبيق مجاني، ويعمل بمفتاحك الخاص من Google ضمن الحصة المجانية اليومية. إذا انتهت الحصة تعود في اليوم التالي.</p></details>
+        <details><summary>أين تُحفظ تسجيلاتي ونصوصي؟</summary><p>على جهازك. لا يوجد خادم خاص بالتطبيق: الصوت يُرسل مباشرة من جهازك إلى خدمة Google لتفريغه.</p></details>
+        <details><summary>ماذا عن الخصوصية؟</summary><p>في الخطة المجانية قد تستخدم Google المحتوى المرسل لتحسين منتجاتها، فلا ترفع تسجيلات سرّية.</p></details>
+        <details><summary>هل يدعم اللهجات العربية؟</summary><p>يقبل العربية بلهجاتها والإنجليزية، وتختلف الدقة بحسب اللهجة ووضوح التسجيل. يمكنك تعديل أي سطر بعد التفريغ.</p></details>
+        <details><summary>هل للملف حدّ أقصى؟</summary><p>التسجيلات الطويلة تُقسَّم تلقائياً، وإن انقطع العمل يُستكمل من حيث توقف. مقاطع الفيديو الكبيرة جداً أسرع على الحاسوب منها على الهاتف.</p></details>
+        <details><summary>كيف أحدّث تطبيق أندرويد؟</summary><p>حمّل ملف APK الأحدث من هذه الصفحة وثبّته فوق القديم، وتبقى بياناتك.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="note">الصور والفيديو في هذه الصفحة تعرض التطبيق الحقيقي مع محتوى تجريبي للتوضيح.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="final">
+        <h2>صوتك، مكتوباً</h2>
+        <p class="lead">افتح Voxa وجرّب أول ملاحظة صوتية.</p>
+        <a class="btn" href="../">افتح التطبيق</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  <span>صنعه <a href="https://ahmadnayfeh.vercel.app">أحمد نايفة</a></span>
+  <span><a href="../../">كل التطبيقات</a></span>
+</footer>
+</body>
+</html>

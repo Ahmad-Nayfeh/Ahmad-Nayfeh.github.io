@@ -14,6 +14,9 @@ Official pages for Ahmad Nayfeh's Android apps and browser apps.
     `<!--@name-->…<!--/@name-->` markers.
 - `/grid-shift/` — مناوبة الشبكة (Grid Shift): a browser game about 13.8 kV fault response and protection grading. This folder holds the built game only (copied from the private source repository's `dist/`); do not hand-edit its hashed files.
 - `/munazara/` — مناظرة (Munazara): a web app for structured debates between friends. Built files only, copied from the private source repository with its `scripts/publish-to-hub.sh`; do not hand-edit its hashed files. Pages are `noindex` and deliberately not in `sitemap.xml`.
+- `/voxa/` — Voxa: speech-to-text and other AI media tools (web app + Android). Built files only, copied from the private source repository with its `scripts/publish-to-hub.sh`; do not hand-edit its hashed files.
+  - `/voxa/about/` — the Arabic intro page with the explainer video (`voxa-intro.mp4`); this is what the hub card links to.
+  - `/voxa/voxa.apk` — the Android app, linked from the about page and from the app's own settings.
 
 Plain static HTML, no build step. APKs are stored next to each page; to release a new version, replace the APK, then update the file name, version, size and SHA-256 on the page.
 

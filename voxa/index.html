@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#4f46e5" />
+    <meta name="description" content="Voxa — أدوات ذكاء اصطناعي للصوت والفيديو والصور والمستندات" />
+    <link rel="icon" type="image/svg+xml" href="./icon.svg" />
+    <title>Voxa</title>
+    <script>
+      // apply language and theme before first paint
+      (function () {
+        try {
+          var l = localStorage.getItem('voxa.lang') || 'ar';
+          var t = localStorage.getItem('voxa.theme') || 'system';
+          document.documentElement.lang = l;
+          document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+          if (t === 'dark' || (t === 'system' && matchMedia('(prefers-color-scheme: dark)').matches)) document.documentElement.classList.add('dark');
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="./assets/index-BSulfmrz.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/rolldown-runtime-XKyaHtl9.js">
+    <link rel="modulepreload" crossorigin href="./assets/kit-kLzo5zBt.js">
+    <link rel="modulepreload" crossorigin href="./assets/preload-helper-DclECHGd.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-DC4SoOSm.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
