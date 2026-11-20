@@ -157,7 +157,7 @@
       <ul class="chips">
         <li data-en="<b>Free</b> to download and use"><b>مجانية</b> للتحميل والاستخدام</li>
         <li data-en="<b>Arabic</b> first"><b>عربية</b> أولًا</li>
-        <li data-en="<b>7</b> projects: <b>4</b> Android · <b>3</b> in the browser"><b>7</b> أعمال: <b>4</b> أندرويد · <b>3</b> في المتصفح</li>
+        <li data-en="<b>8</b> projects: <b>5</b> Android · <b>3</b> in the browser"><b>8</b> أعمال: <b>5</b> أندرويد · <b>3</b> في المتصفح</li>
       </ul>
       <div class="cta">
         <a class="btn" href="#work" data-en="Browse the work">تصفّح الأعمال</a>
@@ -176,6 +176,15 @@
       <button type="button" data-filter="browser" aria-pressed="false" data-en="In the browser">في المتصفح</button>
     </div>
     <div class="apps" id="work-grid">
+      <a class="app" href="https://shadhra.app" data-group="android" data-name-ar="شذرة" data-name-en="Shadhra">
+        <div class="thumb"><img src="assets/img/shadhra-card.webp" alt="" width="1200" height="630" loading="lazy"></div>
+        <div class="meta"><img src="assets/img/shadhra-icon.png" alt="" width="56" height="56"><div>
+          <span class="kind" data-en="Android app · Web">تطبيق أندرويد · ويب</span>
+          <h3><span data-en="Shadhra">شذرة</span></h3>
+          <p data-en="Keep the quotes that stop you and your reflections in one library, link them, and write essays and books from them.">احفظ الاقتباسات التي تستوقفك وتأمّلاتك في مكتبة واحدة، واربط بينها، واكتب منها مقالاتك وكتبك.</p>
+          <span class="more" data-en="Open Shadhra →">افتح شذرة ←</span>
+        </div></div>
+      </a>
       <a class="app" href="reel/" data-group="android" data-name-ar="Reel" data-name-en="Reel">
         <div class="thumb icon-only"><img src="reel/img/icon.svg" alt="" width="96" height="96" loading="lazy"></div>
         <div class="meta"><img src="reel/img/icon.svg" alt="" width="56" height="56"><div>
@@ -259,6 +268,7 @@
   <div class="wrap foot">
     <span data-en="© 2026 Ahmad Nayfeh">© 2026 أحمد نايفة</span>
     <nav aria-label="روابط" data-en-aria="Links" id="foot-links">
+      <a href="https://shadhra.app" data-en="Shadhra" data-name-ar="شذرة" data-name-en="Shadhra">شذرة</a>
       <a href="reel/" data-name-ar="Reel" data-name-en="Reel">Reel</a>
       <a href="khatwa/" data-en="Khatwa" data-name-ar="خطوة" data-name-en="Khatwa">خطوة</a>
       <a href="shasha/" data-en="Shasha" data-name-ar="شاشة" data-name-en="Shasha">شاشة</a>
@@ -276,7 +286,7 @@
   var descEl = document.querySelector('meta[name=description]');
   var meta = {
     ar: { title: document.title, desc: descEl.content },
-    en: { title: 'Ahmad Nayfeh · Free apps and games', desc: 'Free work by Ahmad Nayfeh, Arabic first: Android apps and browser apps — Grid Shift, Khatwa, Munazara, Reading Marathon, Reel, Shasha, Voxa.' }
+    en: { title: 'Ahmad Nayfeh · Free apps and games', desc: 'Free work by Ahmad Nayfeh, Arabic first: Android apps and browser apps — Grid Shift, Khatwa, Munazara, Reading Marathon, Reel, Shadhra, Shasha, Voxa.' }
   };
   var nodes = [].slice.call(document.querySelectorAll('[data-en]'));
   nodes.forEach(function (n) { n.setAttribute('data-ar', n.innerHTML); });
