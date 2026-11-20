@@ -12,5 +12,6 @@ Official download pages for Ahmad Nayfeh's Android apps.
     version, size and SHA-256 by hand: run `tools/publish-site.sh` from the shasha repository, which copies the files
     under fixed names, computes size and SHA-256, and rewrites `latest.json` and the values between the page's
     `<!--@name-->…<!--/@name-->` markers.
+- `/Repo-A/` — مناوبة الشبكة (Grid Shift): a browser game about 13.8 kV fault response and protection grading. It is served from the separate `Repo-A` repository's own GitHub Pages; this site only links to it.
 
 Plain static HTML, no build step. APKs are stored next to each page; to release a new version, replace the APK, then update the file name, version, size and SHA-256 on the page.
