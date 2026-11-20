@@ -15,3 +15,10 @@ Official download pages for Ahmad Nayfeh's Android apps.
 - `/grid-shift/` — مناوبة الشبكة (Grid Shift): a browser game about 13.8 kV fault response and protection grading. This folder holds the built game only (copied from the private source repository's `dist/`); do not hand-edit its hashed files.
 
 Plain static HTML, no build step. APKs are stored next to each page; to release a new version, replace the APK, then update the file name, version, size and SHA-256 on the page.
+
+## Site design (2026-11)
+
+- `index.html`: bilingual hub (Arabic default, English via the EN button or `?lang=en`), light/dark theme (follows the system, toggle remembered), game section, app cards, about section.
+- `assets/fonts.css` + `assets/fonts/`: self-hosted IBM Plex Sans Arabic and Amiri (SIL OFL 1.1, licences beside the files). No Google Fonts requests, except `marathon/admin/` which was left unchanged.
+- `assets/img/`: card thumbnails and the share image `og-hub.png`.
+- Every app page footer links back to the hub ("كل التطبيقات").

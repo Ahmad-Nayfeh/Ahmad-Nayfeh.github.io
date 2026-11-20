@@ -3,41 +3,287 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>تطبيقات أحمد نايفة</title>
-<meta name="description" content="تطبيقات أندرويد مجانية: خطوة للمشي، وماراثون القراءة لمجموعات القراءة.">
+<title>أحمد نايفة · تطبيقات وألعاب مجانية</title>
+<meta name="description" content="تطبيقات أندرويد وألعاب متصفح مجانية بالعربية من أحمد نايفة: خطوة، ماراثون القراءة، شاشة، Reel، ولعبة مناوبة الشبكة.">
 <link rel="canonical" href="https://ahmad-nayfeh.github.io/">
-<meta name="theme-color" content="#0E1424">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#F6F4EF" media="(prefers-color-scheme: light)">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="ar_AR">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="أحمد نايفة · تطبيقات وألعاب مجانية">
+<meta property="og:description" content="تطبيقات أندرويد وألعاب متصفح مجانية، عربية أولًا.">
+<meta property="og:url" content="https://ahmad-nayfeh.github.io/">
+<meta property="og:image" content="https://ahmad-nayfeh.github.io/assets/img/og-hub.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/site.css">
+<script>
+  /* Theme and language before first paint (no flash). Storage may be blocked: ignore errors. */
+  (function () {
+    var d = document.documentElement, t = null, l = null;
+    try { t = localStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
+    var q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || q === 'ar') l = q;
+    if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
+    if (l === 'en') { d.lang = 'en'; d.dir = 'ltr'; }
+  })();
+</script>
 <style>
-  .t-hub { --bg: #0E1424; --ink: #EEF1F7; --muted: #9AA6BD; --line: rgba(255,255,255,.12); --card: rgba(255,255,255,.04); --accent: #F2B84B; --link: #EEF1F7; }
-  .hub { min-height: 100vh; display: flex; flex-direction: column; }
-  .hub main { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 48px 0; }
-  .hub h1 { font-size: clamp(2rem, 6vw, 3rem); }
-  .apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; margin-top: 28px; }
-  .app { display: flex; gap: 18px; align-items: center; padding: 22px; border-radius: 24px; border: 1px solid var(--line); background: var(--card); color: inherit; text-decoration: none; transition: transform .15s, border-color .15s; }
-  .app:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.3); }
-  .app img { width: 72px; height: 72px; border-radius: 18px; flex: none; }
-  .app h2 { font-size: 1.35rem; margin: 0; }
-  .app p { margin: 2px 0 0; color: var(--muted); font-size: .95rem; line-height: 1.6; }
+  :root {
+    --bg: #0B1020; --bg2: #10172B; --ink: #EEF1F7; --muted: #A1ABC0; --line: rgba(255,255,255,.11);
+    --card: rgba(255,255,255,.04); --card-hover: rgba(255,255,255,.07); --accent: #F2B84B; --accent-2: #E8873A;
+    --accent-soft: rgba(242,184,75,.13); --on-accent: #1A1204; --link: #F5C76E; --shadow: 0 30px 60px -30px rgba(0,0,0,.7);
+    --btn-bg: linear-gradient(135deg, #F7C76A, #E8873A); --glow: rgba(232,135,58,.55);
+    --hero-a: rgba(242,184,75,.16); --hero-b: rgba(71,194,255,.10);
+    color-scheme: dark;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      --bg: #F6F4EF; --bg2: #EFECE4; --ink: #151A26; --muted: #5A6377; --line: rgba(20,26,38,.12);
+      --card: #FFFFFF; --card-hover: #FFFFFF; --accent: #B86A12; --accent-2: #C2410C; --accent-soft: rgba(184,106,18,.10);
+      --on-accent: #FFFFFF; --link: #9A4F06; --shadow: 0 24px 48px -28px rgba(20,26,38,.35);
+      --btn-bg: linear-gradient(135deg, #C77A1A, #B8460E); --glow: rgba(184,70,14,.35);
+      --hero-a: rgba(232,135,58,.14); --hero-b: rgba(30,120,200,.08);
+      color-scheme: light;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #F6F4EF; --bg2: #EFECE4; --ink: #151A26; --muted: #5A6377; --line: rgba(20,26,38,.12);
+    --card: #FFFFFF; --card-hover: #FFFFFF; --accent: #B86A12; --accent-2: #C2410C; --accent-soft: rgba(184,106,18,.10);
+    --on-accent: #FFFFFF; --link: #9A4F06; --shadow: 0 24px 48px -28px rgba(20,26,38,.35);
+    --btn-bg: linear-gradient(135deg, #C77A1A, #B8460E); --glow: rgba(184,70,14,.35);
+    --hero-a: rgba(232,135,58,.14); --hero-b: rgba(30,120,200,.08);
+    color-scheme: light;
+  }
+  body { background: var(--bg); }
+
+  /* Header */
+  .site-head { position: sticky; top: 0; z-index: 20; backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); background: color-mix(in srgb, var(--bg) 80%, transparent); border-bottom: 1px solid var(--line); }
+  .site-head .top { padding: 12px 0; }
+  .head-end { display: flex; align-items: center; gap: 6px; }
+  .site-head nav { display: flex; gap: 4px; margin-inline-end: 8px; }
+  .site-head nav a { padding: 8px 12px; border-radius: 10px; color: var(--ink); opacity: .8; text-decoration: none; font-size: .95rem; }
+  .site-head nav a:hover { opacity: 1; background: var(--card); }
+  @media (max-width: 720px) { .site-head nav { display: none; } }
+  .icon-btn { min-width: 44px; height: 44px; padding: 0 10px; display: inline-grid; place-items: center; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-weight: 700; font-size: .9rem; cursor: pointer; }
+  .icon-btn:hover { border-color: var(--accent); }
+  .icon-btn svg { width: 20px; height: 20px; }
+  .i-sun { display: none; }
+  :root[data-theme="light"] .i-sun { display: block; } :root[data-theme="light"] .i-moon { display: none; }
+  @media (prefers-color-scheme: light) { :root:not([data-theme]) .i-sun { display: block; } :root:not([data-theme]) .i-moon { display: none; } }
+
+  /* Hero */
+  .intro { position: relative; isolation: isolate; padding: clamp(56px, 11vw, 120px) 0 clamp(40px, 7vw, 72px); overflow: hidden; }
+  .intro::before { content: ""; position: absolute; inset: 0; z-index: -1;
+    background: radial-gradient(600px 380px at 85% 10%, var(--hero-a), transparent 65%), radial-gradient(520px 360px at 10% 70%, var(--hero-b), transparent 65%); }
+  .intro h1 { font-size: clamp(2.3rem, 7vw, 4.1rem); letter-spacing: -.015em; margin-bottom: .3em; max-width: 14em; }
+  .intro h1 .hl { background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 28px; padding: 0; list-style: none; }
+  .chips li { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 6px 14px; font-size: .92rem; color: var(--muted); }
+  .chips b { color: var(--ink); font-weight: 600; }
+
+  /* Section titles */
+  .sec-head { display: flex; align-items: end; justify-content: space-between; gap: 8px 16px; margin-bottom: 22px; flex-wrap: wrap; }
+  .sec-head h2 { margin: 0; }
+  .sec-head p { margin: 0; color: var(--muted); max-width: 34em; }
+  section[id] { scroll-margin-top: 80px; }
+
+  /* Featured game */
+  .feature { display: grid; grid-template-columns: 1.15fr .85fr; border: 1px solid var(--line); border-radius: 28px; overflow: hidden; background: var(--card); box-shadow: var(--shadow); }
+  .feature .shot { display: block; background: #0D1420; min-height: 280px; }
+  .feature .shot img { width: 100%; height: 100%; object-fit: cover; }
+  .feature .body { padding: clamp(22px, 4vw, 40px); display: flex; flex-direction: column; justify-content: center; }
+  .feature h3 { font-size: clamp(1.5rem, 3.4vw, 2rem); margin-bottom: .3em; }
+  .feature p { color: var(--muted); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 16px; padding: 0; list-style: none; }
+  .tags li { font-size: .8rem; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+  @media (max-width: 860px) { .feature { grid-template-columns: 1fr; } .feature .shot { min-height: 0; aspect-ratio: 16 / 10; } }
+
+  /* App cards */
+  .apps { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 18px; }
+  .app { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 24px; overflow: hidden; background: var(--card); color: inherit; text-decoration: none; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+  .app:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 55%, transparent); box-shadow: var(--shadow); background: var(--card-hover); }
+  .app .thumb { aspect-ratio: 1200 / 630; background: var(--bg2); overflow: hidden; }
+  .app .thumb img { width: 100%; height: 100%; object-fit: cover; }
+  .app .thumb.icon-only { display: grid; place-items: center; background: radial-gradient(circle at 50% 40%, #2A2F3B, #14161C); }
+  .app .thumb.icon-only img { width: 96px; height: 96px; border-radius: 22px; object-fit: contain; }
+  .app .meta { display: flex; flex-direction: column; padding: 0 20px 22px; flex: 1; }
+  .app .meta > img { width: 56px; height: 56px; border-radius: 16px; flex: none; margin-top: -28px; border: 3px solid var(--bg); background: var(--bg); }
+  .app .meta > div { padding-top: 10px; }
+  .app .more { white-space: nowrap; }
+  .app h3 { margin: 0 0 .2em; font-size: 1.2rem; }
+  .app p { margin: 0; color: var(--muted); font-size: .95rem; line-height: 1.65; }
+  .app .more { display: inline-block; margin-top: 10px; font-weight: 600; font-size: .92rem; color: var(--link); }
+  .ar-only { display: none; font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; margin-inline-start: 8px; vertical-align: middle; }
+  html[lang="en"] .ar-only { display: inline-block; }
+
+  /* About */
+  .about { display: grid; grid-template-columns: auto 1fr; gap: clamp(20px, 4vw, 40px); align-items: start; border: 1px solid var(--line); border-radius: 28px; padding: clamp(22px, 4vw, 40px); background: var(--card); }
+  .about .mark { width: 96px; height: 96px; border-radius: 26px; }
+  .about p { color: var(--muted); max-width: 46em; }
+  @media (max-width: 640px) { .about { grid-template-columns: 1fr; } .about .mark { width: 72px; height: 72px; } }
+
+  .site-foot { border-top: 1px solid var(--line); margin-top: clamp(56px, 9vw, 96px); }
+  .site-foot .foot { padding: 28px 0 40px; }
+  .foot nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
 </style>
 </head>
-<body class="t-hub">
-<div class="wrap hub">
-  <main>
-    <h1>تطبيقات أحمد نايفة</h1>
-    <p class="lead">تطبيقات أندرويد مجانية بالعربية. اختر التطبيق لتقرأ عنه وتحمّله.</p>
-    <div class="apps">
-      <a class="app" href="khatwa/"><img src="khatwa/img/logo.png" alt="" width="72" height="72"><div><h2>خطوة</h2><p>يعدّ خطواتك، ويقفل جوالك حتى تمشي، ويحوّل المشي إلى لعبة.</p></div></a>
-      <a class="app" href="marathon/"><img src="marathon/img/icon.svg" alt="" width="72" height="72"><div><h2>ماراثون القراءة</h2><p>كتاب مشترك لكل تحدٍّ، تسجيل يومي، نقاط وأوسمة لمجموعات القراءة.</p></div></a>
-      <a class="app" href="shasha/"><img src="shasha/img/icon.png" alt="" width="72" height="72"><div><h2>شاشة</h2><p>يوتيوب هادئ لتلفاز البيت والجوال: بلا إعلانات، وبحماية كاملة للأطفال.</p></div></a>
-      <a class="app" href="reel/"><img src="reel/img/icon.svg" alt="" width="72" height="72"><div><h2>Reel</h2><p>مشغّل فيديو وموسيقى بلا إعلانات، يشغّل صوت AC3 وDTS ويتذكّر أين توقفت.</p></div></a>
-      <a class="app" href="grid-shift/"><img src="assets/grid-shift.svg" alt="" width="72" height="72"><div><h2>مناوبة الشبكة</h2><p>لعبة متصفح بلا تحميل: كن مهندس التحكم المناوب، حدِّد عطل الكابل، وأعِد الكهرباء للمشتركين بأمان.</p></div></a>
+<body>
+<a class="skip" href="#main" data-en="Skip to content">تخطَّ إلى المحتوى</a>
+
+<header class="site-head">
+  <div class="wrap top">
+    <a class="brand" href="./"><img src="assets/logo.svg" alt="" width="36" height="36"><span data-en="Ahmad Nayfeh">أحمد نايفة</span></a>
+    <div class="head-end">
+      <nav aria-label="الأقسام" data-en-aria="Sections">
+        <a href="#game" data-en="Game">اللعبة</a>
+        <a href="#apps" data-en="Apps">التطبيقات</a>
+        <a href="#about" data-en="About">عنّي</a>
+      </nav>
+      <button class="icon-btn" id="lang" type="button" aria-label="Switch to English" data-en-aria="التبديل إلى العربية"><span data-en="ع">EN</span></button>
+      <button class="icon-btn" id="theme" type="button" aria-label="تبديل المظهر" data-en-aria="Toggle theme">
+        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
     </div>
-  </main>
-  <footer class="foot"><span><a href="https://ahmadnayfeh.vercel.app">الموقع الشخصي</a></span></footer>
-</div>
+  </div>
+</header>
+
+<main id="main">
+  <div class="intro">
+    <div class="wrap">
+      <span class="eyebrow" data-en="Free apps and games">تطبيقات وألعاب مجانية</span>
+      <h1 data-en="I build small tools for <span class=&quot;hl&quot;>real everyday problems</span>.">أبني أدوات صغيرة <span class="hl">لمشاكل يومية حقيقية</span>.</h1>
+      <p class="lead" data-en="Android apps and a browser game, Arabic first. Pick one to read about it and download it, or play right away.">تطبيقات أندرويد ولعبة متصفح، بالعربية أولًا. اختر أيًّا منها لتقرأ عنه وتحمّله، أو العب مباشرة.</p>
+      <ul class="chips">
+        <li data-en="<b>Free</b> to download and use"><b>مجانية</b> للتحميل والاستخدام</li>
+        <li data-en="<b>Arabic</b> first"><b>عربية</b> أولًا</li>
+        <li data-en="<b>4</b> Android apps · <b>1</b> browser game"><b>4</b> تطبيقات أندرويد · <b>1</b> لعبة متصفح</li>
+      </ul>
+      <div class="cta">
+        <a class="btn" href="grid-shift/" data-en="Play Grid Shift">العب «مناوبة الشبكة»</a>
+        <a class="btn btn-ghost" href="#apps" data-en="Browse the apps">تصفّح التطبيقات</a>
+      </div>
+    </div>
+  </div>
+
+  <section class="wrap" id="game" aria-labelledby="game-h">
+    <div class="sec-head">
+      <h2 id="game-h" data-en="Browser game">لعبة متصفح</h2>
+      <p data-en="No download, no account. Works on phone and computer.">بلا تحميل وبلا حساب. تعمل على الجوال والكمبيوتر.</p>
+    </div>
+    <article class="feature">
+      <a class="shot" href="grid-shift/" tabindex="-1" aria-hidden="true"><img src="assets/img/grid-shift-shot.webp" alt="" width="1200" height="750" loading="lazy"></a>
+      <div class="body">
+        <ul class="tags"><li data-en="Browser">متصفح</li><li data-en="Arabic · English">عربي · English</li><li data-en="Electrical engineering">هندسة كهربائية</li></ul>
+        <h3 data-en="Grid Shift">مناوبة الشبكة</h3>
+        <p data-en="You are the duty control engineer on a 13.8 kV distribution network. A cable fault cuts power to a district: read the fault indicators, send crews, switch safely, and restore customers as fast as you can.">أنت مهندس التحكم المناوب على شبكة توزيع 13.8 ك.ف. عطل في كابل قطع الكهرباء عن حيّ: اقرأ مؤشرات العطل، وأرسل الفرق، وبدِّل المفاتيح بأمان، وأعِد الكهرباء للمشتركين بأسرع وقت.</p>
+        <div class="cta"><a class="btn" href="grid-shift/" data-en="Play now">العب الآن</a></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="wrap section" id="apps" aria-labelledby="apps-h">
+    <div class="sec-head">
+      <h2 id="apps-h" data-en="Android apps">تطبيقات أندرويد</h2>
+      <p data-en="Each app has a page with screenshots, the download link and install steps.">لكل تطبيق صفحة فيها صوره ورابط التحميل وخطوات التثبيت.</p>
+    </div>
+    <div class="apps">
+      <a class="app" href="khatwa/">
+        <div class="thumb"><img src="assets/img/khatwa-card.webp" alt="" width="800" height="420" loading="lazy"></div>
+        <div class="meta"><img src="khatwa/img/logo.png" alt="" width="56" height="56"><div>
+          <h3><span data-en="Khatwa">خطوة</span><span class="ar-only">Arabic page</span></h3>
+          <p data-en="Counts your steps, locks your phone until you walk, and turns walking into a game.">يعدّ خطواتك، ويقفل جوالك حتى تمشي، ويحوّل المشي إلى لعبة.</p>
+          <span class="more" data-en="Details and download →">التفاصيل والتحميل ←</span>
+        </div></div>
+      </a>
+      <a class="app" href="marathon/">
+        <div class="thumb"><img src="assets/img/marathon-card.webp" alt="" width="800" height="420" loading="lazy"></div>
+        <div class="meta"><img src="marathon/img/icon.svg" alt="" width="56" height="56"><div>
+          <h3><span data-en="Reading Marathon">ماراثون القراءة</span><span class="ar-only">Arabic page</span></h3>
+          <p data-en="One shared book per challenge, a daily log, points and badges for reading groups.">كتاب مشترك لكل تحدٍّ، تسجيل يومي، نقاط وأوسمة لمجموعات القراءة.</p>
+          <span class="more" data-en="Details and download →">التفاصيل والتحميل ←</span>
+        </div></div>
+      </a>
+      <a class="app" href="shasha/">
+        <div class="thumb"><img src="assets/img/shasha-card.webp" alt="" width="800" height="450" loading="lazy"></div>
+        <div class="meta"><img src="shasha/img/icon.png" alt="" width="56" height="56"><div>
+          <h3><span data-en="Shasha">شاشة</span><span class="ar-only">Arabic page</span></h3>
+          <p data-en="Calm YouTube for the family TV and phone: no ads, with full protection for children.">يوتيوب هادئ لتلفاز البيت والجوال: بلا إعلانات، وبحماية كاملة للأطفال.</p>
+          <span class="more" data-en="Details and download →">التفاصيل والتحميل ←</span>
+        </div></div>
+      </a>
+      <a class="app" href="reel/">
+        <div class="thumb icon-only"><img src="reel/img/icon.svg" alt="" width="96" height="96" loading="lazy"></div>
+        <div class="meta"><img src="reel/img/icon.svg" alt="" width="56" height="56"><div>
+          <h3>Reel<span class="ar-only">Arabic page</span></h3>
+          <p data-en="Ad-free video and music player that plays AC3 and DTS audio and remembers where you stopped.">مشغّل فيديو وموسيقى بلا إعلانات، يشغّل صوت AC3 وDTS ويتذكّر أين توقفت.</p>
+          <span class="more" data-en="Details and download →">التفاصيل والتحميل ←</span>
+        </div></div>
+      </a>
+    </div>
+  </section>
+
+  <section class="wrap" id="about" aria-labelledby="about-h">
+    <div class="about">
+      <img class="mark" src="assets/logo.svg" alt="" width="96" height="96">
+      <div>
+        <span class="eyebrow" data-en="About">عنّي</span>
+        <h2 id="about-h" data-en="Hi, I'm Ahmad Nayfeh">مرحبًا، أنا أحمد نايفة</h2>
+        <p data-en="I'm an electrical engineer, and in my spare time I build free apps for everyday problems: too much time on the phone, keeping a reading group going, a calm YouTube for the family, a player that plays every file. Grid Shift comes from my own field: it shows how a distribution network is protected and how power is restored after a fault, built on public standards and sources only.">مهندس كهرباء، وفي وقت فراغي أبني تطبيقات مجانية لمشاكل يومية: وقت طويل على الجوال، ومجموعة قراءة تحتاج من يحفّزها، ويوتيوب هادئ للعائلة، ومشغّل يشغّل كل الملفات. أما «مناوبة الشبكة» فمن مجال تخصصي: تُريك كيف تُحمى شبكة التوزيع وكيف تعود الكهرباء بعد العطل، مبنية على المواصفات والمصادر العامة فقط.</p>
+        <div class="cta"><a class="btn btn-ghost" href="https://ahmadnayfeh.vercel.app" data-en="Personal website">الموقع الشخصي</a></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap foot">
+    <span data-en="© 2026 Ahmad Nayfeh">© 2026 أحمد نايفة</span>
+    <nav aria-label="روابط" data-en-aria="Links">
+      <a href="grid-shift/" data-en="Grid Shift">مناوبة الشبكة</a>
+      <a href="khatwa/" data-en="Khatwa">خطوة</a>
+      <a href="marathon/" data-en="Reading Marathon">ماراثون القراءة</a>
+      <a href="shasha/" data-en="Shasha">شاشة</a>
+      <a href="reel/">Reel</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var d = document.documentElement;
+  var descEl = document.querySelector('meta[name=description]');
+  var meta = {
+    ar: { title: document.title, desc: descEl.content },
+    en: { title: 'Ahmad Nayfeh · Free apps and games', desc: 'Free Android apps and a browser game, Arabic first: Khatwa, Reading Marathon, Shasha, Reel and Grid Shift.' }
+  };
+  var nodes = [].slice.call(document.querySelectorAll('[data-en]'));
+  nodes.forEach(function (n) { n.setAttribute('data-ar', n.innerHTML); });
+  var ariaNodes = [].slice.call(document.querySelectorAll('[data-en-aria]'));
+  ariaNodes.forEach(function (n) { n.setAttribute('data-ar-aria', n.getAttribute('aria-label')); });
+  function apply(l) {
+    d.lang = l; d.dir = l === 'en' ? 'ltr' : 'rtl';
+    nodes.forEach(function (n) { n.innerHTML = n.getAttribute(l === 'en' ? 'data-en' : 'data-ar'); });
+    ariaNodes.forEach(function (n) { n.setAttribute('aria-label', n.getAttribute(l === 'en' ? 'data-en-aria' : 'data-ar-aria')); });
+    document.title = meta[l].title;
+    descEl.content = meta[l].desc;
+  }
+  if (d.lang === 'en') apply('en');
+  document.getElementById('lang').addEventListener('click', function () {
+    var l = d.lang === 'en' ? 'ar' : 'en';
+    apply(l);
+    try { localStorage.setItem('lang', l); } catch (e) {}
+  });
+  document.getElementById('theme').addEventListener('click', function () {
+    var cur = d.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    var next = cur === 'light' ? 'dark' : 'light';
+    d.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch (e) {}
+  });
+})();
+</script>
 </body>
 </html>
