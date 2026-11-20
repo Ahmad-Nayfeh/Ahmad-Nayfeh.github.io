@@ -1,29 +1,12 @@
-# ahmad-nayfeh.github.io
+# ahmad-nayfeh.github.io (moved)
 
-Official pages for Ahmad Nayfeh's Android apps and browser apps.
+This site moved to **https://ahmadnayfeh.com**. The source is now in the repository `Ahmad-Nayfeh/ahmadnayfeh.com`.
 
-- `/khatwa/` — خطوة (Khatwa): step counter, walk-to-unlock, walking as a game.
-- `/marathon/` — ماراثون القراءة (Reading Marathon): reading groups, daily logging, points and badges.
-  - `/marathon/join/?code=XXXXXX` — invite links (opened directly by the app via `.well-known/assetlinks.json`).
-  - `/marathon/privacy/` — privacy policy.
-- `/shasha/` — شاشة (Shasha): calm, family-safe video app for the TV (Android TV, Google TV, Fire TV) and the phone.
-  - `shasha-tv.apk`, `shasha-mobile.apk`, `shasha-setup.zip` (the computer kit that installs the TV app), `guide-ar.pdf`, `guide-en.pdf`.
-  - `/shasha/latest.json` — read by both apps' in-app updaters (no credentials). Do not edit it or the page's
-    version, size and SHA-256 by hand: run `tools/publish-site.sh` from the shasha repository, which copies the files
-    under fixed names, computes size and SHA-256, and rewrites `latest.json` and the values between the page's
-    `<!--@name-->…<!--/@name-->` markers.
-- `/grid-shift/` — مناوبة الشبكة (Grid Shift): a browser game about 13.8 kV fault response and protection grading. This folder holds the built game only (copied from the private source repository's `dist/`); do not hand-edit its hashed files.
-- `/munazara/` — مناظرة (Munazara): a web app for structured debates between friends. Built files only, copied from the private source repository with its `scripts/publish-to-hub.sh`; do not hand-edit its hashed files. Pages are `noindex` and deliberately not in `sitemap.xml`.
-- `/voxa/` — Voxa: speech-to-text and other AI media tools (web app + Android). Built files only, copied from the private source repository with its `scripts/publish-to-hub.sh`; do not hand-edit its hashed files.
-  - `/voxa/about/` — the Arabic intro page with the explainer video (`voxa-intro.mp4`); this is what the hub card links to.
-  - `/voxa/voxa.apk` — the Android app, linked from the about page and from the app's own settings.
+What is left here is one forwarding page, saved twice:
 
-Plain static HTML, no build step. APKs are stored next to each page; to release a new version, replace the APK, then update the file name, version, size and SHA-256 on the page.
+- `index.html` answers the old home address.
+- `404.html` answers every other old address (GitHub Pages serves it for any path that has no file).
 
-## Site design (2026-11)
+The page sends the visitor to the matching new address and keeps the query string and the part after `#`, so old invite links, app pages and download links still arrive in the right place. The address mapping is the small `target()` function inside the page.
 
-- `index.html`: bilingual hub (Arabic default, English via the EN button or `?lang=en`), light/dark theme (follows the system, toggle remembered), one equal grid of all projects (no featured item), sorted alphabetically in the current language, with filter buttons (All / Android / In the browser), and an about section that names no single project.
-- Adding a project: add one `.app` card in `#work-grid` with `data-group` (`android` or `browser`) and `data-name-ar` / `data-name-en`, plus a footer link with the same two attributes; the order is computed, so position in the HTML does not matter. Update the counts in the hero chips.
-- `assets/fonts.css` + `assets/fonts/`: self-hosted IBM Plex Sans Arabic and Amiri (SIL OFL 1.1, licences beside the files). No Google Fonts requests, except `marathon/admin/` which was left unchanged.
-- `assets/img/`: card thumbnails and the share image `og-hub.png`.
-- Every app page footer links back to the hub ("كل التطبيقات").
+Do not publish apps here any more. Each app's publish script now writes to `public/apps/<app>/` in the new repository.

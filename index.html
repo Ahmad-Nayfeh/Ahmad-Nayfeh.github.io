@@ -3,334 +3,62 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>أحمد نايفة · تطبيقات وألعاب مجانية</title>
-<meta name="description" content="أعمال مجانية بالعربية من أحمد نايفة: تطبيقات أندرويد وتطبيقات تعمل في المتصفح — Reel، خطوة، شاشة، ماراثون القراءة، مناظرة، مناوبة الشبكة، Voxa.">
-<link rel="canonical" href="https://ahmad-nayfeh.github.io/">
-<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
-<meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#F6F4EF" media="(prefers-color-scheme: light)">
-<meta property="og:type" content="website">
-<meta property="og:locale" content="ar_AR">
-<meta property="og:locale:alternate" content="en_US">
-<meta property="og:title" content="أحمد نايفة · تطبيقات وألعاب مجانية">
-<meta property="og:description" content="تطبيقات أندرويد وتطبيقات متصفح مجانية، عربية أولًا.">
-<meta property="og:url" content="https://ahmad-nayfeh.github.io/">
-<meta property="og:image" content="https://ahmad-nayfeh.github.io/assets/img/og-hub.png">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="assets/fonts.css">
-<link rel="stylesheet" href="assets/site.css">
+<meta name="robots" content="noindex">
+<title>انتقل الموقع · This site has moved</title>
+<!--
+  This address has moved to https://ahmadnayfeh.com.
+  GitHub Pages cannot redirect on the server, so this one page is served for every
+  old address (it is both index.html and 404.html) and sends the visitor to the
+  matching new address, keeping the query string and the part after "#".
+-->
 <script>
-  /* Theme and language before first paint (no flash). Storage may be blocked: ignore errors. */
-  (function () {
-    var d = document.documentElement, t = null, l = null;
-    try { t = localStorage.getItem('theme'); l = localStorage.getItem('lang'); } catch (e) {}
-    var q = new URLSearchParams(location.search).get('lang');
-    if (q === 'en' || q === 'ar') l = q;
-    if (t === 'light' || t === 'dark') d.setAttribute('data-theme', t);
-    if (l === 'en') { d.lang = 'en'; d.dir = 'ltr'; }
-  })();
+(function () {
+  var NEW = "https://ahmadnayfeh.com";
+  // Old file names that changed.
+  var FILES = {
+    "/khatwa/khatwa-0.10.0.apk": "/apps/khatwa/khatwa.apk",
+    "/reel/reel-1.0.0.apk": "/apps/reel/reel.apk",
+    "/marathon/reading-marathon-0.1.0.apk": "/apps/marathon/reading-marathon.apk"
+  };
+  // Browser apps now run one level down, at /apps/<app>/app/.
+  var RUNNING = { "munazara": 1, "voxa": 1, "grid-shift": 1 };
+  // Files that sit beside an app's page rather than inside the running app.
+  var BESIDE = { "voxa.apk": 1, "latest.json": 1 };
+
+  function target(path) {
+    path = path.replace(/\/index\.html$/, "/");
+    if (FILES[path]) return FILES[path];
+    var parts = path.split("/").filter(Boolean);
+    if (parts.length === 0) return "/apps/";
+    if (parts[0] === ".well-known") return path;
+    if (parts[0] === "assets") return "/apps/" + parts.join("/");
+    var app = parts[0], rest = parts.slice(1);
+    var tail = rest.join("/") + (rest.length && /\/$/.test(path) ? "/" : "");
+    if (RUNNING[app]) {
+      if (rest[0] === "about") return "/apps/" + app + "/";            // the old information page
+      if (rest.length === 1 && BESIDE[rest[0]]) return "/apps/" + app + "/" + rest[0];
+      return "/apps/" + app + "/app/" + tail;                          // the app itself and its files
+    }
+    return "/apps/" + app + "/" + tail;
+  }
+
+  var url = NEW + target(location.pathname) + location.search + location.hash;
+  window.__moved = url;
+  location.replace(url);
+})();
 </script>
 <style>
-  :root {
-    --bg: #0B1020; --bg2: #10172B; --ink: #EEF1F7; --muted: #A1ABC0; --line: rgba(255,255,255,.11);
-    --card: rgba(255,255,255,.04); --card-hover: rgba(255,255,255,.07); --accent: #F2B84B; --accent-2: #E8873A;
-    --accent-soft: rgba(242,184,75,.13); --on-accent: #1A1204; --link: #F5C76E; --shadow: 0 30px 60px -30px rgba(0,0,0,.7);
-    --btn-bg: linear-gradient(135deg, #F7C76A, #E8873A); --glow: rgba(232,135,58,.55);
-    --hero-a: rgba(242,184,75,.16); --hero-b: rgba(71,194,255,.10);
-    color-scheme: dark;
-  }
-  @media (prefers-color-scheme: light) {
-    :root:not([data-theme="dark"]) {
-      --bg: #F6F4EF; --bg2: #EFECE4; --ink: #151A26; --muted: #5A6377; --line: rgba(20,26,38,.12);
-      --card: #FFFFFF; --card-hover: #FFFFFF; --accent: #B86A12; --accent-2: #C2410C; --accent-soft: rgba(184,106,18,.10);
-      --on-accent: #FFFFFF; --link: #9A4F06; --shadow: 0 24px 48px -28px rgba(20,26,38,.35);
-      --btn-bg: linear-gradient(135deg, #C77A1A, #B8460E); --glow: rgba(184,70,14,.35);
-      --hero-a: rgba(232,135,58,.14); --hero-b: rgba(30,120,200,.08);
-      color-scheme: light;
-    }
-  }
-  :root[data-theme="light"] {
-    --bg: #F6F4EF; --bg2: #EFECE4; --ink: #151A26; --muted: #5A6377; --line: rgba(20,26,38,.12);
-    --card: #FFFFFF; --card-hover: #FFFFFF; --accent: #B86A12; --accent-2: #C2410C; --accent-soft: rgba(184,106,18,.10);
-    --on-accent: #FFFFFF; --link: #9A4F06; --shadow: 0 24px 48px -28px rgba(20,26,38,.35);
-    --btn-bg: linear-gradient(135deg, #C77A1A, #B8460E); --glow: rgba(184,70,14,.35);
-    --hero-a: rgba(232,135,58,.14); --hero-b: rgba(30,120,200,.08);
-    color-scheme: light;
-  }
-  body { background: var(--bg); }
-
-  /* Header */
-  .site-head { position: sticky; top: 0; z-index: 20; backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); background: color-mix(in srgb, var(--bg) 80%, transparent); border-bottom: 1px solid var(--line); }
-  .site-head .top { padding: 12px 0; }
-  .head-end { display: flex; align-items: center; gap: 6px; }
-  .site-head nav { display: flex; gap: 4px; margin-inline-end: 8px; }
-  .site-head nav a { padding: 8px 12px; border-radius: 10px; color: var(--ink); opacity: .8; text-decoration: none; font-size: .95rem; }
-  .site-head nav a:hover { opacity: 1; background: var(--card); }
-  @media (max-width: 720px) { .site-head nav { display: none; } }
-  .icon-btn { min-width: 44px; height: 44px; padding: 0 10px; display: inline-grid; place-items: center; border-radius: 12px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-weight: 700; font-size: .9rem; cursor: pointer; }
-  .icon-btn:hover { border-color: var(--accent); }
-  .icon-btn svg { width: 20px; height: 20px; }
-  .i-sun { display: none; }
-  :root[data-theme="light"] .i-sun { display: block; } :root[data-theme="light"] .i-moon { display: none; }
-  @media (prefers-color-scheme: light) { :root:not([data-theme]) .i-sun { display: block; } :root:not([data-theme]) .i-moon { display: none; } }
-
-  /* Hero */
-  .intro { position: relative; isolation: isolate; padding: clamp(56px, 11vw, 120px) 0 clamp(40px, 7vw, 72px); overflow: hidden; }
-  .intro::before { content: ""; position: absolute; inset: 0; z-index: -1;
-    background: radial-gradient(600px 380px at 85% 10%, var(--hero-a), transparent 65%), radial-gradient(520px 360px at 10% 70%, var(--hero-b), transparent 65%); }
-  .intro h1 { font-size: clamp(2.3rem, 7vw, 4.1rem); letter-spacing: -.015em; margin-bottom: .3em; max-width: 14em; }
-  .intro h1 .hl { background: linear-gradient(135deg, var(--accent), var(--accent-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 22px 0 28px; padding: 0; list-style: none; }
-  .chips li { border: 1px solid var(--line); background: var(--card); border-radius: 999px; padding: 6px 14px; font-size: .92rem; color: var(--muted); }
-  .chips b { color: var(--ink); font-weight: 600; }
-
-  /* Section titles */
-  .sec-head { display: flex; align-items: end; justify-content: space-between; gap: 8px 16px; margin-bottom: 22px; flex-wrap: wrap; }
-  .sec-head h2 { margin: 0; }
-  .sec-head p { margin: 0; color: var(--muted); max-width: 34em; }
-  section[id] { scroll-margin-top: 80px; }
-
-  /* Type tag and filters (one equal grid, no featured item) */
-  .kind { display: inline-block; font-size: .78rem; font-weight: 600; padding: 2px 10px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); margin-bottom: 8px; }
-  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 20px; }
-  .filters button { min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--ink); font: inherit; font-size: .95rem; cursor: pointer; }
-  .filters button[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
-  .app[hidden] { display: none; }
-  /* App cards */
-  .apps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
-  @media (max-width: 960px) { .apps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 600px) { .apps { grid-template-columns: 1fr; } }
-  .app { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 24px; overflow: hidden; background: var(--card); color: inherit; text-decoration: none; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
-  .app:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--accent) 55%, transparent); box-shadow: var(--shadow); background: var(--card-hover); }
-  .app .thumb { aspect-ratio: 1200 / 630; background: var(--bg2); overflow: hidden; }
-  .app .thumb img { width: 100%; height: 100%; object-fit: cover; }
-  .app .thumb.shot img { object-position: center top; }
-  .app .thumb.icon-only { display: grid; place-items: center; background: radial-gradient(circle at 50% 40%, #2A2F3B, #14161C); }
-  .app .thumb.icon-only img { width: 96px; height: 96px; border-radius: 22px; object-fit: contain; }
-  .app .meta { display: flex; flex-direction: column; padding: 0 20px 22px; flex: 1; }
-  .app .meta > img { width: 56px; height: 56px; border-radius: 16px; flex: none; margin-top: -28px; border: 3px solid var(--bg); background: var(--bg); }
-  .app .meta > div { padding-top: 10px; }
-  .app .more { white-space: nowrap; }
-  .app h3 { margin: 0 0 .2em; font-size: 1.2rem; }
-  .app p { margin: 0; color: var(--muted); font-size: .95rem; line-height: 1.65; }
-  .app .more { display: inline-block; margin-top: 10px; font-weight: 600; font-size: .92rem; color: var(--link); }
-  .ar-only { display: none; font-size: .72rem; font-weight: 600; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 1px 8px; margin-inline-start: 8px; vertical-align: middle; }
-  html[lang="en"] .ar-only { display: inline-block; }
-
-  /* About */
-  .about { display: grid; grid-template-columns: auto 1fr; gap: clamp(20px, 4vw, 40px); align-items: start; border: 1px solid var(--line); border-radius: 28px; padding: clamp(22px, 4vw, 40px); background: var(--card); }
-  .about .mark { width: 96px; height: 96px; border-radius: 26px; }
-  .about p { color: var(--muted); max-width: 46em; }
-  @media (max-width: 640px) { .about { grid-template-columns: 1fr; } .about .mark { width: 72px; height: 72px; } }
-
-  .site-foot { border-top: 1px solid var(--line); margin-top: clamp(56px, 9vw, 96px); }
-  .site-foot .foot { padding: 28px 0 40px; }
-  .foot nav { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #1B3BDB; color: #fff;
+    font-family: system-ui, "Segoe UI", Tahoma, sans-serif; text-align: center; padding: 24px; line-height: 1.8; }
+  a { color: #fff; font-weight: 700; }
+  h1 { font-size: 2rem; margin: 0 0 .3em; }
 </style>
 </head>
 <body>
-<a class="skip" href="#main" data-en="Skip to content">تخطَّ إلى المحتوى</a>
-
-<header class="site-head">
-  <div class="wrap top">
-    <a class="brand" href="./"><img src="assets/logo.svg" alt="" width="36" height="36"><span data-en="Ahmad Nayfeh">أحمد نايفة</span></a>
-    <div class="head-end">
-      <nav aria-label="الأقسام" data-en-aria="Sections">
-        <a href="#work" data-en="Work">الأعمال</a>
-        <a href="#about" data-en="About">عنّي</a>
-      </nav>
-      <button class="icon-btn" id="lang" type="button" aria-label="Switch to English" data-en-aria="التبديل إلى العربية"><span data-en="ع">EN</span></button>
-      <button class="icon-btn" id="theme" type="button" aria-label="تبديل المظهر" data-en-aria="Toggle theme">
-        <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-        <svg class="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-      </button>
-    </div>
-  </div>
-</header>
-
-<main id="main">
-  <div class="intro">
-    <div class="wrap">
-      <span class="eyebrow" data-en="Free apps and games">تطبيقات وألعاب مجانية</span>
-      <h1 data-en="I build small tools for <span class=&quot;hl&quot;>real everyday problems</span>.">أبني أدوات صغيرة <span class="hl">لمشاكل يومية حقيقية</span>.</h1>
-      <p class="lead" data-en="Android apps and apps that run in the browser, free and Arabic first. Pick any of them to read about it and try it.">تطبيقات أندرويد وتطبيقات تعمل في المتصفح، مجانية وبالعربية أولًا. اختر أيًّا منها لتقرأ عنه وتجرّبه.</p>
-      <ul class="chips">
-        <li data-en="<b>Free</b> to download and use"><b>مجانية</b> للتحميل والاستخدام</li>
-        <li data-en="<b>Arabic</b> first"><b>عربية</b> أولًا</li>
-        <li data-en="<b>8</b> projects: <b>5</b> Android · <b>3</b> in the browser"><b>8</b> أعمال: <b>5</b> أندرويد · <b>3</b> في المتصفح</li>
-      </ul>
-      <div class="cta">
-        <a class="btn" href="#work" data-en="Browse the work">تصفّح الأعمال</a>
-      </div>
-    </div>
-  </div>
-
-  <section class="wrap section" id="work" aria-labelledby="work-h">
-    <div class="sec-head">
-      <h2 id="work-h" data-en="All work">كل الأعمال</h2>
-      <p data-en="Listed alphabetically. Android apps have a page with screenshots, the download link and install steps; browser apps open directly.">مرتبة أبجديًّا. لكل تطبيق أندرويد صفحة فيها صوره ورابط التحميل وخطوات التثبيت، وتطبيقات المتصفح تُفتح مباشرة.</p>
-    </div>
-    <div class="filters" role="group" aria-label="تصفية" data-en-aria="Filter">
-      <button type="button" data-filter="all" aria-pressed="true" data-en="All">الكل</button>
-      <button type="button" data-filter="android" aria-pressed="false" data-en="Android">أندرويد</button>
-      <button type="button" data-filter="browser" aria-pressed="false" data-en="In the browser">في المتصفح</button>
-    </div>
-    <div class="apps" id="work-grid">
-      <a class="app" href="shadhra/" data-group="android" data-name-ar="شذرة" data-name-en="Shadhra">
-        <div class="thumb"><img src="assets/img/shadhra-card.webp" alt="" width="1200" height="630" loading="lazy"></div>
-        <div class="meta"><img src="assets/img/shadhra-icon.png" alt="" width="56" height="56"><div>
-          <span class="kind" data-en="Android app · Web">تطبيق أندرويد · ويب</span>
-          <h3><span data-en="Shadhra">شذرة</span></h3>
-          <p data-en="Keep the quotes that stop you and your reflections in one library, link them, and write essays and books from them.">احفظ الاقتباسات التي تستوقفك وتأمّلاتك في مكتبة واحدة، واربط بينها، واكتب منها مقالاتك وكتبك.</p>
-          <span class="more" data-en="Details and the app →">التفاصيل والتطبيق ←</span>
-        </div></div>
-      </a>
-      <a class="app" href="reel/" data-group="android" data-name-ar="Reel" data-name-en="Reel">
-        <div class="thumb icon-only"><img src="reel/img/icon.svg" alt="" width="96" height="96" loading="lazy"></div>
-        <div class="meta"><img src="reel/img/icon.svg" alt="" width="56" height="56"><div>
-          <span class="kind" data-en="Android app">تطبيق أندرويد</span>
-          <h3>Reel<span class="ar-only">Arabic page</span></h3>
-          <p data-en="Ad-free video and music player that plays AC3 and DTS audio and remembers where you stopped.">مشغّل فيديو وموسيقى بلا إعلانات، يشغّل صوت AC3 وDTS ويتذكّر أين توقفت.</p>
-          <span class="more" data-en="Details and download →">التفاصيل والتحميل ←</span>
-        </div></div>
-      </a>
-      <a class="app" href="khatwa/" data-group="android" data-name-ar="خطوة" data-name-en="Khatwa">
-        <div class="thumb"><img src="assets/img/khatwa-card.webp" alt="" width="800" height="420" loading="lazy"></div>
-        <div class="meta"><img src="khatwa/img/logo.png" alt="" width="56" height="56"><div>
-          <span class="kind" data-en="Android app">تطبيق أندرويد</span>
-          <h3><span data-en="Khatwa">خطوة</span><span class="ar-only">Arabic page</span></h3>
-          <p data-en="Counts your steps, locks your phone until you walk, and turns walking into a game.">يعدّ خطواتك، ويقفل جوالك حتى تمشي، ويحوّل المشي إلى لعبة.</p>
-          <span class="more" data-en="Details and download →">التفاصيل والتحميل ←</span>
-        </div></div>
-      </a>
-      <a class="app" href="shasha/" data-group="android" data-name-ar="شاشة" data-name-en="Shasha">
-        <div class="thumb"><img src="assets/img/shasha-card.webp" alt="" width="800" height="450" loading="lazy"></div>
-        <div class="meta"><img src="shasha/img/icon.png" alt="" width="56" height="56"><div>
-          <span class="kind" data-en="Android app">تطبيق أندرويد</span>
-          <h3><span data-en="Shasha">شاشة</span><span class="ar-only">Arabic page</span></h3>
-          <p data-en="Calm YouTube for the family TV and phone: no ads, with full protection for children.">يوتيوب هادئ لتلفاز البيت والجوال: بلا إعلانات، وبحماية كاملة للأطفال.</p>
-          <span class="more" data-en="Details and download →">التفاصيل والتحميل ←</span>
-        </div></div>
-      </a>
-      <a class="app" href="marathon/" data-group="android" data-name-ar="ماراثون القراءة" data-name-en="Reading Marathon">
-        <div class="thumb"><img src="assets/img/marathon-card.webp" alt="" width="800" height="420" loading="lazy"></div>
-        <div class="meta"><img src="marathon/img/icon.svg" alt="" width="56" height="56"><div>
-          <span class="kind" data-en="Android app">تطبيق أندرويد</span>
-          <h3><span data-en="Reading Marathon">ماراثون القراءة</span><span class="ar-only">Arabic page</span></h3>
-          <p data-en="One shared book per challenge, a daily log, points and badges for reading groups.">كتاب مشترك لكل تحدٍّ، تسجيل يومي، نقاط وأوسمة لمجموعات القراءة.</p>
-          <span class="more" data-en="Details and download →">التفاصيل والتحميل ←</span>
-        </div></div>
-      </a>
-      <a class="app" href="munazara/" data-group="browser" data-name-ar="مناظرة" data-name-en="Munazara">
-        <div class="thumb shot"><img src="assets/img/munazara-shot.webp" alt="" width="1200" height="750" loading="lazy"></div>
-        <div class="meta"><img src="munazara/icon.svg" alt="" width="56" height="56"><div>
-          <span class="kind" data-en="Web app">تطبيق ويب</span>
-          <h3><span data-en="Munazara">مناظرة</span></h3>
-          <p data-en="A structured debate between friends: every reply sits under the point it answers, and you see what is waiting on you and on your friend.">مناظرة منظّمة بين الأصدقاء: كل ردّ تحت النقطة التي يرد عليها، ويظهر ما ينتظر ردّك وردّ صاحبك.</p>
-          <span class="more" data-en="Open the app →">افتح التطبيق ←</span>
-        </div></div>
-      </a>
-      <a class="app" href="grid-shift/about/" data-group="browser" data-name-ar="مناوبة الشبكة" data-name-en="Grid Shift">
-        <div class="thumb shot"><img src="assets/img/grid-shift-shot.webp" alt="" width="1200" height="750" loading="lazy"></div>
-        <div class="meta"><img src="assets/grid-shift.svg" alt="" width="56" height="56"><div>
-          <span class="kind" data-en="Browser game">لعبة متصفح</span>
-          <h3><span data-en="Grid Shift">مناوبة الشبكة</span></h3>
-          <p data-en="Be the duty control engineer: locate the cable fault and restore power to customers safely.">كن مهندس التحكم المناوب: حدّد عطل الكابل، وأعِد الكهرباء للمشتركين بأمان.</p>
-          <span class="more" data-en="Play now →">العب الآن ←</span>
-        </div></div>
-      </a>
-      <a class="app" href="voxa/about/" data-group="browser" data-name-ar="Voxa" data-name-en="Voxa">
-        <div class="thumb shot"><img src="assets/img/voxa-shot.webp" alt="" width="1200" height="750" loading="lazy"></div>
-        <div class="meta"><img src="voxa/icon.svg" alt="" width="56" height="56"><div>
-          <span class="kind" data-en="Web app · Android">تطبيق ويب · أندرويد</span>
-          <h3>Voxa<span class="ar-only">Arabic page</span></h3>
-          <p data-en="Turns voice notes, meetings, lectures and YouTube videos into text that shows who said what, with summary, translation and export.">يحوّل الملاحظات الصوتية والاجتماعات والمحاضرات ومقاطع يوتيوب إلى نص يبيّن من قال ماذا، مع تلخيص وترجمة وتصدير.</p>
-          <span class="more" data-en="Video, details and the app →">الفيديو والتفاصيل والتطبيق ←</span>
-        </div></div>
-      </a>
-    </div>
-  </section>
-
-  <section class="wrap" id="about" aria-labelledby="about-h">
-    <div class="about">
-      <img class="mark" src="assets/logo.svg" alt="" width="96" height="96">
-      <div>
-        <span class="eyebrow" data-en="About">عنّي</span>
-        <h2 id="about-h" data-en="Hi, I'm Ahmad Nayfeh">مرحبًا، أنا أحمد نايفة</h2>
-        <p data-en="I'm an electrical engineer, and in my spare time I build free tools for everyday problems: too much time on the phone, keeping a reading group going, a calm YouTube for the family, a player that plays every file, a game from my own field, and a place for structured debate between friends. All free, Arabic first.">مهندس كهرباء، وفي وقت فراغي أبني أدوات مجانية لمشاكل يومية: وقت طويل على الجوال، ومجموعة قراءة تحتاج من يحفّزها، ويوتيوب هادئ للعائلة، ومشغّل يشغّل كل الملفات، ولعبة من مجال تخصصي، ومساحة للنقاش المنظّم بين الأصدقاء. كلها مجانية وبالعربية أولًا.</p>
-        <div class="cta"><a class="btn btn-ghost" href="https://ahmadnayfeh.vercel.app" data-en="Personal website">الموقع الشخصي</a></div>
-      </div>
-    </div>
-  </section>
+<main>
+  <h1>انتقل الموقع إلى ahmadnayfeh.com</h1>
+  <p lang="en" dir="ltr">This site has moved to <a id="go" href="https://ahmadnayfeh.com/apps/">ahmadnayfeh.com</a>.</p>
 </main>
-
-<footer class="site-foot">
-  <div class="wrap foot">
-    <span data-en="© 2026 Ahmad Nayfeh">© 2026 أحمد نايفة</span>
-    <nav aria-label="روابط" data-en-aria="Links" id="foot-links">
-      <a href="shadhra/" data-en="Shadhra" data-name-ar="شذرة" data-name-en="Shadhra">شذرة</a>
-      <a href="reel/" data-name-ar="Reel" data-name-en="Reel">Reel</a>
-      <a href="khatwa/" data-en="Khatwa" data-name-ar="خطوة" data-name-en="Khatwa">خطوة</a>
-      <a href="shasha/" data-en="Shasha" data-name-ar="شاشة" data-name-en="Shasha">شاشة</a>
-      <a href="marathon/" data-en="Reading Marathon" data-name-ar="ماراثون القراءة" data-name-en="Reading Marathon">ماراثون القراءة</a>
-      <a href="munazara/" data-en="Munazara" data-name-ar="مناظرة" data-name-en="Munazara">مناظرة</a>
-      <a href="grid-shift/" data-en="Grid Shift" data-name-ar="مناوبة الشبكة" data-name-en="Grid Shift">مناوبة الشبكة</a>
-      <a href="voxa/about/" data-name-ar="Voxa" data-name-en="Voxa">Voxa</a>
-    </nav>
-  </div>
-</footer>
-
-<script>
-(function () {
-  var d = document.documentElement;
-  var descEl = document.querySelector('meta[name=description]');
-  var meta = {
-    ar: { title: document.title, desc: descEl.content },
-    en: { title: 'Ahmad Nayfeh · Free apps and games', desc: 'Free work by Ahmad Nayfeh, Arabic first: Android apps and browser apps — Grid Shift, Khatwa, Munazara, Reading Marathon, Reel, Shadhra, Shasha, Voxa.' }
-  };
-  var nodes = [].slice.call(document.querySelectorAll('[data-en]'));
-  nodes.forEach(function (n) { n.setAttribute('data-ar', n.innerHTML); });
-  var ariaNodes = [].slice.call(document.querySelectorAll('[data-en-aria]'));
-  ariaNodes.forEach(function (n) { n.setAttribute('data-ar-aria', n.getAttribute('aria-label')); });
-  function apply(l) {
-    d.lang = l; d.dir = l === 'en' ? 'ltr' : 'rtl';
-    nodes.forEach(function (n) { n.innerHTML = n.getAttribute(l === 'en' ? 'data-en' : 'data-ar'); });
-    ariaNodes.forEach(function (n) { n.setAttribute('aria-label', n.getAttribute(l === 'en' ? 'data-en-aria' : 'data-ar-aria')); });
-    document.title = meta[l].title;
-    descEl.content = meta[l].desc;
-    sortAlpha(l);
-  }
-  // Alphabetical order in the current language, so no item is favoured by position.
-  function sortAlpha(l) {
-    var coll = new Intl.Collator(l === 'en' ? 'en' : 'ar');
-    ['work-grid', 'foot-links'].forEach(function (id) {
-      var box = document.getElementById(id); if (!box) return;
-      var items = [].slice.call(box.children);
-      items.sort(function (a, b) { return coll.compare(a.getAttribute('data-name-' + l), b.getAttribute('data-name-' + l)); });
-      items.forEach(function (n) { box.appendChild(n); });
-    });
-  }
-  sortAlpha(d.lang === 'en' ? 'en' : 'ar');
-  [].slice.call(document.querySelectorAll('[data-filter]')).forEach(function (b, _, all) {
-    b.addEventListener('click', function () {
-      var f = b.getAttribute('data-filter');
-      all.forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
-      [].slice.call(document.querySelectorAll('#work-grid .app')).forEach(function (c) { c.hidden = f !== 'all' && c.getAttribute('data-group') !== f; });
-    });
-  });
-  if (d.lang === 'en') apply('en');
-  document.getElementById('lang').addEventListener('click', function () {
-    var l = d.lang === 'en' ? 'ar' : 'en';
-    apply(l);
-    try { localStorage.setItem('lang', l); } catch (e) {}
-  });
-  document.getElementById('theme').addEventListener('click', function () {
-    var cur = d.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-    var next = cur === 'light' ? 'dark' : 'light';
-    d.setAttribute('data-theme', next);
-    try { localStorage.setItem('theme', next); } catch (e) {}
-  });
-})();
-</script>
+<script>if (window.__moved) document.getElementById("go").href = window.__moved;</script>
 </body>
 </html>
