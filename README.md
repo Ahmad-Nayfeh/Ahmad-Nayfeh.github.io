@@ -1,6 +1,6 @@
 # ahmad-nayfeh.github.io
 
-Official download pages for Ahmad Nayfeh's Android apps.
+Official pages for Ahmad Nayfeh's Android apps and browser apps.
 
 - `/khatwa/` — خطوة (Khatwa): step counter, walk-to-unlock, walking as a game.
 - `/marathon/` — ماراثون القراءة (Reading Marathon): reading groups, daily logging, points and badges.
@@ -13,12 +13,14 @@ Official download pages for Ahmad Nayfeh's Android apps.
     under fixed names, computes size and SHA-256, and rewrites `latest.json` and the values between the page's
     `<!--@name-->…<!--/@name-->` markers.
 - `/grid-shift/` — مناوبة الشبكة (Grid Shift): a browser game about 13.8 kV fault response and protection grading. This folder holds the built game only (copied from the private source repository's `dist/`); do not hand-edit its hashed files.
+- `/munazara/` — مناظرة (Munazara): a web app for structured debates between friends. Built files only, copied from the private source repository with its `scripts/publish-to-hub.sh`; do not hand-edit its hashed files. Pages are `noindex` and deliberately not in `sitemap.xml`.
 
 Plain static HTML, no build step. APKs are stored next to each page; to release a new version, replace the APK, then update the file name, version, size and SHA-256 on the page.
 
 ## Site design (2026-11)
 
-- `index.html`: bilingual hub (Arabic default, English via the EN button or `?lang=en`), light/dark theme (follows the system, toggle remembered), game section, app cards, about section.
+- `index.html`: bilingual hub (Arabic default, English via the EN button or `?lang=en`), light/dark theme (follows the system, toggle remembered), one equal grid of all projects (no featured item), sorted alphabetically in the current language, with filter buttons (All / Android / In the browser), and an about section that names no single project.
+- Adding a project: add one `.app` card in `#work-grid` with `data-group` (`android` or `browser`) and `data-name-ar` / `data-name-en`, plus a footer link with the same two attributes; the order is computed, so position in the HTML does not matter. Update the counts in the hero chips.
 - `assets/fonts.css` + `assets/fonts/`: self-hosted IBM Plex Sans Arabic and Amiri (SIL OFL 1.1, licences beside the files). No Google Fonts requests, except `marathon/admin/` which was left unchanged.
 - `assets/img/`: card thumbnails and the share image `og-hub.png`.
 - Every app page footer links back to the hub ("كل التطبيقات").
