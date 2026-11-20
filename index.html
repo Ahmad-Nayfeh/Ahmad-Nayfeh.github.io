@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>أحمد نايفة · تطبيقات وألعاب مجانية</title>
-<meta name="description" content="تطبيقات أندرويد وألعاب متصفح مجانية بالعربية من أحمد نايفة: خطوة، ماراثون القراءة، شاشة، Reel، ولعبة مناوبة الشبكة.">
+<meta name="description" content="تطبيقات أندرويد وألعاب متصفح مجانية بالعربية من أحمد نايفة: خطوة، ماراثون القراءة، شاشة، Reel، ولعبة مناوبة الشبكة، وتطبيق مناظرة.">
 <link rel="canonical" href="https://ahmad-nayfeh.github.io/">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
 <meta name="theme-color" content="#0B1020" media="(prefers-color-scheme: dark)">
@@ -160,7 +160,7 @@
       <ul class="chips">
         <li data-en="<b>Free</b> to download and use"><b>مجانية</b> للتحميل والاستخدام</li>
         <li data-en="<b>Arabic</b> first"><b>عربية</b> أولًا</li>
-        <li data-en="<b>4</b> Android apps · <b>1</b> browser game"><b>4</b> تطبيقات أندرويد · <b>1</b> لعبة متصفح</li>
+        <li data-en="<b>4</b> Android apps · <b>1</b> browser game · <b>1</b> web app"><b>4</b> تطبيقات أندرويد · <b>1</b> لعبة متصفح · <b>1</b> تطبيق ويب</li>
       </ul>
       <div class="cta">
         <a class="btn" href="grid-shift/" data-en="Play Grid Shift">العب «مناوبة الشبكة»</a>
@@ -181,6 +181,22 @@
         <h3 data-en="Grid Shift">مناوبة الشبكة</h3>
         <p data-en="You are the duty control engineer on a 13.8 kV distribution network. A cable fault cuts power to a district: read the fault indicators, send crews, switch safely, and restore customers as fast as you can.">أنت مهندس التحكم المناوب على شبكة توزيع 13.8 ك.ف. عطل في كابل قطع الكهرباء عن حيّ: اقرأ مؤشرات العطل، وأرسل الفرق، وبدِّل المفاتيح بأمان، وأعِد الكهرباء للمشتركين بأسرع وقت.</p>
         <div class="cta"><a class="btn" href="grid-shift/" data-en="Play now">العب الآن</a></div>
+      </div>
+    </article>
+  </section>
+
+  <section class="wrap section" id="web" aria-labelledby="web-h">
+    <div class="sec-head">
+      <h2 id="web-h" data-en="Web app">تطبيق ويب</h2>
+      <p data-en="Opens in the browser, no download, no account. Add it to your home screen to use it like an app.">يُفتح في المتصفح بلا تحميل وبلا حساب، وتستطيع إضافته إلى الشاشة الرئيسية ليعمل كتطبيق.</p>
+    </div>
+    <article class="feature">
+      <a class="shot" href="munazara/" tabindex="-1" aria-hidden="true"><img src="assets/img/munazara-shot.webp" alt="" width="1200" height="750" loading="lazy"></a>
+      <div class="body">
+        <ul class="tags"><li data-en="Web app">تطبيق ويب</li><li data-en="Arabic · English">عربي · English</li><li data-en="Private, no accounts">خاص وبلا حسابات</li></ul>
+        <h3 data-en="Munazara">مناظرة</h3>
+        <p data-en="A structured debate between friends instead of lost voice notes: every reply sits under the point it answers, and the first screen shows what is waiting on you and on your friend. Built on the classical etiquette of disputation (ādāb al-munāẓara), and it never judges who is right.">مناظرة منظّمة بين الأصدقاء بدل الرسائل الصوتية الضائعة: كل ردّ تحت النقطة التي يرد عليها، وأول ما تراه ما ينتظر ردّك وما ينتظر ردّ صاحبك. مبنية على آداب البحث والمناظرة، ولا تحكم لأحد.</p>
+        <div class="cta"><a class="btn" href="munazara/" data-en="Start a debate">ابدأ مناظرة</a></div>
       </div>
     </article>
   </section>
@@ -248,6 +264,7 @@
       <a href="marathon/" data-en="Reading Marathon">ماراثون القراءة</a>
       <a href="shasha/" data-en="Shasha">شاشة</a>
       <a href="reel/">Reel</a>
+      <a href="munazara/" data-en="Munazara">مناظرة</a>
     </nav>
   </div>
 </footer>
@@ -258,7 +275,7 @@
   var descEl = document.querySelector('meta[name=description]');
   var meta = {
     ar: { title: document.title, desc: descEl.content },
-    en: { title: 'Ahmad Nayfeh · Free apps and games', desc: 'Free Android apps and a browser game, Arabic first: Khatwa, Reading Marathon, Shasha, Reel and Grid Shift.' }
+    en: { title: 'Ahmad Nayfeh · Free apps and games', desc: 'Free Android apps, a browser game and a web app, Arabic first: Khatwa, Reading Marathon, Shasha, Reel, Grid Shift and Munazara.' }
   };
   var nodes = [].slice.call(document.querySelectorAll('[data-en]'));
   nodes.forEach(function (n) { n.setAttribute('data-ar', n.innerHTML); });
